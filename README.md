@@ -22,7 +22,7 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
 ## Configuration Example
 
     server {
-        listen 80;
+        listen 8000;
         server_name localhost;
 
         small_light on;
