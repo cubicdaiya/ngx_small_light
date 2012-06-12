@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 -----------------------------------------------------------------------------
-ngx_small_light inclues a subset of sources of mod_small_light.
+ngx_small_light includes a subset of sources of mod_small_light.
 Following is the license information of mod_small_light.
 -----------------------------------------------------------------------------
 Copyright (c) 1996-2011 livedoor Co.,Ltd.
