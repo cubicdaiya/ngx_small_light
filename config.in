@@ -1,0 +1,31 @@
+ngx_feature="Dynamic Image Transformation"
+ngx_feature_libs="{$ngx_feature_libs}"
+ngx_feature_name=
+ngx_feature_run=no
+ngx_feature_incs="#include <wand/MagickWand.h>"
+ngx_feature_path=
+ngx_feature_test='MagickWandGenesis();'
+
+. auto/feature
+
+CORE_LIBS="$CORE_LIBS $ngx_feature_libs"
+ngx_addon_name=ngx_http_small_light
+HTTP_FILTER_MODULES="$HTTP_FILTER_MODULES ngx_http_small_light_module"
+
+NGX_ADDON_SRCS="$NGX_ADDON_SRCS \
+				$ngx_addon_dir/ngx_http_small_light_module.c      \
+				$ngx_addon_dir/ngx_http_small_light_parser.c      \
+				$ngx_addon_dir/ngx_http_small_light_param.c       \
+				$ngx_addon_dir/ngx_http_small_light_size.c        \
+				$ngx_addon_dir/ngx_http_small_light_imagemagick.c \
+				"
+
+NGX_ADDON_DEPS="$NGX_ADDON_DEPS \
+				$ngx_addon_dir/ngx_http_small_light_module.h      \
+				$ngx_addon_dir/ngx_http_small_light_parser.h      \
+				$ngx_addon_dir/ngx_http_small_light_param.h       \
+				$ngx_addon_dir/ngx_http_small_light_size.h        \
+				$ngx_addon_dir/ngx_http_small_light_imagemagick.h \
+				"
+
+CFLAGS="{$CFLAGS}"

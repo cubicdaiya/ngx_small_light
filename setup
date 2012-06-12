@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use strict;
+
+my $libs    = `Wand-config --libs`;
+my $lds     = `Wand-config --ldflags`;
+my $inclues = `Wand-config --cflags`;
+
+chomp($libs);
+chomp($lds);
+chomp($inclues);
+
+open(CONFIG_IN, "< config.in") or die("config.in not found");
+open(CONFIG,    "> config")    or die("open config failed");
+
+while (my $line = <CONFIG_IN>) {
+  $line =~ s/\{\$ngx_feature_libs\}/$libs $lds/;
+  $line =~ s/\{\$CFLAGS\}/$inclues/;
+  print CONFIG $line;
+}
+
+close(CONFIG_IN);
+close(CONFIG);
+
+
