@@ -82,6 +82,15 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         return NGX_ERROR;
     }
 
+    // remove all profiles
+    int rmprof_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "rmprof"));
+    if (rmprof_flg != 0) {
+        status = MagickProfileImage(ictx->wand, "*", NULL, 0);
+        if (status == MagickFalse) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "couldn't profiling image %s:%d", __FUNCTION__, __LINE__);
+        }
+    }
+
     // calc size.
     double iw = (double)MagickGetImageWidth(ictx->wand);
     double ih = (double)MagickGetImageHeight(ictx->wand);

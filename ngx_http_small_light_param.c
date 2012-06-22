@@ -51,6 +51,7 @@ static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t 
     ngx_str_t info     = ngx_string("info");
     ngx_str_t inhexif  = ngx_string("inhexif");
     ngx_str_t jpeghint = ngx_string("jpeghint");
+    ngx_str_t rmprof   = ngx_string("rmprof");
 
     ngx_hash_add_key(&ctx->params, &p,        "",       NGX_HASH_READONLY_KEY);
     ngx_hash_add_key(&ctx->params, &sx,       "",       NGX_HASH_READONLY_KEY);
@@ -75,6 +76,7 @@ static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t 
     ngx_hash_add_key(&ctx->params, &info,     "0",      NGX_HASH_READONLY_KEY);
     ngx_hash_add_key(&ctx->params, &inhexif,  "n",      NGX_HASH_READONLY_KEY);
     ngx_hash_add_key(&ctx->params, &jpeghint, "n",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &rmprof,   "n",      NGX_HASH_READONLY_KEY);
 }
 
 ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_str_t *define_pattern, ngx_http_small_light_conf_t *srv_conf)
