@@ -106,9 +106,9 @@ ngx_int_t ngx_http_small_light_parse_params(ngx_http_request_t *r, ngx_http_smal
 ngx_int_t ngx_http_small_light_parse_flag(const char *s)
 {
     if (s != NULL && s[0] == 'y') {
-        return NGX_OK;
+        return 1;
     }
-    return NGX_ERROR;
+    return 0;
 }
 
 ngx_int_t ngx_http_small_light_parse_int(const char *s)
