@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Test::More;
 use Proc::Guard qw(proc_guard);
+use LWP::UserAgent;
 
 sub nginx_start {
     my ($class, $conf_name) = @_;
@@ -18,6 +19,19 @@ sub nginx_start {
         '-p', $pwd . '/t/ngx_base/',
         '-c', $pwd . "/t/ngx_base/etc/$conf_name"
     );
+}
+
+sub test_nginx {
+    my ($class, $code) = @_;
+    my $ua = LWP::UserAgent->new;
+
+    my $do_request = sub {
+        my $req = shift;
+        $req->uri->scheme('http');
+        $req->uri->host('localhost:8000');
+        $ua->request($req);
+    };
+    return $code->($ua, $do_request);
 }
 
 1;
