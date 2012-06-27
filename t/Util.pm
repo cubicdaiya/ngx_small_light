@@ -2,12 +2,14 @@ package t::Util;
 use strict;
 use warnings;
 use Test::More;
+use Test::TCP;
 use Proc::Guard qw(proc_guard);
 use LWP::UserAgent;
 
 sub nginx_start {
     my ($class, $conf_name) = @_;
     $conf_name ||= "basic.nginx.conf";
+
 
     my $pwd = `pwd`;
     chomp $pwd;
@@ -19,6 +21,8 @@ sub nginx_start {
         '-p', $pwd . '/t/ngx_base/',
         '-c', $pwd . "/t/ngx_base/etc/$conf_name"
     );
+    Test::TCP::wait_port(8000);
+    return $proc;
 }
 
 sub test_nginx {
