@@ -222,7 +222,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         MagickSetFormat(ictx->wand, ctx->inf);
         ctx->of = ctx->inf;
     }
-    ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "ctx->of: %s: %s:%d", ctx->of, __FUNCTION__, __LINE__);
 
     // get small_lighted image as binary.
     u_char *canvas_buf;
