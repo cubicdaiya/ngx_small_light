@@ -1,0 +1,13 @@
+2012-07-04 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* (fix #1)fix memory corruption in parameter table
+
+	* add parameter 'rmprof'
+
+	* fix bug(flag parse function returns an invalid result)
+
+	* 0.0.2 released
+
+2011-06-13 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* 0.0.1 released
