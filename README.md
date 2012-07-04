@@ -38,6 +38,14 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
         }
     } 
 
+## Running Test
+
+	perl Build.PL
+	cpanm --installdeps .
+	NGINX_BIN=${ngx_small_light_src_dir}/objs/nginx ./Build test
+	# or
+	NGINX_BIN=${ngx_small_light_src_dir}/objs/nginx prove t/**/*.t
+
 ## Todo
 
   - support Imlib2 and GD
