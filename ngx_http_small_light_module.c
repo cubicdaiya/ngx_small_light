@@ -59,6 +59,7 @@ static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf);
 static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child);
 static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child);
 static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chain_t *in, ngx_http_small_light_ctx_t *ctx);
 static ngx_int_t ngx_http_small_light_finish(ngx_http_request_t *r, ngx_chain_t *out);
 static ngx_int_t ngx_http_small_light_init(ngx_conf_t *cf);
@@ -77,6 +78,15 @@ static ngx_command_t  ngx_http_small_light_commands[] = {
         ngx_string("small_light_pattern_define"),
         NGX_HTTP_SRV_CONF|NGX_CONF_TAKE2,
         ngx_http_small_light_pattern_define,
+        NGX_HTTP_SRV_CONF_OFFSET,
+        0,
+        NULL
+    },
+
+    { 
+        ngx_string("small_light_material_dir"),
+        NGX_HTTP_SRV_CONF|NGX_CONF_TAKE1,
+        ngx_http_small_light_material_dir,
         NGX_HTTP_SRV_CONF_OFFSET,
         0,
         NULL
@@ -369,6 +379,25 @@ static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *
 
     return NGX_CONF_OK;
 }
+
+static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+{
+    ngx_http_small_light_conf_t *srv_conf;
+    ngx_str_t                   *value;
+    ngx_dir_t                   dir;
+
+    srv_conf = conf;
+    value    = cf->args->elts;
+
+    if (ngx_open_dir(&value[1], &dir) == NGX_ERROR) {
+        return NGX_CONF_ERROR;
+    }
+
+    ngx_cpymem(&srv_conf->material_dir, &value[1], sizeof(ngx_str_t));
+
+    return NGX_CONF_OK;
+}    
+
 
 static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chain_t *in, ngx_http_small_light_ctx_t *ctx)
 {

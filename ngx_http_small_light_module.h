@@ -53,6 +53,7 @@ typedef struct {
     ngx_flag_t enable;
     ngx_hash_t hash;
     ngx_hash_keys_arrays_t patterns;
+    ngx_str_t material_dir;
 } ngx_http_small_light_conf_t;
 
 typedef struct {
