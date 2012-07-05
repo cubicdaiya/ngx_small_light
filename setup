@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
+use warnings;
 
 my $libs    = `Wand-config --libs`;
 my $lds     = `Wand-config --ldflags`;
