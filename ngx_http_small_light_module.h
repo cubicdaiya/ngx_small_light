@@ -53,6 +53,7 @@ typedef struct {
     ngx_flag_t enable;
     ngx_hash_t hash;
     ngx_hash_keys_arrays_t patterns;
+    ngx_str_t material_dir;
 } ngx_http_small_light_conf_t;
 
 typedef struct {
@@ -70,6 +71,8 @@ typedef struct {
     double                       bw;
     double                       bh;
     ngx_http_small_light_color_t bc;
+    ngx_int_t                    ix;
+    ngx_int_t                    iy;
     double                       aspect;
     ngx_int_t                    pt_flg;
     ngx_int_t                    scale_flg;
@@ -86,6 +89,7 @@ typedef struct {
     u_char *content;
     u_char *last;
     void *ictx;
+    ngx_str_t *material_dir;
 } ngx_http_small_light_ctx_t;
 
 #endif // NGX_HTTP_SMALL_LIGHT_MODULE_H

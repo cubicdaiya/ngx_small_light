@@ -149,6 +149,8 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     }
     sz->inhexif_flg = inhexif_flg;
 
-    // get jpeghint option.
     sz->jpeghint_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "jpeghint"));
+
+    sz->ix = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "ix"));
+    sz->iy = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "iy"));
 }
