@@ -191,6 +191,7 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
 
     ctx->inf            = r->headers_out.content_type.data;
     ctx->content_length = r->headers_out.content_length_n;
+    ctx->material_dir   = &srv_conf->material_dir;
 
     ngx_http_set_ctx(r, ctx, ngx_http_small_light_module);
 
