@@ -1,3 +1,11 @@
+2012-07-08 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* add command 'small_light_material_dir'
+
+	* add parameters 'ix', 'iy', 'embedicon'
+
+	* 0.1.0 released
+
 2012-07-04 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* (fix #1)fix memory corruption in parameter table
