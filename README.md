@@ -19,6 +19,10 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
     make
     make install
 
+## How to
+
+See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki/Configuration).
+
 ## Configuration Example
 
     server {
