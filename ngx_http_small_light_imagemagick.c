@@ -206,12 +206,20 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     // embed icon
     char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "embedicon");
     if (ngx_strlen(ctx->material_dir) > 0 && ngx_strlen(embedicon) > 0) {
-        MagickWand *base_wand = NewMagickWand();
-        MagickWand *icon_wand = NewMagickWand();
+        MagickWand *base_wand;
+        MagickWand *icon_wand;
         char   *p;
         char   *embedicon_path;
         size_t  embedicon_path_len;
         size_t  embedicon_len;
+
+        if (ngx_strstrn(embedicon, "/", 1 - 1)) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
+
+        base_wand = NewMagickWand();
+        icon_wand = NewMagickWand();
 
         embedicon_len      = ngx_strlen(embedicon);
         embedicon_path_len = ctx->material_dir->len + ngx_strlen("/") + embedicon_len;
@@ -223,6 +231,11 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         p = ngx_cpystrn(p, embedicon, embedicon_len + 1);
         
         if (ngx_open_file(embedicon_path, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0) == NGX_INVALID_FILE) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
+
+        if (ngx_strstrn(embedicon_path, "..", 2 - 1)) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
