@@ -54,4 +54,3 @@ See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki
 
   - support Imlib2 and GD
   - add various convenient options
-  - make documentations
