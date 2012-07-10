@@ -1,3 +1,11 @@
+2012-07-10 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* set default engine 'imagemagick'
+
+	* security fix(directory traversal with 'material_dir' and 'embedicon')
+
+	* 0.1.1 released
+
 2012-07-08 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* add command 'small_light_material_dir'
