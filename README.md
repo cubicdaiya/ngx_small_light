@@ -46,9 +46,9 @@ See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki
 
 	perl Build.PL
 	cpanm --installdeps .
-	NGINX_BIN=${ngx_small_light_src_dir}/objs/nginx ./Build test
+	NGINX_BIN=${nginx_prefix_dir}/sbin/nginx ./Build test
 	# or
-	NGINX_BIN=${ngx_small_light_src_dir}/objs/nginx prove t/**/*.t
+	NGINX_BIN=${nginx_prefix_dir}/sbin/nginx prove t/**/*.t
 
 ## Todo
 
