@@ -67,7 +67,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         char *jpeg_size_opt;
         jpeg_size_opt = ngx_pcalloc(r->pool, 32 + 1);
         if (jpeg_size_opt == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
         ngx_snprintf(jpeg_size_opt, 32 + 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
@@ -108,12 +108,12 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         char *size_geo;
         crop_geo = ngx_pcalloc(r->pool, 128 + 1);
         if (crop_geo == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
         size_geo = ngx_pcalloc(r->pool, 128 + 1);
         if (size_geo == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
         ngx_snprintf(crop_geo, 128 + 1, "%f!x%f!+%f+%f", sz.sw, sz.sh, sz.sx, sz.sy);
@@ -214,7 +214,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         size_t  embedicon_len;
 
         if (ngx_strstrn(embedicon, "/", 1 - 1)) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "invalid parameter 'embedicon':%s %s:%d", embedicon, __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
 
@@ -231,17 +231,17 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         p = ngx_cpystrn(p, embedicon, embedicon_len + 1);
         
         if (ngx_open_file(embedicon_path, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0) == NGX_INVALID_FILE) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to open embeddedicon file:%s %s:%d", embedicon_path, __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
 
         if (ngx_strstrn(embedicon_path, "..", 2 - 1)) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "invalid embeddedicon_path:%s %s:%d", embedicon_path, __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
 
         if (MagickReadImage(icon_wand, embedicon_path) == MagickFalse) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to read embed icon image. %s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to read embed icon image file:%s %s:%d", embedicon_path, __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
 
@@ -259,7 +259,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         MagickSetFormat(ictx->wand, of);
         char *s = ngx_pcalloc(r->pool, 10 + 1);
         if (s == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
         ngx_snprintf(s, 10 + 1, "image/%s", of);
@@ -277,7 +277,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     sled_image = ngx_pcalloc(r->pool, sled_image_size);
     if (sled_image == NULL) {
         MagickRelinquishMemory(canvas_buf);
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "%s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
     }
     ngx_cpymem(sled_image, canvas_buf, sled_image_size);

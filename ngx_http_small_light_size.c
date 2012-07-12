@@ -97,15 +97,18 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     }
     sz->cw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "cw"));
     sz->ch = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "ch"));
-    ngx_http_small_light_parse_color(&sz->cc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "cc"));
     sz->bw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "bw"));
     sz->bh = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "bh"));
+    sz->ix = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "ix"));
+    sz->iy = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "iy"));
+    ngx_http_small_light_parse_color(&sz->cc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "cc"));
     ngx_http_small_light_parse_color(&sz->bc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "bc"));
 #if 0
     ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, 
-                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,cw=%f,ch=%f,bw=%f,bh=%f",
+                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,cw=%f,ch=%f,bw=%f,bh=%f,ix=%d,iy=%d",
                   sz->sx, sz->sy, sz->sw, sz->sh,
-                  sz->dw, sz->dh, sz->cw, sz->ch, sz->bw, sz->bh);
+                  sz->dw, sz->dh, sz->cw, sz->ch, sz->bw, sz->bh, 
+                  sz->ix, sz->iy);
 #endif
 
     // get pass through option.
@@ -151,6 +154,4 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
 
     sz->jpeghint_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "jpeghint"));
 
-    sz->ix = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "ix"));
-    sz->iy = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "iy"));
 }
