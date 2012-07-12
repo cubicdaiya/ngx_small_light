@@ -1,3 +1,9 @@
+2012-07-13 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* improve error messages(issues/2)
+
+	* 0.1.2 released
+
 2012-07-10 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* set default engine 'imagemagick'
