@@ -8,3 +8,4 @@ MANIFEST
 MANIFEST.SKIP.bak
 MYMETA.*
 _build
+t/ngx_base/logs/*.log
