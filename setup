@@ -3,6 +3,11 @@
 use strict;
 use warnings;
 
+if (`which Wand-config` eq "") {
+    print "Wand-config is not found\n";
+    exit;
+}
+
 my $libs    = `Wand-config --libs`;
 my $lds     = `Wand-config --ldflags`;
 my $inclues = `Wand-config --cflags`;
