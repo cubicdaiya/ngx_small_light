@@ -28,4 +28,4 @@ NGX_ADDON_DEPS="$NGX_ADDON_DEPS \
 				$ngx_addon_dir/ngx_http_small_light_imagemagick.h \
 				"
 
-CFLAGS="{$CFLAGS}"
+CFLAGS="${CFLAGS} {$CFLAGS}"
