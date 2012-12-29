@@ -48,12 +48,6 @@ typedef enum ngx_http_small_light_image_type_t {
     NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_MAX
 } ngx_http_small_light_image_type_t;
 
-static char *ngx_http_small_light_image_types[] = {
-    [NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_JPEG] = "image/jpeg",
-    [NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_GIF]  = "image/gif",
-    [NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_PNG]  = "image/png",
-};
-
 static void *ngx_http_small_light_create_srv_conf(ngx_conf_t *cf);
 static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf);
 static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child);
@@ -147,7 +141,6 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     }
 
     if(ngx_http_small_light_parse_define_pattern(r, &r->unparsed_uri, &define_pattern) != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "invalid uri:%s %s:%d", r->unparsed_uri.data, __FUNCTION__, __LINE__);
         return ngx_http_next_header_filter(r);
     }
     
@@ -189,7 +182,7 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
         return NGX_ERROR;
     }
 
-    ctx->inf            = r->headers_out.content_type.data;
+    ctx->inf            = (char *)r->headers_out.content_type.data;
     ctx->content_length = r->headers_out.content_length_n;
     ctx->material_dir   = &srv_conf->material_dir;
 
@@ -207,7 +200,6 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
 
 static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
 {
-    ngx_http_small_light_conf_t            *srv_conf;
     ngx_http_small_light_conf_t            *loc_conf;
     ngx_http_small_light_ctx_t             *ctx;
     ngx_chain_t                             out;
@@ -217,7 +209,6 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
         return ngx_http_next_body_filter(r, in);
     }
 
-    srv_conf = ngx_http_get_module_srv_conf(r, ngx_http_small_light_module);
     loc_conf = ngx_http_get_module_loc_conf(r, ngx_http_small_light_module);
 
     if (!loc_conf->enable) {
@@ -327,9 +318,6 @@ static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf)
 
 static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
 {
-    ngx_http_small_light_conf_t *prev = parent;
-    ngx_http_small_light_conf_t *conf = child;
-
     return NGX_CONF_OK;
 }
 
@@ -346,7 +334,6 @@ static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, v
 static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
     ngx_http_small_light_conf_t *srv_conf;
-    ngx_uint_t                   key;
     ngx_uint_t                   rc;
     ngx_str_t                   *ptn_name;
     ngx_str_t                   *ptn_str;
@@ -356,7 +343,6 @@ static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *
     value    = cf->args->elts;
     ptn_name = &value[1];
     ptn_str  = &value[2];
-    key      = ngx_hash_key_lc(ptn_name->data, ptn_name->len);
     
     rc  = ngx_hash_add_key(&srv_conf->patterns, ptn_name, ptn_str->data, NGX_HASH_READONLY_KEY);
 
@@ -394,7 +380,7 @@ static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cm
         return NGX_CONF_ERROR;
     }
 
-    ngx_cpymem(&srv_conf->material_dir, &value[1], sizeof(ngx_str_t));
+    ngx_memcpy(&srv_conf->material_dir, &value[1], sizeof(ngx_str_t));
 
     return NGX_CONF_OK;
 }    

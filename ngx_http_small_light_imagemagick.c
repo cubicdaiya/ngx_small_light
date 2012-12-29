@@ -22,6 +22,7 @@
  */
 
 #include "ngx_http_small_light_imagemagick.h"
+#include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
 
 void ngx_http_small_light_imagemagick_init(ngx_http_small_light_ctx_t *ctx)
@@ -70,7 +71,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
-        ngx_snprintf(jpeg_size_opt, 32 + 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
+        ngx_snprintf((u_char *)jpeg_size_opt, 32 + 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
         MagickSetOption(ictx->wand, "jpeg:size", jpeg_size_opt);
     }
 
@@ -116,8 +117,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
-        ngx_snprintf(crop_geo, 128 + 1, "%f!x%f!+%f+%f", sz.sw, sz.sh, sz.sx, sz.sy);
-        ngx_snprintf(size_geo, 128 + 1, "%f!x%f!",       sz.dw, sz.dh);
+        ngx_snprintf((u_char *)crop_geo, 128 + 1, "%f!x%f!+%f+%f", sz.sw, sz.sh, sz.sx, sz.sy);
+        ngx_snprintf((u_char *)size_geo, 128 + 1, "%f!x%f!",       sz.dw, sz.dh);
         MagickWand *trans_wand;
         trans_wand = MagickTransformImage(ictx->wand, crop_geo, size_geo);
         if (trans_wand == NULL || trans_wand == ictx->wand) {
@@ -204,21 +205,19 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     // embed icon
-    char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "embedicon");
+    u_char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "embedicon");
     if (ngx_strlen(ctx->material_dir) > 0 && ngx_strlen(embedicon) > 0) {
-        MagickWand *base_wand;
         MagickWand *icon_wand;
-        char   *p;
-        char   *embedicon_path;
+        u_char  *p;
+        u_char  *embedicon_path;
         size_t  embedicon_path_len;
         size_t  embedicon_len;
 
-        if (ngx_strstrn(embedicon, "/", 1 - 1)) {
+        if (ngx_strstrn((u_char *)embedicon, "/", 1 - 1)) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "invalid parameter 'embedicon':%s %s:%d", embedicon, __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
 
-        base_wand = NewMagickWand();
         icon_wand = NewMagickWand();
 
         embedicon_len      = ngx_strlen(embedicon);
@@ -227,9 +226,9 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
         p = embedicon_path;
         p = ngx_cpystrn(p, ctx->material_dir->data, ctx->material_dir->len + 1);
-        p = ngx_cpystrn(p, "/", 1 + 1);
+        p = ngx_cpystrn(p, (u_char *)"/", 1 + 1);
         p = ngx_cpystrn(p, embedicon, embedicon_len + 1);
-        
+
         if (ngx_open_file(embedicon_path, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0) == NGX_INVALID_FILE) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to open embeddedicon file:%s %s:%d", embedicon_path, __FUNCTION__, __LINE__);
             return NGX_ERROR;
@@ -240,7 +239,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             return NGX_ERROR;
         }
 
-        if (MagickReadImage(icon_wand, embedicon_path) == MagickFalse) {
+        if (MagickReadImage(icon_wand, (char *)embedicon_path) == MagickFalse) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to read embed icon image file:%s %s:%d", embedicon_path, __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
@@ -257,13 +256,13 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
         MagickSetFormat(ictx->wand, of);
-        char *s = ngx_pcalloc(r->pool, 10 + 1);
+        u_char *s = ngx_pcalloc(r->pool, 10 + 1);
         if (s == NULL) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
         ngx_snprintf(s, 10 + 1, "image/%s", of);
-        ctx->of = s;
+        ctx->of = (char *)s;
     } else {
         MagickSetFormat(ictx->wand, ctx->inf);
         ctx->of = ctx->inf;
@@ -280,10 +279,10 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
     }
-    ngx_cpymem(sled_image, canvas_buf, sled_image_size);
+    ngx_memcpy(sled_image, canvas_buf, sled_image_size);
     MagickRelinquishMemory(canvas_buf);
 
-    r->headers_out.content_type.data    = ctx->of;
+    r->headers_out.content_type.data    = (u_char *)ctx->of;
     r->headers_out.content_type.len     = ngx_strlen(ctx->of);
     r->headers_out.content_type_len     = ngx_strlen(ctx->of);
     r->headers_out.content_type_lowcase = NULL;

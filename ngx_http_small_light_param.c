@@ -103,7 +103,7 @@ ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small
             return NGX_OK;
         }
         ngx_str_t pval_str;
-        pval_str.data = pval;
+        pval_str.data = (u_char *)pval;
         pval_str.len  = ngx_strlen(pval);
         if (ngx_http_small_light_parse_params(r, ctx, &pval_str, pv) != NGX_OK) {
             return NGX_ERROR;
