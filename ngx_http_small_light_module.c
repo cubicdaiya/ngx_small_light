@@ -41,13 +41,6 @@ static void ngx_http_small_light_cleanup(void *data)
     ngx_memzero(ctx, sizeof(ngx_http_small_light_ctx_t));
 }
 
-typedef enum ngx_http_small_light_image_type_t {
-    NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_JPEG,
-    NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_GIF,
-    NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_PNG,
-    NGX_HTTP_SMALL_LIGHT_IMAGE_TYPE_MAX
-} ngx_http_small_light_image_type_t;
-
 static void *ngx_http_small_light_create_srv_conf(ngx_conf_t *cf);
 static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf);
 static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child);
