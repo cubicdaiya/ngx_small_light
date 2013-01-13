@@ -79,7 +79,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     status = MagickReadImageBlob(ictx->wand, (void *)ictx->image, ictx->image_len);
     if (status == MagickFalse) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "couldn't read image %s:%d", __FUNCTION__, __LINE__);
-        r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
         return NGX_ERROR;
     }
 
