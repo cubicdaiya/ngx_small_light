@@ -2,7 +2,7 @@
 
 	* fix compile error(3f0e2d3 hide this problems)
 
-	* fix problme that nginx's CFLAGS is orver-written by ngx_small_light
+	* fix problem that nginx's CFLAGS is orver-written by ngx_small_light
 
 	* 0.1.3 released
 
