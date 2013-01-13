@@ -1,3 +1,9 @@
+2013-01-13 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* returns 415(Unsupported Media Type) if image convert process fails
+
+	* 0.1.4 released
+
 2012-12-30 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix compile error(3f0e2d3 hide this problems)
