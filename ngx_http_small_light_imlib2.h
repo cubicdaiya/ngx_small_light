@@ -20,22 +20,21 @@
    THE SOFTWARE.
  */
 
-#ifndef NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
-#define NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
+#ifndef NGX_HTTP_SMALL_LIGHT_IMLIB2_H
+#define NGX_HTTP_SMALL_LIGHT_IMLIB2_H
 
-#include <wand/MagickWand.h>
+#include <Imlib2.h>
 
 #include "ngx_http_small_light_module.h"
 
 typedef struct {
     u_char *image;
     size_t image_len;
-    MagickWand *wand;
-} ngx_http_small_light_imagemagick_ctx_t;
+    ngx_temp_file_t *tf;
+} ngx_http_small_light_imlib2_ctx_t;
 
-ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-ngx_int_t ngx_http_small_light_imagemagick_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
+ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
+ngx_int_t ngx_http_small_light_imlib2_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
+ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
 
-
-#endif // NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
+#endif // NGX_HTTP_SMALL_LIGHT_IMLIB2_H

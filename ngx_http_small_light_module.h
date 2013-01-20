@@ -29,6 +29,9 @@
 
 #define NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE (1.e+38)
 
+#define NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK "imagemagick"
+#define NGX_HTTP_SMALL_LIGHT_CONVERTER_IMLIB2      "imlib2"
+
 #define NGX_HTTP_SMALL_LIGHT_PARAM_GET(hash, k) ngx_hash_find(hash, ngx_hash_key_lc((u_char *)k, ngx_strlen(k)), (u_char *)k, ngx_strlen(k))
 
 typedef enum {
@@ -54,6 +57,7 @@ typedef struct {
     ngx_hash_t hash;
     ngx_hash_keys_arrays_t patterns;
     ngx_str_t material_dir;
+    ngx_path_t *imlib2_temp_dir;
 } ngx_http_small_light_conf_t;
 
 typedef struct {
@@ -80,7 +84,7 @@ typedef struct {
     ngx_int_t                    jpeghint_flg;    
 } ngx_http_small_light_image_size_t;
 
-typedef struct {
+typedef struct ngx_http_small_light_ctx_t {
     ngx_hash_t hash;
     ngx_hash_keys_arrays_t params;
     size_t content_length;
@@ -90,6 +94,16 @@ typedef struct {
     u_char *last;
     void *ictx;
     ngx_str_t *material_dir;
+    ngx_path_t *imlib2_temp_dir;
+    struct ngx_http_small_light_converter_t {
+        ngx_int_t (*init)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
+        ngx_int_t (*term)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
+        ngx_int_t (*process)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
+    } converter;
 } ngx_http_small_light_ctx_t;
+
+typedef void      (*init)(struct ngx_http_small_light_ctx_t *ctx);
+typedef void      (*term)(struct ngx_http_small_light_ctx_t *ctx);
+typedef ngx_int_t (*process)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
 
 #endif // NGX_HTTP_SMALL_LIGHT_MODULE_H

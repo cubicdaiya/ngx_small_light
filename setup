@@ -8,9 +8,14 @@ if (`which Wand-config` eq "") {
     exit;
 }
 
-my $libs    = `Wand-config --libs`;
+if (`which imlib2-config` eq "") {
+    print "imlib2-config is not found\n";
+    exit;
+}
+
+my $libs    = `Wand-config --libs` . " " . `imlib2-config --libs`;
 my $lds     = `Wand-config --ldflags`;
-my $inclues = `Wand-config --cflags`;
+my $inclues = `Wand-config --cflags` . " " . `imlib2-config --cflags`;
 
 chomp($libs);
 chomp($lds);
@@ -27,5 +32,3 @@ while (my $line = <CONFIG_IN>) {
 
 close(CONFIG_IN);
 close(CONFIG);
-
-
