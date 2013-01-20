@@ -1,5 +1,6 @@
 /**
    Copyright (c) 2013 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+   Copyright (c) 1996-2011 livedoor Co.,Ltd.
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
    of this software and associated documentation files (the "Software"), to deal
@@ -66,6 +67,10 @@ ngx_int_t ngx_http_small_light_imlib2_term(ngx_http_request_t *r, ngx_http_small
 
     return NGX_OK;
 }
+
+// 
+// following original functions are brought from mod_small_light(Dynamic image transformation module for Apache2) and customed
+// 
 
 ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
