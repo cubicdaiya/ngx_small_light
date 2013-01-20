@@ -263,7 +263,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ngx_snprintf(s, 10 + 1, "image/%s", of);
         ctx->of = (char *)s;
     } else {
-        MagickSetFormat(ictx->wand, ctx->inf);
+        MagickSetFormat(ictx->wand, MagickGetImageFormat(ictx->wand));
         ctx->of = ctx->inf;
     }
 
