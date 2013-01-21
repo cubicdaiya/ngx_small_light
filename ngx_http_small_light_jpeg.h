@@ -1,5 +1,6 @@
 /**
    Copyright (c) 2013 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+   Copyright (c) 1996-2011 livedoor Co.,Ltd.
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
    of this software and associated documentation files (the "Software"), to deal
@@ -18,24 +19,21 @@
    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
    THE SOFTWARE.
- */
-
-#ifndef NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
-#define NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
-
-#include <wand/MagickWand.h>
+*/
 
 #include "ngx_http_small_light_module.h"
 
-typedef struct {
-    u_char *image;
-    size_t image_len;
-    MagickWand *wand;
-} ngx_http_small_light_imagemagick_ctx_t;
+ngx_int_t load_jpeg(
+          void **dest_data, int *width, int *height, const ngx_http_request_t *r,
+          const char *filename, int hint_w, int hint_h);
+ngx_int_t load_exif_from_memory(
+    unsigned char **exif_data,
+    unsigned int *exif_size,
+    ngx_http_request_t *r,
+    const unsigned char *data,
+    unsigned int data_len);
+void exif_insert_tail(
+    unsigned char *exif_data, unsigned int exif_size,
+    unsigned char *image_data, unsigned long image_size,
+    ngx_http_request_t *r);
 
-ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-ngx_int_t ngx_http_small_light_imagemagick_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-
-
-#endif // NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H

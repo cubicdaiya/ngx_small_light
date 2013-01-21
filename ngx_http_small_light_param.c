@@ -53,38 +53,39 @@ static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t 
     ngx_str_t jpeghint  = ngx_string("jpeghint");
     ngx_str_t rmprof    = ngx_string("rmprof");
     ngx_str_t embedicon = ngx_string("embedicon");
-    ngx_str_t e         = ngx_string("e");
     ngx_str_t ix        = ngx_string("ix");
     ngx_str_t iy        = ngx_string("iy");
+    ngx_str_t e         = ngx_string("e");
 
-    ngx_hash_add_key(&ctx->params, &p,         "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sx,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sy,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sw,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sh,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dx,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dy,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dw,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dh,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &da,        "l",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &ds,        "n",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &cw,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &ch,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &cc,        "000000",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &bw,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &bh,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &bc,        "000000",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &pt,        "n",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &q,         "0",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &of,        "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &info,      "0",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &inhexif,   "n",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &jpeghint,  "n",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &rmprof,    "n",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &embedicon, "",            NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &e,         "imagemagick", NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &ix,        "0",           NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &iy,        "0",           NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &p,         "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &sx,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &sy,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &sw,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &sh,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &dx,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &dy,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &dw,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &dh,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &da,        "l",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &ds,        "n",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &cw,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &ch,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &cc,        "000000", NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &bw,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &bh,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &bc,        "000000", NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &pt,        "n",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &q,         "0",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &of,        "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &info,      "0",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &inhexif,   "n",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &jpeghint,  "n",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &rmprof,    "n",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &embedicon, "",       NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &ix,        "0",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &iy,        "0",      NGX_HASH_READONLY_KEY);
+
+    ngx_hash_add_key(&ctx->params, &e, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK, NGX_HASH_READONLY_KEY);
 }
 
 ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_str_t *define_pattern, ngx_http_small_light_conf_t *srv_conf)

@@ -30,6 +30,7 @@
 #include "ngx_http_small_light_param.h"
 #include "ngx_http_small_light_parser.h"
 #include "ngx_http_small_light_imagemagick.h"
+#include "ngx_http_small_light_imlib2.h"
 
 #define NGX_HTTP_SMALL_LIGHT_IMAGE_BUFFERED 0x08
 
@@ -79,6 +80,15 @@ static ngx_command_t  ngx_http_small_light_commands[] = {
         NULL
     },
 
+    { 
+        ngx_string("small_light_imlib2_temp_dir"),
+        NGX_HTTP_SRV_CONF|NGX_CONF_TAKE1234,
+        ngx_conf_set_path_slot,
+        NGX_HTTP_SRV_CONF_OFFSET,
+        offsetof(ngx_http_small_light_conf_t, imlib2_temp_dir),
+        NULL
+    },
+
     ngx_null_command
 };
 
@@ -121,6 +131,7 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     ngx_http_small_light_ctx_t  *ctx;
     ngx_hash_init_t              hash;
     ngx_str_t                    define_pattern;
+    char                        *converter;
 
     if (r->headers_out.status == NGX_HTTP_NOT_MODIFIED) {
         return ngx_http_next_header_filter(r);
@@ -149,7 +160,6 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     }
 
     ngx_memzero(ctx, sizeof(ngx_http_small_light_ctx_t));
-
     ctx->params.keys.pool = r->pool;
     ctx->params.temp_pool = r->pool;
     if (ngx_hash_keys_array_init(&ctx->params, NGX_HASH_SMALL) != NGX_OK) {
@@ -178,6 +188,30 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     ctx->inf            = (char *)r->headers_out.content_type.data;
     ctx->content_length = r->headers_out.content_length_n;
     ctx->material_dir   = &srv_conf->material_dir;
+    ctx->imlib2_temp_dir = loc_conf->imlib2_temp_dir;
+
+    converter = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "e");
+    if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMLIB2) == 0) {
+        ctx->converter.init    = ngx_http_small_light_imlib2_init;
+        ctx->converter.term    = ngx_http_small_light_imlib2_term;
+        ctx->converter.process = ngx_http_small_light_imlib2_process;
+        ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imagemagick_ctx_t));
+    } else if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK) == 0) {
+        ctx->converter.init    = ngx_http_small_light_imagemagick_init;
+        ctx->converter.term    = ngx_http_small_light_imagemagick_term;
+        ctx->converter.process = ngx_http_small_light_imagemagick_process;
+        ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imlib2_ctx_t));
+    } else {
+        ctx->converter.init    = ngx_http_small_light_imagemagick_init;
+        ctx->converter.term    = ngx_http_small_light_imagemagick_term;
+        ctx->converter.process = ngx_http_small_light_imagemagick_process;
+        ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imagemagick_ctx_t));
+    }
+
+    if (ctx->ictx == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        return NGX_ERROR;
+    }
 
     ngx_http_set_ctx(r, ctx, ngx_http_small_light_module);
 
@@ -214,14 +248,6 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
         return ngx_http_next_body_filter(r, in);
     }
 
-    if (ctx->ictx == NULL) {
-        ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imagemagick_ctx_t));
-        if (ctx->ictx == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
-            return NGX_ERROR;
-        }
-    }
-
     if((rc = ngx_http_small_light_image_read(r, in, ctx)) != NGX_OK) {
         if (rc == NGX_AGAIN) {
             return NGX_OK;
@@ -232,17 +258,22 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
 
     r->connection->buffered &= ~NGX_HTTP_SMALL_LIGHT_IMAGE_BUFFERED;
 
-    ngx_http_small_light_imagemagick_init(ctx);
-
-    rc = ngx_http_small_light_imagemagick_process(r, ctx);
-
-    ngx_http_small_light_imagemagick_term(ctx);
-
+    rc = ctx->converter.init(r, ctx);
+    if (rc != NGX_OK) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to process image %s:%d", __FUNCTION__, __LINE__);
+        return NGX_ERROR;
+    }
+    rc = ctx->converter.process(r, ctx);
     if (rc != NGX_OK) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to process image %s:%d", __FUNCTION__, __LINE__);
         return ngx_http_filter_finalize_request(r,
                                                 &ngx_http_small_light_module,
                                                 NGX_HTTP_UNSUPPORTED_MEDIA_TYPE);
+    }
+    rc = ctx->converter.term(r, ctx);
+    if (rc != NGX_OK) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to process image %s:%d", __FUNCTION__, __LINE__);
+        return NGX_ERROR;
     }
 
     ngx_buf_t *b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
@@ -316,12 +347,24 @@ static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, v
     return NGX_CONF_OK;
 }
 
+static ngx_path_init_t  ngx_http_small_light_imlib2_temp_dir = {
+    ngx_string("/tmp"), { 1, 2, 0 }
+};
+
 static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 {
     ngx_http_small_light_conf_t *prev = parent;
     ngx_http_small_light_conf_t *conf = child;
 
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
+
+    if (ngx_conf_merge_path_value(cf, &conf->imlib2_temp_dir,
+                                  prev->imlib2_temp_dir,
+                                  &ngx_http_small_light_imlib2_temp_dir)
+        != NGX_OK)
+    {
+        return NGX_CONF_ERROR;
+    }
 
     return NGX_CONF_OK;
 }

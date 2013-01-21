@@ -25,7 +25,7 @@
 #include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
 
-void ngx_http_small_light_imagemagick_init(ngx_http_small_light_ctx_t *ctx)
+ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     MagickWandGenesis();
@@ -33,14 +33,16 @@ void ngx_http_small_light_imagemagick_init(ngx_http_small_light_ctx_t *ctx)
     ictx->wand      = NewMagickWand();
     ictx->image     = ctx->content;
     ictx->image_len = ctx->content_length;
+    return NGX_OK;
 }
 
-void ngx_http_small_light_imagemagick_term(ngx_http_small_light_ctx_t *ctx)
+ngx_int_t ngx_http_small_light_imagemagick_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ictx = (ngx_http_small_light_imagemagick_ctx_t *)ctx->ictx;
     DestroyMagickWand(ictx->wand);
     MagickWandTerminus();
+    return NGX_OK;
 }
 
 // 
@@ -206,6 +208,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     // embed icon
     u_char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "embedicon");
     if (ngx_strlen(ctx->material_dir) > 0 && ngx_strlen(embedicon) > 0) {
+        ngx_fd_t fd;
         MagickWand *icon_wand;
         u_char  *p;
         u_char  *embedicon_path;
@@ -228,8 +231,13 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         p = ngx_cpystrn(p, (u_char *)"/", 1 + 1);
         p = ngx_cpystrn(p, embedicon, embedicon_len + 1);
 
-        if (ngx_open_file(embedicon_path, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0) == NGX_INVALID_FILE) {
+        if ((fd = ngx_open_file(embedicon_path, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0)) == NGX_INVALID_FILE) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to open embeddedicon file:%s %s:%d", embedicon_path, __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
+
+        if (ngx_close_file(fd) == NGX_FILE_ERROR) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to close:%s %s:%d", embedicon_path, __FUNCTION__, __LINE__);
             return NGX_ERROR;
         }
 
