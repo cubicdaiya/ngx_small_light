@@ -1,3 +1,13 @@
+2013-01-21 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* add imlib2 support
+
+	* fix bug(set not Content-Type but image format -> feaf24f)
+
+	* fix resource leak when embedicon is used
+
+	* 0.2.0 released
+
 2013-01-13 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* returns 415(Unsupported Media Type) if image convert process fails

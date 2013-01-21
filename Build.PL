@@ -4,7 +4,7 @@ use Module::Build;
 
 my $build = Module::Build->new(
     module_name    => 'ngx_small_light',
-    dist_version   => '0.1.4',
+    dist_version   => '0.2.0',
     dist_author    => "Tatsuhiko Kubo",
     dist_abstract  => "nginx module for dynamic thumbnail",
     build_requires => {
