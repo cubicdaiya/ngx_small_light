@@ -245,6 +245,14 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         return NGX_ERROR;
     }
 
+    if ((size_t)size > ctx->content_length) {
+        ctx->content = ngx_palloc(r->pool, size);
+        if (ctx->content == NULL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
+    }
+
     ngx_memcpy(ctx->content, buf, size);
 
     ngx_close_file(fd);
