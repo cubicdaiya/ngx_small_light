@@ -1,3 +1,9 @@
+2013-01-26 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix memory corruption error when generated image size bigger than original image size with Imlib2
+
+	* 0.2.1 released
+
 2013-01-21 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* add imlib2 support
