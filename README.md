@@ -53,5 +53,5 @@ See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki
 
 ## Todo
 
-  - support Imlib2 and GD
+  - support GD
   - add various convenient options
