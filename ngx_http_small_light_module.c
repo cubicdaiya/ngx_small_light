@@ -30,7 +30,9 @@
 #include "ngx_http_small_light_param.h"
 #include "ngx_http_small_light_parser.h"
 #include "ngx_http_small_light_imagemagick.h"
+#ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
 #include "ngx_http_small_light_imlib2.h"
+#endif
 
 #define NGX_HTTP_SMALL_LIGHT_IMAGE_BUFFERED 0x08
 
@@ -191,16 +193,18 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     ctx->imlib2_temp_dir = loc_conf->imlib2_temp_dir;
 
     converter = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "e");
-    if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMLIB2) == 0) {
-        ctx->converter.init    = ngx_http_small_light_imlib2_init;
-        ctx->converter.term    = ngx_http_small_light_imlib2_term;
-        ctx->converter.process = ngx_http_small_light_imlib2_process;
-        ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imagemagick_ctx_t));
-    } else if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK) == 0) {
+    if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK) == 0) {
         ctx->converter.init    = ngx_http_small_light_imagemagick_init;
         ctx->converter.term    = ngx_http_small_light_imagemagick_term;
         ctx->converter.process = ngx_http_small_light_imagemagick_process;
+        ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imagemagick_ctx_t));
+#ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
+    } else if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMLIB2) == 0) {
+        ctx->converter.init    = ngx_http_small_light_imlib2_init;
+        ctx->converter.term    = ngx_http_small_light_imlib2_term;
+        ctx->converter.process = ngx_http_small_light_imlib2_process;
         ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imlib2_ctx_t));
+#endif
     } else {
         ctx->converter.init    = ngx_http_small_light_imagemagick_init;
         ctx->converter.term    = ngx_http_small_light_imagemagick_term;

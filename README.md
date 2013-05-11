@@ -20,6 +20,12 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
     make
     make install
 
+If you want to enable Imlib2 in ngx_small_light, add '--with-imlib2' when executing setup.
+
+```sh
+./setup --with-imlib2
+```
+
 ## How to
 
 See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki/Configuration).
