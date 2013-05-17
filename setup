@@ -34,11 +34,14 @@ chomp($wand_libs);
 chomp($wand_lds);
 chomp($wand_includes);
 
-my $imlib2_libs     = `imlib2-config --libs`;
-my $imlib2_includes = `imlib2-config --cflags`;
-
-chomp($imlib2_libs);
-chomp($imlib2_includes);
+my $imlib2_libs     = "";
+my $imlib2_includes = "";
+if ($imlib2_enabled == 1) {
+    $imlib2_libs     = `imlib2-config --libs`;
+    $imlib2_includes = `imlib2-config --cflags`;
+    chomp($imlib2_libs);
+    chomp($imlib2_includes);
+}
 
 my $libs    = $wand_libs . " " . $imlib2_libs;
 my $lds     = $wand_lds . " ";
