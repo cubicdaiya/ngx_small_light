@@ -291,7 +291,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     r->headers_out.content_type.data    = (u_char *)ctx->of;
     r->headers_out.content_type.len     = ngx_strlen(ctx->of);
-    r->headers_out.content_type_len     = ngx_strlen(ctx->of);
     r->headers_out.content_type_lowcase = NULL;
 
     ctx->content        = sled_image;
