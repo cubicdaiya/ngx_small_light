@@ -4,6 +4,7 @@ ngx_feature_name=
 ngx_feature_run=no
 ngx_feature_incs="#include <wand/MagickWand.h>
 #include <Imlib2.h>
+#include <gd.h>
 "
 ngx_feature_path=
 ngx_feature_test='MagickWandGenesis();'
@@ -22,6 +23,7 @@ NGX_ADDON_SRCS="$NGX_ADDON_SRCS \
 				$ngx_addon_dir/ngx_http_small_light_imagemagick.c \
 				$ngx_addon_dir/ngx_http_small_light_imlib2.c      \
 				$ngx_addon_dir/ngx_http_small_light_jpeg.c        \
+				$ngx_addon_dir/ngx_http_small_light_gd.c          \
 				"
 
 NGX_ADDON_DEPS="$NGX_ADDON_DEPS \
@@ -32,6 +34,7 @@ NGX_ADDON_DEPS="$NGX_ADDON_DEPS \
 				$ngx_addon_dir/ngx_http_small_light_imagemagick.h \
 				$ngx_addon_dir/ngx_http_small_light_imlib2.h      \
 				$ngx_addon_dir/ngx_http_small_light_jpeg.h        \
+				$ngx_addon_dir/ngx_http_small_light_gd.h          \
 				"
 
 CFLAGS="${CFLAGS} {$CFLAGS}"

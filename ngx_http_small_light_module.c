@@ -33,6 +33,9 @@
 #ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
 #include "ngx_http_small_light_imlib2.h"
 #endif
+#ifdef NGX_HTTP_SMALL_LIGHT_GD_ENABLED
+#include "ngx_http_small_light_gd.h"
+#endif
 
 #define NGX_HTTP_SMALL_LIGHT_IMAGE_BUFFERED 0x08
 
@@ -204,6 +207,13 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
         ctx->converter.term    = ngx_http_small_light_imlib2_term;
         ctx->converter.process = ngx_http_small_light_imlib2_process;
         ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_imlib2_ctx_t));
+#endif
+#ifdef NGX_HTTP_SMALL_LIGHT_GD_ENABLED
+    } else if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_GD) == 0) {
+        ctx->converter.init    = ngx_http_small_light_gd_init;
+        ctx->converter.term    = ngx_http_small_light_gd_term;
+        ctx->converter.process = ngx_http_small_light_gd_process;
+        ctx->ictx = ngx_pcalloc(r->pool, sizeof(ngx_http_small_light_gd_ctx_t));
 #endif
     } else {
         ctx->converter.init    = ngx_http_small_light_imagemagick_init;

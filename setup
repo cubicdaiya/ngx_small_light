@@ -4,27 +4,36 @@ use strict;
 use warnings;
 use utf8;
 
-my $imlib2_enabled = 0;
-
-if (@ARGV == 1) {
-	my $arg = $ARGV[0];
-	if($arg eq "--with-imlib2") {
-		$imlib2_enabled = 1;
-	} else {
-		print "unrecognized option: " . $arg . "\n";
+sub xxx_config_check
+{
+    my $xxx_config = shift;
+    my $enabled    = shift;
+    my $cmd        = "which $xxx_config";
+    if ($enabled == 1 and `$cmd` eq "") {
+		print "$xxx_config is not found\n";
 		exit;
-	}
+    }
 }
 
-if (`which Wand-config` eq "") {
-    print "Wand-config is not found\n";
-    exit;
+my $imagemagick_enabled = 1; # default
+my $imlib2_enabled  = 0;
+my $gd_enabled      = 0;
+
+for (my $i=0;$i<@ARGV;$i++) {
+    my $arg = $ARGV[$i];
+    if($arg eq "--with-imlib2") {
+        $imlib2_enabled = 1;
+    } elsif ($arg eq "--with-gd") {
+        $gd_enabled = 1;
+    }else {
+        print "unrecognized option: " . $arg . "\n";
+        exit;
+    }
 }
 
-if ($imlib2_enabled == 1 and `which imlib2-config` eq "") {
-    print "imlib2-config is not found\n";
-    exit;
-}
+xxx_config_check("Wand-config",   $imagemagick_enabled);
+xxx_config_check("imlib2-config", $imlib2_enabled);
+xxx_config_check("gdlib-config",  $gd_enabled);
 
 my $wand_libs     = `Wand-config --libs`;
 my $wand_lds      = `Wand-config --ldflags`;
@@ -43,30 +52,60 @@ if ($imlib2_enabled == 1) {
     chomp($imlib2_includes);
 }
 
-my $libs    = $wand_libs . " " . $imlib2_libs;
-my $lds     = $wand_lds . " ";
-my $inclues = $wand_includes . " " . $imlib2_includes;
+my $gd_libs     = "";
+my $gd_lds      = "";
+my $gd_includes = "";
+if ($gd_enabled == 1) {
+    $gd_libs     = `gdlib-config --libs`;
+    $gd_lds      = `gdlib-config --ldflags`;
+    $gd_includes = `gdlib-config --cflags`;
+    $gd_libs    .= " -lgd";
+    chomp($gd_libs);
+    chomp($gd_includes);
+}
+
+my $libs    = $wand_libs . " " . $imlib2_libs . " " . $gd_libs;
+my $lds     = $wand_lds . " " . $gd_lds;
+my $inclues = $wand_includes . " " . $imlib2_includes . " " . $gd_includes;
+
+my $macro_imlib2_enabled = "";
+my $macro_gd_enabled     = "";
+
+if ($imlib2_enabled == 1) {
+    $macro_imlib2_enabled = "-DNGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED";
+}
+
+if ($gd_enabled == 1) {
+    $macro_gd_enabled = "-DNGX_HTTP_SMALL_LIGHT_GD_ENABLED";
+}
 
 open(CONFIG_IN, "< config.in") or die("config.in not found");
 open(CONFIG,    "> config")    or die("open config failed");
 
 while (my $line = <CONFIG_IN>) {
-  $line =~ s/\{\$ngx_feature_libs\}/$libs $lds/;
-  if ($imlib2_enabled != 1) {
-	  if ($line =~ /#include <Imlib2\.h>$/) {
-		  next;
-	  }
-	  if ($line =~ /ngx_http_small_light_jpeg\.(c|h)/) {
-		  next;
-	  }
-	  if ($line =~ /ngx_http_small_light_imlib2\.(c|h)/) {
-		  next;
-	  }
-	  $line =~ s/\{\$CFLAGS\}/$inclues/;
-  } else {
-	  $line =~ s/\{\$CFLAGS\}/$inclues -DNGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED/;
-  }
-  print CONFIG $line;
+    $line =~ s/\{\$ngx_feature_libs\}/$libs $lds/;
+    if ($imlib2_enabled != 1) {
+        if ($line =~ /#include <Imlib2\.h>$/) {
+            next;
+        }
+        if ($line =~ /ngx_http_small_light_jpeg\.(c|h)/) {
+            next;
+        }
+        if ($line =~ /ngx_http_small_light_imlib2\.(c|h)/) {
+            next;
+        }
+        $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
+    } else {
+        $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
+    }
+    if ($gd_enabled != 1) {
+		if ($line =~ /#include <gd\.h>$/) {
+			next;
+		}
+    } else {
+        $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
+    }
+    print CONFIG $line;
 }
 
 close(CONFIG_IN);

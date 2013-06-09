@@ -31,6 +31,7 @@
 
 #define NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK "imagemagick"
 #define NGX_HTTP_SMALL_LIGHT_CONVERTER_IMLIB2      "imlib2"
+#define NGX_HTTP_SMALL_LIGHT_CONVERTER_GD          "gd"
 
 #define NGX_HTTP_SMALL_LIGHT_PARAM_GET(hash, k) ngx_hash_find(hash, ngx_hash_key_lc((u_char *)k, ngx_strlen(k)), (u_char *)k, ngx_strlen(k))
 
