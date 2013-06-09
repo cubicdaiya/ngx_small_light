@@ -1,5 +1,11 @@
 2013-06-10 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
+	* fix bug(The compilation without --with-gd always fails)
+
+	* 0.3.1 released
+
+2013-06-10 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
 	* support GD graphics library
 
 	* fix bug(using negative value when adding border)
