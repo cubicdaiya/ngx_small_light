@@ -99,9 +99,15 @@ while (my $line = <CONFIG_IN>) {
         $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
     }
     if ($gd_enabled != 1) {
-		if ($line =~ /#include <gd\.h>$/) {
-			next;
-		}
+	if ($line =~ /#include <gd\.h>$/) {
+	    next;
+	}
+        if ($line =~ /ngx_http_small_light_gd\.(c|h)/) {
+            next;
+        }
+        if ($line =~ /ngx_http_small_light_gd\.(c|h)/) {
+            next;
+        }
     } else {
         $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
     }
