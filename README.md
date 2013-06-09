@@ -10,6 +10,7 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
   - [PCRE](http://www.pcre.org/)
   - [ImageMagick](http://www.imagemagick.org/script/index.php)
   - [Imlib2](http://docs.enlightenment.org/api/imlib2/html/)
+  - [GD](http://libgd.bitbucket.org/)
 
 ## Build
 
@@ -59,5 +60,4 @@ See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki
 
 ## Todo
 
-  - support GD
   - add various convenient options
