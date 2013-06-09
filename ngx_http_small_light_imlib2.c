@@ -181,10 +181,17 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     if (sz.bw > 0.0 || sz.bh > 0.0) {
         imlib_context_set_color(sz.bc.r, sz.bc.g, sz.bc.b, sz.bc.a);
         imlib_context_set_image(image_dst);
-        imlib_image_fill_rectangle(0, 0, sz.cw, sz.bh);
-        imlib_image_fill_rectangle(0, 0, sz.bw, sz.ch);
-        imlib_image_fill_rectangle(0, sz.ch - sz.bh, sz.cw, sz.bh);
-        imlib_image_fill_rectangle(sz.cw - sz.bw, 0, sz.bw, sz.ch);
+        if (sz.cw > 0.0 && sz.ch > 0.0) {
+            imlib_image_fill_rectangle(0, 0, sz.cw, sz.bh);
+            imlib_image_fill_rectangle(0, 0, sz.bw, sz.ch);
+            imlib_image_fill_rectangle(0, sz.ch - sz.bh, sz.cw, sz.bh);
+            imlib_image_fill_rectangle(sz.cw - sz.bw, 0, sz.bw, sz.ch);
+        } else {
+            imlib_image_fill_rectangle(0, 0, sz.dw, sz.bh);
+            imlib_image_fill_rectangle(0, 0, sz.bw, sz.ch);
+            imlib_image_fill_rectangle(0, sz.dh - sz.bh, sz.dw, sz.bh);
+            imlib_image_fill_rectangle(sz.dw - sz.bw, 0, sz.bw, sz.dh);
+        }
     }
 
     // set params.

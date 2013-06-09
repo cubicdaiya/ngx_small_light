@@ -198,10 +198,18 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         DrawSetFillColor(border_wand, border_color);
         DrawSetStrokeColor(border_wand, border_color);
         DrawSetStrokeWidth(border_wand, 1);
-        DrawRectangle(border_wand, 0, 0, sz.cw - 1, sz.bh - 1);
-        DrawRectangle(border_wand, 0, 0, sz.bw - 1, sz.ch - 1);
-        DrawRectangle(border_wand, 0, sz.ch - sz.bh, sz.cw - 1, sz.ch - 1);
-        DrawRectangle(border_wand, sz.cw - sz.bw, 0, sz.cw - 1, sz.ch - 1);
+
+        if (sz.cw > 0.0 && sz.ch > 0.0) {
+            DrawRectangle(border_wand, 0, 0, sz.cw - 1, sz.bh - 1);
+            DrawRectangle(border_wand, 0, 0, sz.bw - 1, sz.ch - 1);
+            DrawRectangle(border_wand, 0, sz.ch - sz.bh, sz.cw - 1, sz.ch - 1);
+            DrawRectangle(border_wand, sz.cw - sz.bw, 0, sz.cw - 1, sz.ch - 1);
+        } else {
+            DrawRectangle(border_wand, 0, 0, sz.dw - 1, sz.bh - 1);
+            DrawRectangle(border_wand, 0, 0, sz.bw - 1, sz.dh - 1);
+            DrawRectangle(border_wand, 0, sz.dh - sz.bh, sz.dw - 1, sz.dh - 1);
+            DrawRectangle(border_wand, sz.dw - sz.bw, 0, sz.dw - 1, sz.dh - 1);
+        }
         MagickDrawImage(ictx->wand, border_wand);
         DestroyPixelWand(border_color);
         DestroyDrawingWand(border_wand);

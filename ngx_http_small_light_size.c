@@ -136,10 +136,10 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->dh = ih;
     }
     if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-        sz->dx = (sz->cw - sz->dw) * 0.5;
+        sz->dx = (sz->cw - sz->dw > 0) ? ((sz->cw - sz->dw) * 0.5) : 0.0;
     }
     if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-        sz->dy = (sz->ch - sz->dh) * 0.5;
+        sz->dy = (sz->ch - sz->dh > 0) ? ((sz->ch - sz->dh) * 0.5) : 0.0;
     }
 
     // get exif option.
