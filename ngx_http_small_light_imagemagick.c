@@ -103,6 +103,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         return NGX_OK;
     }
 
+    char *of_orig = MagickGetImageFormat(ictx->wand);
+
     // crop, scale.
     status = MagickTrue;
     if (sz.scale_flg != 0) {
@@ -271,7 +273,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ngx_snprintf(s, 10 + 1, "image/%s", of);
         ctx->of = (char *)s;
     } else {
-        MagickSetFormat(ictx->wand, MagickGetImageFormat(ictx->wand));
+        MagickSetFormat(ictx->wand, of_orig);
         ctx->of = ctx->inf;
     }
 
