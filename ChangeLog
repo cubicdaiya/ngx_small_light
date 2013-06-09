@@ -1,3 +1,13 @@
+2013-06-10 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* support GD graphics library
+
+	* fix bug(using negative value when adding border)
+
+	* fix bug(Content-Length becomes zero when using 'cw' and 'ch')
+
+	* 0.3.0 released
+
 2013-05-20 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix bug(imlib2-config --libs is not empty when imlib2 is disabled)
