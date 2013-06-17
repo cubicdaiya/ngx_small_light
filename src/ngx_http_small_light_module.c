@@ -134,7 +134,7 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     ngx_http_small_light_conf_t *srv_conf;
     ngx_http_small_light_conf_t *loc_conf;
     ngx_http_small_light_ctx_t  *ctx;
-    ngx_hash_init_t              hash;
+    ngx_hash_init_t              hash_init;
     ngx_str_t                    define_pattern;
     char                        *converter;
 
@@ -177,15 +177,15 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
         return NGX_ERROR;
     }
 
-    hash.hash        = &ctx->hash;
-    hash.key         = ngx_hash_key_lc;
-    hash.max_size    = 128;
-    hash.bucket_size = ngx_cacheline_size;
-    hash.name        = "small_light_init_params";
-    hash.pool        = ctx->params.keys.pool;
-    hash.temp_pool   = NULL;
+    hash_init.hash        = &ctx->hash;
+    hash_init.key         = ngx_hash_key_lc;
+    hash_init.max_size    = 128;
+    hash_init.bucket_size = ngx_cacheline_size;
+    hash_init.name        = "small_light_init_params";
+    hash_init.pool        = ctx->params.keys.pool;
+    hash_init.temp_pool   = NULL;
 
-    if (ngx_hash_init(&hash, ctx->params.keys.elts, ctx->params.keys.nelts) != NGX_OK) {
+    if (ngx_hash_init(&hash_init, ctx->params.keys.elts, ctx->params.keys.nelts) != NGX_OK) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to init hash table for parameters %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
     }
