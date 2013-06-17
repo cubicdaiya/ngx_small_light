@@ -15,9 +15,33 @@ sub xxx_config_check
     }
 }
 
+sub imlib2_is_take_off_line
+{
+    my $line = shift;
+    if ($line =~ /#include <Imlib2\.h>$/ ||
+        $line =~ /imlib_create_image/    ||
+        $line =~ /ngx_http_small_light_(jpeg|imlib2)\.(c|h)/)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+sub gd_is_take_off_line
+{
+    my $line = shift;
+    if ($line =~ /#include <gd\.h>$/ ||
+        $line =~ /gdImageCreate/     ||
+        $line =~ /ngx_http_small_light_gd\.(c|h)/)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 my $imagemagick_enabled = 1; # default
 my $imlib2_enabled      = 0;
-my $gd_enabled			= 0;
+my $gd_enabled          = 0;
 
 for (my $i=0;$i<@ARGV;$i++) {
     my $arg = $ARGV[$i];
@@ -59,15 +83,17 @@ if ($gd_enabled == 1) {
     $gd_libs     = `gdlib-config --libs`;
     $gd_lds      = `gdlib-config --ldflags`;
     $gd_includes = `gdlib-config --cflags`;
-    # the output of `gdlib-config --libs` does not include '-lgd'.(This is a bug of GD)
-    $gd_libs    .= " -lgd";
     chomp($gd_libs);
     chomp($gd_includes);
+    # the output of `gdlib-config --libs` does not include '-lgd'.(This is a bug of GD)
+    $gd_libs    .= " -lgd";
 }
 
-my $libs    = $wand_libs . " " . $imlib2_libs . " " . $gd_libs;
-my $lds     = $wand_lds . " " . $gd_lds;
-my $inclues = $wand_includes . " " . $imlib2_includes . " " . $gd_includes;
+my $libs     = $wand_libs . " " . $imlib2_libs . " " . $gd_libs;
+my $lds      = $wand_lds . " " . $gd_lds;
+my $includes = $wand_includes . " " . $imlib2_includes . " " . $gd_includes;
+my $includes_exclude_not_include = $includes;
+$includes_exclude_not_include    =~ s/-fopenmp//;
 
 my $macro_imlib2_enabled = "";
 my $macro_gd_enabled     = "";
@@ -85,32 +111,21 @@ open(CONFIG,    "> config")    or die("open config failed");
 
 while (my $line = <CONFIG_IN>) {
     $line =~ s/\{\$ngx_feature_libs\}/$libs $lds/;
+    $line =~ s/\{\$ngx_feature_inc_path\}/$includes_exclude_not_include/;
     if ($imlib2_enabled != 1) {
-        if ($line =~ /#include <Imlib2\.h>$/) {
+        if (imlib2_is_take_off_line($line)) {
             next;
         }
-        if ($line =~ /ngx_http_small_light_jpeg\.(c|h)/) {
-            next;
-        }
-        if ($line =~ /ngx_http_small_light_imlib2\.(c|h)/) {
-            next;
-        }
-        $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
+        $line =~ s/\{\$CFLAGS\}/$includes $macro_imlib2_enabled $macro_gd_enabled/;
     } else {
-        $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
+        $line =~ s/\{\$CFLAGS\}/$includes $macro_imlib2_enabled $macro_gd_enabled/;
     }
     if ($gd_enabled != 1) {
-        if ($line =~ /#include <gd\.h>$/) {
-            next;
-        }
-        if ($line =~ /ngx_http_small_light_gd\.(c|h)/) {
-            next;
-        }
-        if ($line =~ /ngx_http_small_light_gd\.(c|h)/) {
+        if (gd_is_take_off_line($line)) {
             next;
         }
     } else {
-        $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
+        $line =~ s/\{\$CFLAGS\}/$includes $macro_imlib2_enabled $macro_gd_enabled/;
     }
     print CONFIG $line;
 }

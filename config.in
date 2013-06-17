@@ -1,15 +1,23 @@
-ngx_feature="Dynamic Image Transformation"
+ngx_feature="ngx_small_light dependencies"
 ngx_feature_libs="{$ngx_feature_libs}"
 ngx_feature_name=
 ngx_feature_run=no
+ngx_feature_inc_path="$ngx_feature_inc_path {$ngx_feature_inc_path}"
 ngx_feature_incs="#include <wand/MagickWand.h>
 #include <Imlib2.h>
 #include <gd.h>
 "
 ngx_feature_path=
-ngx_feature_test='MagickWandGenesis();'
+ngx_feature_test="MagickWandGenesis();
+Imlib_Image img_imlib2 = imlib_create_image(300, 300);
+gdImagePtr img_gd = gdImageCreate(300, 300);
+"
 
 . auto/feature
+
+if [ $ngx_found = no ]; then
+   exit
+fi
 
 CORE_LIBS="$CORE_LIBS $ngx_feature_libs"
 ngx_addon_name=ngx_http_small_light
