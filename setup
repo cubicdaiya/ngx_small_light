@@ -59,6 +59,7 @@ if ($gd_enabled == 1) {
     $gd_libs     = `gdlib-config --libs`;
     $gd_lds      = `gdlib-config --ldflags`;
     $gd_includes = `gdlib-config --cflags`;
+    # the output of `gdlib-config --libs` does not include '-lgd'.(This is a bug of GD)
     $gd_libs    .= " -lgd";
     chomp($gd_libs);
     chomp($gd_includes);
