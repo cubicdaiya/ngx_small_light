@@ -10,14 +10,14 @@ sub xxx_config_check
     my $enabled    = shift;
     my $cmd        = "which $xxx_config";
     if ($enabled == 1 and `$cmd` eq "") {
-		print "$xxx_config is not found\n";
-		exit;
+        print "$xxx_config is not found\n";
+        exit;
     }
 }
 
 my $imagemagick_enabled = 1; # default
-my $imlib2_enabled  = 0;
-my $gd_enabled      = 0;
+my $imlib2_enabled      = 0;
+my $gd_enabled			= 0;
 
 for (my $i=0;$i<@ARGV;$i++) {
     my $arg = $ARGV[$i];
@@ -99,9 +99,9 @@ while (my $line = <CONFIG_IN>) {
         $line =~ s/\{\$CFLAGS\}/$inclues $macro_imlib2_enabled $macro_gd_enabled/;
     }
     if ($gd_enabled != 1) {
-	if ($line =~ /#include <gd\.h>$/) {
-	    next;
-	}
+        if ($line =~ /#include <gd\.h>$/) {
+            next;
+        }
         if ($line =~ /ngx_http_small_light_gd\.(c|h)/) {
             next;
         }
