@@ -1,5 +1,11 @@
 2013-06-18 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
+	* remove garbage in setup
+
+	* 0.3.3 released
+
+2013-06-18 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
 	* fix setup bug(ngx_feature_test always fails)
 
 	* move *.(c|h) to src directory
