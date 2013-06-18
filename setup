@@ -48,7 +48,6 @@ sub xxx_set_enabled
     my $gd_enabled          = 0;
     for (my $i=0;$i<$c;$i++) {
         my $arg = $args[$i];
-        print $arg, "\n";
         if($arg eq "--with-imlib2") {
             $imlib2_enabled = 1;
         } elsif ($arg eq "--with-gd") {
