@@ -1,3 +1,13 @@
+2013-06-18 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix setup bug(ngx_feature_test always fails)
+
+	* move *.(c|h) to src directory
+
+	* some refactorings
+
+	* 0.3.2 released
+
 2013-06-10 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix bug(The compilation without --with-gd always fails)
