@@ -39,21 +39,33 @@ sub gd_is_take_off_line
     return 0;
 }
 
-my $imagemagick_enabled = 1; # default
-my $imlib2_enabled      = 0;
-my $gd_enabled          = 0;
-
-for (my $i=0;$i<@ARGV;$i++) {
-    my $arg = $ARGV[$i];
-    if($arg eq "--with-imlib2") {
-        $imlib2_enabled = 1;
-    } elsif ($arg eq "--with-gd") {
-        $gd_enabled = 1;
-    }else {
-        print "unrecognized option: " . $arg . "\n";
-        exit;
+sub xxx_set_enabled
+{
+    my @args = @_;
+    my $c    = $#args + 1;
+    my $imagemagick_enabled = 1; # default
+    my $imlib2_enabled      = 0;
+    my $gd_enabled          = 0;
+    for (my $i=0;$i<$c;$i++) {
+        my $arg = $args[$i];
+        print $arg, "\n";
+        if($arg eq "--with-imlib2") {
+            $imlib2_enabled = 1;
+        } elsif ($arg eq "--with-gd") {
+            $gd_enabled = 1;
+        }else {
+            print "unrecognized option: " . $arg . "\n";
+            exit;
+        }
     }
+    return ($imagemagick_enabled, $imlib2_enabled, $gd_enabled);
 }
+
+my $imagemagick_enabled;
+my $imlib2_enabled;
+my $gd_enabled;
+
+($imagemagick_enabled, $imlib2_enabled, $gd_enabled) = xxx_set_enabled(@ARGV);
 
 xxx_config_check("Wand-config",   $imagemagick_enabled);
 xxx_config_check("imlib2-config", $imlib2_enabled);
