@@ -2,7 +2,7 @@ ngx_small_light
 ==================
 
 ngx_small_light is a dynamic image transformation module for Nginx.
-And ngx_small_light is written for using as the same way as [mod_small_light](http://code.google.com/p/smalllight/) as possible in Nginx.(mod_small_light is a Apache module)
+And ngx_small_light is written for using as the same way as [mod_small_light](http://code.google.com/p/smalllight/) as possible in Nginx.(mod_small_light is an apache module)
 
 ## Dependencies
 
