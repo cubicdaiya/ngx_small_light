@@ -50,6 +50,7 @@ ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small
 
     if (ngx_write_file(&ictx->tf->file, ictx->image, ictx->image_len, 0) == NGX_ERROR) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to save temporary file %s:%d", __FUNCTION__, __LINE__);
+        ngx_http_small_light_imlib2_term(r, ctx);
         return NGX_ERROR;
     }
 

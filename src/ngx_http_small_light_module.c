@@ -280,13 +280,18 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
     rc = ctx->converter.process(r, ctx);
     if (rc != NGX_OK) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to process image %s:%d", __FUNCTION__, __LINE__);
+        rc = ctx->converter.term(r, ctx);
+        if (rc != NGX_OK) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to terminate processing image %s:%d", __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
         return ngx_http_filter_finalize_request(r,
                                                 &ngx_http_small_light_module,
                                                 NGX_HTTP_UNSUPPORTED_MEDIA_TYPE);
     }
     rc = ctx->converter.term(r, ctx);
     if (rc != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to process image %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to terminate processing image %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
     }
 
