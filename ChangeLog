@@ -1,3 +1,9 @@
+2013-06-23 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix resource leak when failing to process a image
+
+	* 0.3.4 released
+
 2013-06-18 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* remove garbage in setup
