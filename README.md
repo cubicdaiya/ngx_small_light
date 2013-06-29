@@ -35,22 +35,24 @@ See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki
 
 ## Configuration Example
 
-    server {
-        listen 8000;
-        server_name localhost;
+```nginx
+server {
+    listen 8000;
+    server_name localhost;
 
-        small_light on;
-        small_light_pattern_define msize dw=500,dh=500,da=l,q=95,e=imagemagick,jpeghint=y;
-        small_light_pattern_define ssize dw=120,dh=120,da=l,q=95,e=imlib2,jpeghint=y;
+    small_light on;
+    small_light_pattern_define msize dw=500,dh=500,da=l,q=95,e=imagemagick,jpeghint=y;
+    small_light_pattern_define ssize dw=120,dh=120,da=l,q=95,e=imlib2,jpeghint=y;
 
-        # http://localhost:8000/small_light(p=msize)/img/filename.jpg -> generate msize image
-        # http://localhost:8000/small_light(p=ssize)/img/filename.jpg -> generate ssize image
-        # http://localhost:8000/small_light(of=gif,q=100)/img/filename.jpg -> generate gif image which quality is 100
-        location ~ small_light[^/]*/(.+)$ {
-            set $file $1;
-            rewrite ^ /$file;
-        }
-    } 
+    # http://localhost:8000/small_light(p=msize)/img/filename.jpg -> generate msize image
+    # http://localhost:8000/small_light(p=ssize)/img/filename.jpg -> generate ssize image
+    # http://localhost:8000/small_light(of=gif,q=100)/img/filename.jpg -> generate gif image which quality is 100
+    location ~ small_light[^/]*/(.+)$ {
+        set $file $1;
+        rewrite ^ /$file;
+    }
+} 
+```
 
 ## Running Test
 
