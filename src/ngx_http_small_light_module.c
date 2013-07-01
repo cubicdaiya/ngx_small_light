@@ -312,7 +312,11 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
     if (r->headers_out.content_length) {
         r->headers_out.content_length->hash = 0;
     }
-    r->headers_out.content_length = NULL;
+    r->headers_out.content_length       = NULL;
+    r->headers_out.content_type.data    = (u_char *)ctx->of;
+    r->headers_out.content_type.len     = ngx_strlen(ctx->of);
+    r->headers_out.content_type_lowcase = NULL;
+
 
     ngx_pool_cleanup_t *cln;
     cln = ngx_pool_cleanup_add(r->pool, 0);

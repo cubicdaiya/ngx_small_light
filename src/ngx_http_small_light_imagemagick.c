@@ -299,10 +299,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_memcpy(sled_image, canvas_buf, sled_image_size);
     MagickRelinquishMemory(canvas_buf);
 
-    r->headers_out.content_type.data    = (u_char *)ctx->of;
-    r->headers_out.content_type.len     = ngx_strlen(ctx->of);
-    r->headers_out.content_type_lowcase = NULL;
-
     ctx->content        = sled_image;
     ctx->content_length = sled_image_size;
 

@@ -284,12 +284,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     }
 
     // get small_lighted image as binary.
-
-    r->headers_out.content_type.data    = (u_char *)ctx->of;
-    r->headers_out.content_type.len     = ngx_strlen(ctx->of);
-    r->headers_out.content_type_lowcase = NULL;
-
-    ctx->content = out;
+    ctx->content        = out;
     ctx->content_length = size;
 
     return NGX_OK;
