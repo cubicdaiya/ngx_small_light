@@ -1,3 +1,11 @@
+2013-07-02 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix bug(the misalignment of image in canvas)
+
+	* fix bug(with 32bit instance in EC2, the worker process exited)
+
+	* 0.3.5 released
+
 2013-06-23 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix resource leak when failing to process a image
