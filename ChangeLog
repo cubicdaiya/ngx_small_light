@@ -1,3 +1,9 @@
+2013-07-21 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix bug(confate image with canvas by gd becomes grayscale) -> http://git.io/0-T3Qg
+
+	* 0.3.6 released
+
 2013-07-02 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix bug(the misalignment of image in canvas)
