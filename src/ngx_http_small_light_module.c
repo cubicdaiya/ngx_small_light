@@ -39,6 +39,12 @@
 
 #define NGX_HTTP_SMALL_LIGHT_IMAGE_BUFFERED 0x08
 
+const char *ngx_http_small_light_image_types[] = {
+    "image/jpeg",
+    "image/gif",
+    "image/png"
+};
+
 static void ngx_http_small_light_cleanup(void *data);
 static void ngx_http_small_light_cleanup(void *data)
 {

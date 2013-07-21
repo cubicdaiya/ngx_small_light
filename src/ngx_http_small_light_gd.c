@@ -24,16 +24,7 @@
 #include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
 
-#define NGX_HTTP_IMAGE_NONE      0
-#define NGX_HTTP_IMAGE_JPEG      1
-#define NGX_HTTP_IMAGE_GIF       2
-#define NGX_HTTP_IMAGE_PNG       3
-
-static char *ngx_http_small_light_gd_image_types[] = {
-    "image/jpeg",
-    "image/gif",
-    "image/png"
-};
+extern const char *ngx_http_small_light_image_types[];
 
 //
 // this original function is brought from nginx/src/http/modules/ngx_http_image_filter_module.c
@@ -45,23 +36,23 @@ static ngx_uint_t ngx_http_small_light_gd_type(ngx_http_small_light_gd_ctx_t *ic
     p = ictx->image;
 
     if (ictx->image_len < 16) {
-        return NGX_HTTP_IMAGE_NONE;
+        return NGX_HTTP_SMALL_LIGHT_IMAGE_NONE;
     }
 
     if (p[0] == 0xff && p[1] == 0xd8) {
-        return NGX_HTTP_IMAGE_JPEG;
+        return NGX_HTTP_SMALL_LIGHT_IMAGE_JPEG;
 
     } else if (p[0] == 'G' && p[1] == 'I' && p[2] == 'F' && p[3] == '8' && p[5] == 'a') {
         if (p[4] == '9' || p[4] == '7') {
-            return NGX_HTTP_IMAGE_GIF;
+            return NGX_HTTP_SMALL_LIGHT_IMAGE_GIF;
         }
     } else if (p[0] == 0x89 && p[1] == 'P'  && p[2] == 'N'  && p[3] == 'G' &&
                p[4] == 0x0d && p[5] == 0x0a && p[6] == 0x1a && p[7] == 0x0a)
     {
-        return NGX_HTTP_IMAGE_PNG;
+        return NGX_HTTP_SMALL_LIGHT_IMAGE_PNG;
     }
 
-    return NGX_HTTP_IMAGE_NONE;
+    return NGX_HTTP_SMALL_LIGHT_IMAGE_NONE;
 }
 
 static gdImagePtr ngx_http_small_light_gd_new(int w, int h, int colors)
@@ -86,13 +77,13 @@ static gdImagePtr ngx_http_small_light_gd_src(ngx_http_small_light_gd_ctx_t *ict
 {
     gdImagePtr src = NULL;
     switch (ictx->type) {
-    case NGX_HTTP_IMAGE_JPEG:
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_JPEG:
         src = gdImageCreateFromJpegPtr(ictx->image_len, ictx->image);
         break;
-    case NGX_HTTP_IMAGE_GIF:
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_GIF:
         src = gdImageCreateFromGifPtr(ictx->image_len,  ictx->image);
         break;
-    case NGX_HTTP_IMAGE_PNG:
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_PNG:
         src = gdImageCreateFromPngPtr(ictx->image_len,  ictx->image);
         break;
     default:
@@ -106,13 +97,13 @@ static u_char *ngx_http_small_light_gd_out(gdImagePtr img, ngx_int_t type, int *
 {
     u_char *out = NULL;
     switch (type) {
-    case NGX_HTTP_IMAGE_JPEG:
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_JPEG:
         out = gdImageJpegPtr(img, size, (int)q);
         break;
-    case NGX_HTTP_IMAGE_GIF:
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_GIF:
         out = gdImageGifPtr(img, size);
         break;
-    case NGX_HTTP_IMAGE_PNG:
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_PNG:
         out = gdImagePngPtr(img, size);
         break;
     default:
@@ -131,7 +122,7 @@ ngx_int_t ngx_http_small_light_gd_init(ngx_http_request_t *r, ngx_http_small_lig
     ictx->image_len = ctx->content_length;
 
     ictx->type = ngx_http_small_light_gd_type(ictx);
-    if (ictx->type == NGX_HTTP_IMAGE_NONE) {
+    if (ictx->type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to get image type %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
     }
@@ -260,15 +251,15 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
         if (strcmp(of, "jpeg") == 0 || strcmp(of, "jpg") == 0) {
-            ictx->type = NGX_HTTP_IMAGE_JPEG;
+            ictx->type = NGX_HTTP_SMALL_LIGHT_IMAGE_JPEG;
         } else if (strcmp(of, "gif") == 0) {
-            ictx->type = NGX_HTTP_IMAGE_GIF;
+            ictx->type = NGX_HTTP_SMALL_LIGHT_IMAGE_GIF;
         } else if (strcmp(of, "png") == 0) {
-            ictx->type = NGX_HTTP_IMAGE_PNG;
+            ictx->type = NGX_HTTP_SMALL_LIGHT_IMAGE_PNG;
         }
     }
     
-    ctx->of = ngx_http_small_light_gd_image_types[ictx->type - 1];
+    ctx->of = ngx_http_small_light_image_types[ictx->type - 1];
 
     u_char *out;
     int size;

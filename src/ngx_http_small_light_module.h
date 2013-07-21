@@ -33,6 +33,11 @@
 #define NGX_HTTP_SMALL_LIGHT_CONVERTER_IMLIB2      "imlib2"
 #define NGX_HTTP_SMALL_LIGHT_CONVERTER_GD          "gd"
 
+#define NGX_HTTP_SMALL_LIGHT_IMAGE_NONE 0
+#define NGX_HTTP_SMALL_LIGHT_IMAGE_JPEG 1
+#define NGX_HTTP_SMALL_LIGHT_IMAGE_GIF  2
+#define NGX_HTTP_SMALL_LIGHT_IMAGE_PNG  3
+
 #define NGX_HTTP_SMALL_LIGHT_PARAM_GET(hash, k) ngx_hash_find(hash, ngx_hash_key_lc((u_char *)k, ngx_strlen(k)), (u_char *)k, ngx_strlen(k))
 
 typedef enum {
@@ -89,8 +94,8 @@ typedef struct ngx_http_small_light_ctx_t {
     ngx_hash_t hash;
     ngx_hash_keys_arrays_t params;
     size_t content_length;
-    char *inf;
-    char *of;
+    const char *inf;
+    const char *of;
     u_char *content;
     u_char *last;
     void *ictx;
