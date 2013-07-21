@@ -229,7 +229,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     // create canvas then draw image to the canvas.
     if (sz.cw > 0.0 && sz.ch > 0.0) {
-        gdImagePtr canvas = gdImageCreate(sz.cw, sz.ch);
+        gdImagePtr canvas = gdImageCreateTrueColor(sz.cw, sz.ch);
         if (canvas == NULL) {
             gdImageDestroy(dst);
             return NGX_ERROR;
