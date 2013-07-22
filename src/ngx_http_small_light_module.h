@@ -87,7 +87,8 @@ typedef struct {
     ngx_int_t                    pt_flg;
     ngx_int_t                    scale_flg;
     ngx_int_t                    inhexif_flg;
-    ngx_int_t                    jpeghint_flg;    
+    ngx_int_t                    jpeghint_flg;
+    ngx_uint_t                   angle;
 } ngx_http_small_light_image_size_t;
 
 typedef struct ngx_http_small_light_ctx_t {

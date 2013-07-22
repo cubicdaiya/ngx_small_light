@@ -55,6 +55,7 @@ static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t 
     ngx_str_t embedicon = ngx_string("embedicon");
     ngx_str_t ix        = ngx_string("ix");
     ngx_str_t iy        = ngx_string("iy");
+    ngx_str_t angle     = ngx_string("angle");
     ngx_str_t e         = ngx_string("e");
 
     ngx_hash_add_key(&ctx->params, &p,         "",       NGX_HASH_READONLY_KEY);
@@ -84,6 +85,7 @@ static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t 
     ngx_hash_add_key(&ctx->params, &embedicon, "",       NGX_HASH_READONLY_KEY);
     ngx_hash_add_key(&ctx->params, &ix,        "0",      NGX_HASH_READONLY_KEY);
     ngx_hash_add_key(&ctx->params, &iy,        "0",      NGX_HASH_READONLY_KEY);
+    ngx_hash_add_key(&ctx->params, &angle,     "0",      NGX_HASH_READONLY_KEY);
 
     ngx_hash_add_key(&ctx->params, &e, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK, NGX_HASH_READONLY_KEY);
 }

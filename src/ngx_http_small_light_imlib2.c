@@ -126,8 +126,9 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     inf = (char *)ngx_pstrdup(r->pool, &inf_imlib);
     inf[inf_imlib.len] = '\0';
 
-    // crop, scale.
     Imlib_Image image_dst;
+
+    // crop, scale.
     if (sz.scale_flg != 0) {
         image_dst = imlib_create_cropped_scaled_image((int)sz.sx, (int)sz.sy, (int)sz.sw, (int)sz.sh, (int)sz.dw, (int)sz.dh);
         imlib_context_set_image(image_org);
@@ -139,6 +140,27 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     if (image_dst == NULL) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "imlib_create_cropped_scaled_image failed. %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
+    }
+
+    if (sz.angle == 90 || sz.angle == 180 || sz.angle == 270) {
+        ngx_int_t t;
+        imlib_context_set_image(image_dst);
+        switch(sz.angle) {
+        case 90:
+            imlib_image_orientate(1);
+            break;
+        case 180:
+            imlib_image_orientate(2);
+            break;
+        case 270:
+            imlib_image_orientate(3);
+            break;
+        }
+
+        t     = sz.dw;
+        sz.dw = sz.dh;
+        sz.dh = t;
+
     }
 
     // create canvas then draw image to the canvas.

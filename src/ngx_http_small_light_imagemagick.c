@@ -132,6 +132,26 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ictx->wand = trans_wand;
     }
 
+    // rotate
+    if (sz.angle) {
+        PixelWand  *bg_color;
+        bg_color = NewPixelWand();
+        PixelSetRed(bg_color,   sz.cc.r / 255.0);
+        PixelSetGreen(bg_color, sz.cc.g / 255.0);
+        PixelSetBlue(bg_color,  sz.cc.b / 255.0);
+        PixelSetAlpha(bg_color, sz.cc.a / 255.0);
+
+        switch (sz.angle) {
+        case 90:
+        case 180:
+        case 270:
+            MagickRotateImage(ictx->wand, bg_color, sz.angle);
+            break;
+        }
+
+        DestroyPixelWand(bg_color);
+    }
+
     // create canvas then draw image to the canvas.
     if (sz.cw > 0.0 && sz.ch > 0.0) {
         MagickWand *canvas_wand  = NewMagickWand();

@@ -202,6 +202,49 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         dst = src;
     }
 
+    if (sz.angle) {
+        ngx_int_t ax, ay, ox, oy, t;
+        src = dst;
+        ax  = ((ngx_int_t)sz.dw % 2 == 0) ? 1 : 0;
+        ay  = ((ngx_int_t)sz.dh % 2 == 0) ? 1 : 0;
+        switch (sz.angle) {
+        case 90:
+        case 270:
+            dst = ngx_http_small_light_gd_new(sz.dh, sz.dw, palette);
+            if (dst == NULL) {
+                gdImageDestroy(src);
+                return NGX_ERROR;
+            }
+
+            if (sz.angle == 90) {
+                ox = sz.dh / 2 - ay;
+                oy = sz.dw / 2 + ax;
+            } else {
+                ox = sz.dh / 2 + ay;
+                oy = sz.dw / 2 - ax;
+            }
+
+            gdImageCopyRotated(dst, src, ox, oy, 0, 0,
+                               sz.dw, sz.dh, -sz.angle);
+            gdImageDestroy(src);
+
+            t     = sz.dw;
+            sz.dw = sz.dh;
+            sz.dh = t;
+            break;
+        case 180:
+            dst = ngx_http_small_light_gd_new(sz.dw, sz.dh, palette);
+            if (dst == NULL) {
+                gdImageDestroy(src);
+                return NGX_ERROR;
+            }
+            gdImageCopyRotated(dst, src, sz.dw / 2 - ax, sz.dh / 2 - ay, 0, 0,
+                               sz.dw + ax, sz.dh + ay, sz.angle);
+            gdImageDestroy(src);
+            break;
+        }
+    }
+
     if (transparent != -1 && colors) {
         gdImageColorTransparent(dst, gdImageColorExact(dst, red, green, blue));
     }
