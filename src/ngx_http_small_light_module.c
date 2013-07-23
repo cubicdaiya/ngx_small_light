@@ -170,7 +170,6 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
         return NGX_ERROR;
     }
 
-    ngx_memzero(ctx, sizeof(ngx_http_small_light_ctx_t));
     ctx->params.keys.pool = r->pool;
     ctx->params.temp_pool = r->pool;
     if (ngx_hash_keys_array_init(&ctx->params, NGX_HASH_SMALL) != NGX_OK) {
