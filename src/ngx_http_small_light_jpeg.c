@@ -112,7 +112,7 @@ ngx_int_t load_jpeg(
     *width = *height = 0;
 
     fd = ngx_open_file(filename, NGX_FILE_RDONLY, NGX_FILE_OPEN, NGX_FILE_DEFAULT_ACCESS);
-    if (fd != NGX_OK) {
+    if (fd == NGX_INVALID_FILE) {
         return NGX_ERROR;
     }
     f = fdopen(fd, "rb");
@@ -125,6 +125,7 @@ ngx_int_t load_jpeg(
         {
             jpeg_destroy_decompress(&cinfo);
             ngx_close_file(fd);
+            fclose(f);
             return NGX_ERROR;
         }
     jpeg_create_decompress(&cinfo);
@@ -165,12 +166,14 @@ ngx_int_t load_jpeg(
     {
         jpeg_destroy_decompress(&cinfo);
         ngx_close_file(fd);
+        fclose(f);
         return NGX_ERROR;
     }
     data = ngx_palloc(r->pool, w * 16 * cinfo.output_components);
     if (!data) {
         jpeg_destroy_decompress(&cinfo);
         ngx_close_file(fd);
+        fclose(f);
         return NGX_ERROR;
     }
     /* must set the im->data member before callign progress function */
@@ -178,6 +181,7 @@ ngx_int_t load_jpeg(
     if (!dest) {
         jpeg_destroy_decompress(&cinfo);
         ngx_close_file(fd);
+        fclose(f);
         return NGX_ERROR;
     }
     if (cinfo.output_components > 1) {
@@ -224,6 +228,7 @@ ngx_int_t load_jpeg(
     jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
     ngx_close_file(fd);
+    fclose(f);
 
     *dest_data = dest;
     *width = w;
