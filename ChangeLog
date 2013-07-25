@@ -1,3 +1,13 @@
+2013-07-26 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix bug(imlib_save_error sometimes fails in highly-loaded) ->  http://git.io/KKkgaQ
+
+	* fix resource leak -> http://git.io/KKkgaQ
+
+	* add parameter 'angle' -> http://git.io/mGk22A
+
+	* 0.4.0 released
+
 2013-07-21 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix bug(confate image with canvas by gd becomes grayscale) -> http://git.io/0-T3Qg
