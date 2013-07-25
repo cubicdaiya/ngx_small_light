@@ -28,6 +28,7 @@ NGX_ADDON_SRCS="$NGX_ADDON_SRCS \
 				$ngx_addon_dir/src/ngx_http_small_light_parser.c      \
 				$ngx_addon_dir/src/ngx_http_small_light_param.c       \
 				$ngx_addon_dir/src/ngx_http_small_light_size.c        \
+				$ngx_addon_dir/src/ngx_http_small_light_type.c        \
 				$ngx_addon_dir/src/ngx_http_small_light_imagemagick.c \
 				$ngx_addon_dir/src/ngx_http_small_light_imlib2.c      \
 				$ngx_addon_dir/src/ngx_http_small_light_jpeg.c        \
@@ -39,6 +40,7 @@ NGX_ADDON_DEPS="$NGX_ADDON_DEPS \
 				$ngx_addon_dir/src/ngx_http_small_light_parser.h      \
 				$ngx_addon_dir/src/ngx_http_small_light_param.h       \
 				$ngx_addon_dir/src/ngx_http_small_light_size.h        \
+				$ngx_addon_dir/src/ngx_http_small_light_type.h        \
 				$ngx_addon_dir/src/ngx_http_small_light_imagemagick.h \
 				$ngx_addon_dir/src/ngx_http_small_light_imlib2.h      \
 				$ngx_addon_dir/src/ngx_http_small_light_jpeg.h        \

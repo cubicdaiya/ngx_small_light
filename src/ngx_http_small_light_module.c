@@ -45,6 +45,12 @@ const char *ngx_http_small_light_image_types[] = {
     "image/png"
 };
 
+const char *ngx_http_small_light_image_exts[] = {
+    "jpeg",
+    "gif",
+    "png"
+};
+
 static void ngx_http_small_light_cleanup(void *data);
 static void ngx_http_small_light_cleanup(void *data)
 {

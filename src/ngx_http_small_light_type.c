@@ -20,22 +20,34 @@
    THE SOFTWARE.
  */
 
-#ifndef NGX_HTTP_SMALL_LIGHT_IMLIB2_H
-#define NGX_HTTP_SMALL_LIGHT_IMLIB2_H
-
-#include <Imlib2.h>
-
 #include "ngx_http_small_light_module.h"
+#include "ngx_http_small_light_type.h"
 
-typedef struct {
-    u_char *image;
-    size_t image_len;
-    ngx_temp_file_t *tf;
-    ngx_int_t type;
-} ngx_http_small_light_imlib2_ctx_t;
+//
+// this original function is brought from nginx/src/http/modules/ngx_http_image_filter_module.c
+//
+ngx_uint_t ngx_http_small_light_type(u_char *image, size_t image_len)
+{
+    u_char  *p;
 
-ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-ngx_int_t ngx_http_small_light_imlib2_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
+    p = image;
 
-#endif // NGX_HTTP_SMALL_LIGHT_IMLIB2_H
+    if (image_len < 16) {
+        return NGX_HTTP_SMALL_LIGHT_IMAGE_NONE;
+    }
+
+    if (p[0] == 0xff && p[1] == 0xd8) {
+        return NGX_HTTP_SMALL_LIGHT_IMAGE_JPEG;
+
+    } else if (p[0] == 'G' && p[1] == 'I' && p[2] == 'F' && p[3] == '8' && p[5] == 'a') {
+        if (p[4] == '9' || p[4] == '7') {
+            return NGX_HTTP_SMALL_LIGHT_IMAGE_GIF;
+        }
+    } else if (p[0] == 0x89 && p[1] == 'P'  && p[2] == 'N'  && p[3] == 'G' &&
+               p[4] == 0x0d && p[5] == 0x0a && p[6] == 0x1a && p[7] == 0x0a)
+    {
+        return NGX_HTTP_SMALL_LIGHT_IMAGE_PNG;
+    }
+
+    return NGX_HTTP_SMALL_LIGHT_IMAGE_NONE;
+}

@@ -24,7 +24,10 @@
 #include "ngx_http_small_light_imlib2.h"
 #include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
+#include "ngx_http_small_light_type.h"
 #include "ngx_http_small_light_jpeg.h"
+
+extern const char *ngx_http_small_light_image_exts[];
 
 ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
@@ -33,7 +36,12 @@ ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small
     ictx            = (ngx_http_small_light_imlib2_ctx_t *)ctx->ictx;
     ictx->image     = ctx->content;
     ictx->image_len = ctx->content_length;
-    ictx->tf = ngx_pcalloc(r->pool, sizeof(ngx_temp_file_t));
+    ictx->type      = ngx_http_small_light_type(ictx->image, ictx->image_len);
+    if (ictx->type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to get image type %s:%d", __FUNCTION__, __LINE__);
+        return NGX_ERROR;
+    }
+    ictx->tf        = ngx_pcalloc(r->pool, sizeof(ngx_temp_file_t));
     if (ictx->tf == NULL) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
@@ -118,13 +126,6 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     if (sz.pt_flg != 0) {
         return NGX_OK;
     }
-
-    char *inf;
-    ngx_str_t inf_imlib;
-    inf_imlib.data = (u_char *)imlib_image_format();
-    inf_imlib.len  = ngx_strlen(inf_imlib.data);
-    inf = (char *)ngx_pstrdup(r->pool, &inf_imlib);
-    inf[inf_imlib.len] = '\0';
 
     Imlib_Image image_dst;
 
@@ -235,8 +236,9 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         ngx_snprintf(s, 10 + 1, "image/%s", of);
         ctx->of = (char *)s;
     } else {
-        imlib_image_set_format(inf);
-        ctx->of = ctx->inf;
+        const char *ext = ngx_http_small_light_image_exts[ictx->type - 1];
+        imlib_image_set_format(ext);
+        ctx->of = ext;
     }
 
     // save image.
