@@ -99,7 +99,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     if (sz.jpeghint_flg != 0) {
         void *data;
         int w, h;
-        if (load_jpeg((void**)&data, &w, &h, r, filename, sz.dw, sz.dh) != NGX_OK) {
+        if (ngx_http_small_light_load_jpeg((void**)&data, &w, &h, r, filename, sz.dw, sz.dh) != NGX_OK) {
             image_org = imlib_load_image_immediately_without_cache(filename);
             if (image_org == NULL) {
                 ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to load image %s:%d", __FUNCTION__, __LINE__);

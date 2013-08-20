@@ -23,17 +23,6 @@
 
 #include "ngx_http_small_light_module.h"
 
-ngx_int_t load_jpeg(
+ngx_int_t ngx_http_small_light_load_jpeg(
           void **dest_data, int *width, int *height, const ngx_http_request_t *r,
           const char *filename, int hint_w, int hint_h);
-ngx_int_t load_exif_from_memory(
-    unsigned char **exif_data,
-    unsigned int *exif_size,
-    ngx_http_request_t *r,
-    const unsigned char *data,
-    unsigned int data_len);
-void exif_insert_tail(
-    unsigned char *exif_data, unsigned int exif_size,
-    unsigned char *image_data, unsigned long image_size,
-    ngx_http_request_t *r);
-

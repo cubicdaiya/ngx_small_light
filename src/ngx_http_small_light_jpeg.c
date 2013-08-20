@@ -46,8 +46,6 @@
 #define M_APP1      (M_APP + 1)
 #define M_COM       0xfe // comment
 
-static char jpeg_header[] = { 0xff, M_SOI };
-
 /*
 ** functions.
 */
@@ -98,7 +96,7 @@ _JPEGErrorHandler2(j_common_ptr cinfo, int msg_level)
 }
 
 // The load_jpeg function is based on Imlib2 loader.
-ngx_int_t load_jpeg(
+ngx_int_t ngx_http_small_light_load_jpeg(
           void **dest_data, int *width, int *height, const ngx_http_request_t *r,
           const char *filename, int hint_w, int hint_h)
 {
@@ -236,106 +234,3 @@ ngx_int_t load_jpeg(
 
     return NGX_OK;
 }
-
-ngx_int_t load_exif_from_memory(
-    unsigned char **exif_data,
-    unsigned int *exif_size,
-    ngx_http_request_t *r,
-    const unsigned char *data,
-    unsigned int data_len)
-{
-    // scan SOI marker.
-    if (data_len <= 2) return NGX_ERROR;
-    data_len -= 2;
-    unsigned char c1 = *data++;
-    unsigned char c2 = *data++;
-    if (c1 != 0xff || c2 != M_SOI) {
-        return NGX_ERROR;
-    }
-
-    int num_marker = 0;
-    unsigned char *marker_data[MAX_MARKERS];
-    unsigned int marker_size[MAX_MARKERS];    
-
-    // scan marker.
-    for (;;) {
-        unsigned char c;
-        for (;;) {
-            c = *data++;
-            if (data_len == 0) return NGX_ERROR;
-            data_len--;
-            if (c == 0xff) break;
-        }
-        for (;;) {
-            c = *data++;
-            if (data_len == 0) return NGX_ERROR;
-            data_len--;
-            if (c != 0xff) break;
-        }
-
-        // check marker.
-        if (c == M_EOI || c == M_SOS || c == 0) {
-            break;
-        } else if (c == M_APP1 || c == M_COM) {
-            // get length of app1.
-            //unsigned int length = (*data++ << 8) + *(data++ + 1);
-            unsigned int length;
-            length =  (*data++ << 8);
-            length += *(data++ + 1);
-
-            // validate length.
-            if (length < 2) return NGX_ERROR;
-
-            // get app1 pointer and length.
-            if (num_marker < MAX_MARKERS) {
-                marker_data[num_marker] = (unsigned char *)(data - 4);
-                marker_size[num_marker] = length + 2;
-                num_marker++;
-            }
-            
-            // skip pointer.
-            if (data_len <= length) return NGX_ERROR;
-            data_len -= length;
-            data += length - 2;
-        } else {
-            // get length of app1.
-            //unsigned int length = (*data++ << 8) + *(data++ + 1);
-            unsigned int length;
-            length = (*data++ << 8);
-            length += *(data++ + 1);
-
-            // validate length.
-            if (length < 2) return NGX_ERROR;
-
-            // skip pointer.
-            if (data_len <= length) return NGX_ERROR;
-            data_len -= length;
-            data += length - 2;
-        }
-    }
-
-    // copy app1.
-    int i;
-    unsigned int exif_size_total = 0;
-    for (i = 0; i < num_marker; i++) {
-        exif_size_total += marker_size[i];
-    }
-    *exif_size = exif_size_total;
-    *exif_data = ngx_palloc(r->pool, exif_size_total);
-    unsigned char *exif_data_ptr = *exif_data;
-    for (i = 0; i < num_marker; i++) {
-        memcpy(exif_data_ptr, marker_data[i], marker_size[i]);
-        exif_data_ptr += marker_size[i];
-    }
-
-    return NGX_OK;
-}
-
-void exif_insert_tail(
-    unsigned char *exif_data, unsigned int exif_size,
-    unsigned char *image_data, unsigned long image_size,
-    ngx_http_request_t *r)
-{
-    printf("%p\n", jpeg_header);
-}
-
