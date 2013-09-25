@@ -1,3 +1,11 @@
+2013-09-26 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix bug(Content-Type becomes invalid when processing image with Imlib2 and `of` is not used)
+
+	* optimize image-processing(remove wasted allocation for Content-Type)
+
+	* 0.4.1 released
+
 2013-07-26 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix bug(imlib_save_error sometimes fails in highly-loaded) ->  http://git.io/KKkgaQ
