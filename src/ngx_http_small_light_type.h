@@ -29,6 +29,7 @@
 
 #include "ngx_http_small_light_module.h"
 
-ngx_uint_t ngx_http_small_light_type(u_char *image, size_t image_len);
+ngx_int_t ngx_http_small_light_type(const char *of);
+ngx_int_t ngx_http_small_light_type_detect(u_char *image, size_t image_len);
 
 #endif // NGX_HTTP_SMALL_LIGHT_TYPE_H

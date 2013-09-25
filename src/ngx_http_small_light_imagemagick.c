@@ -24,6 +24,10 @@
 #include "ngx_http_small_light_imagemagick.h"
 #include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
+#include "ngx_http_small_light_type.h"
+
+extern const char *ngx_http_small_light_image_exts[];
+extern const char *ngx_http_small_light_image_types[];
 
 ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
@@ -33,6 +37,11 @@ ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_
     ictx->wand      = NewMagickWand();
     ictx->image     = ctx->content;
     ictx->image_len = ctx->content_length;
+    ictx->type      = ngx_http_small_light_type_detect(ictx->image, ictx->image_len);
+    if (ictx->type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to get image type %s:%d", __FUNCTION__, __LINE__);
+        return NGX_ERROR;
+    }
     return NGX_OK;
 }
 
@@ -290,16 +299,19 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     if (q > 0.0) {
         MagickSetImageCompressionQuality(ictx->wand, q);
     }
+
     char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
-        MagickSetFormat(ictx->wand, of);
-        u_char *s = ngx_pcalloc(r->pool, 10 + 1);
-        if (s == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
-            return NGX_ERROR;
+        ngx_int_t type;
+        type = ngx_http_small_light_type(of);
+        if (type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "of is invalid(%s) %s:%d", of, __FUNCTION__, __LINE__);
+            of = (char *)ngx_http_small_light_image_exts[ictx->type - 1];
+        } else {
+            ictx->type = type;
         }
-        ngx_snprintf(s, 10 + 1, "image/%s", of);
-        ctx->of = (char *)s;
+        MagickSetFormat(ictx->wand, of);
+        ctx->of = ngx_http_small_light_image_types[ictx->type - 1];
     } else {
         MagickSetFormat(ictx->wand, of_orig);
         ctx->of = ctx->inf;

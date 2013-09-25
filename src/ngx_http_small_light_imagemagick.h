@@ -31,6 +31,7 @@ typedef struct {
     u_char *image;
     size_t image_len;
     MagickWand *wand;
+    ngx_int_t type;
 } ngx_http_small_light_imagemagick_ctx_t;
 
 ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);

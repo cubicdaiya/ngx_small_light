@@ -23,10 +23,27 @@
 #include "ngx_http_small_light_module.h"
 #include "ngx_http_small_light_type.h"
 
+ngx_int_t ngx_http_small_light_type(const char *of)
+{
+    ngx_int_t type;
+
+    if (strcmp(of, "jpeg") == 0 || strcmp(of, "jpg") == 0) {
+        type = NGX_HTTP_SMALL_LIGHT_IMAGE_JPEG;
+    } else if (strcmp(of, "gif") == 0) {
+        type = NGX_HTTP_SMALL_LIGHT_IMAGE_GIF;
+    } else if (strcmp(of, "png") == 0) {
+        type = NGX_HTTP_SMALL_LIGHT_IMAGE_PNG;
+    } else {
+        type = NGX_HTTP_SMALL_LIGHT_IMAGE_NONE;
+    }
+
+    return type;
+}
+
 //
 // this original function is brought from nginx/src/http/modules/ngx_http_image_filter_module.c
 //
-ngx_uint_t ngx_http_small_light_type(u_char *image, size_t image_len)
+ngx_int_t ngx_http_small_light_type_detect(u_char *image, size_t image_len)
 {
     u_char  *p;
 
