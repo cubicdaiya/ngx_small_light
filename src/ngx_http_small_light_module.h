@@ -60,6 +60,7 @@ typedef struct {
 
 typedef struct {
     ngx_flag_t enable;
+    ngx_flag_t enable_getparam_mode;
     ngx_hash_t hash;
     ngx_hash_keys_arrays_t patterns;
     ngx_str_t material_dir;

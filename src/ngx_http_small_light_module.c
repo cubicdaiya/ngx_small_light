@@ -80,6 +80,15 @@ static ngx_command_t  ngx_http_small_light_commands[] = {
     },
     
     { 
+        ngx_string("small_light_getparam_mode"),
+        NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_FLAG,
+        ngx_conf_set_flag_slot,
+        NGX_HTTP_LOC_CONF_OFFSET,
+        offsetof(ngx_http_small_light_conf_t, enable_getparam_mode),
+        NULL
+    },
+    
+    { 
         ngx_string("small_light_pattern_define"),
         NGX_HTTP_SRV_CONF|NGX_CONF_TAKE2,
         ngx_http_small_light_pattern_define,
@@ -161,8 +170,10 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
         return ngx_http_next_header_filter(r);
     }
 
-    if(ngx_http_small_light_parse_define_pattern(r, &r->unparsed_uri, &define_pattern) != NGX_OK) {
-        return ngx_http_next_header_filter(r);
+    if (!loc_conf->enable_getparam_mode) {
+        if(ngx_http_small_light_parse_define_pattern(r, &r->unparsed_uri, &define_pattern) != NGX_OK) {
+            return ngx_http_next_header_filter(r);
+        }
     }
     
     ctx = ngx_http_get_module_ctx(r, ngx_http_small_light_module);
@@ -183,9 +194,16 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
         return NGX_ERROR;
     }
 
-    if (ngx_http_small_light_init_params(r, ctx, &define_pattern, srv_conf) != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to analyze parameters:%s %s:%d", define_pattern.data, __FUNCTION__, __LINE__);
-        return NGX_ERROR;
+    if (loc_conf->enable_getparam_mode) {
+        if (ngx_http_small_light_init_getparams(r, ctx, srv_conf) != NGX_OK) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to analyze parameters:%s %s:%d", define_pattern.data, __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
+    } else {
+        if (ngx_http_small_light_init_params(r, ctx, &define_pattern, srv_conf) != NGX_OK) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to analyze parameters:%s %s:%d", define_pattern.data, __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
     }
 
     hash_init.hash        = &ctx->hash;
@@ -372,7 +390,8 @@ static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf)
     if (loc_conf == NULL) {
         return NGX_CONF_ERROR;
     }
-    loc_conf->enable = NGX_CONF_UNSET;
+    loc_conf->enable               = NGX_CONF_UNSET;
+    loc_conf->enable_getparam_mode = NGX_CONF_UNSET;
     return loc_conf;
 }
 
@@ -390,7 +409,8 @@ static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, v
     ngx_http_small_light_conf_t *prev = parent;
     ngx_http_small_light_conf_t *conf = child;
 
-    ngx_conf_merge_value(conf->enable, prev->enable, 0);
+    ngx_conf_merge_value(conf->enable,               prev->enable,               0);
+    ngx_conf_merge_value(conf->enable_getparam_mode, prev->enable_getparam_mode, 0);
 
     if (ngx_conf_merge_path_value(cf, &conf->imlib2_temp_dir,
                                   prev->imlib2_temp_dir,

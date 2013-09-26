@@ -113,3 +113,88 @@ ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small
 
     return NGX_OK;
 }
+
+ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_http_small_light_conf_t *srv_conf)
+{
+    ngx_str_t args[] = { 
+        ngx_string("arg_p"),
+        ngx_string("arg_sx"),
+        ngx_string("arg_sy"),
+        ngx_string("arg_sw"),
+        ngx_string("arg_sh"),
+        ngx_string("arg_dx"),
+        ngx_string("arg_dy"),
+        ngx_string("arg_dw"),
+        ngx_string("arg_dh"),
+        ngx_string("arg_da"),
+        ngx_string("arg_ds"),
+        ngx_string("arg_cw"),
+        ngx_string("arg_ch"),
+        ngx_string("arg_cc"),
+        ngx_string("arg_bw"),
+        ngx_string("arg_bh"),
+        ngx_string("arg_bc"),
+        ngx_string("arg_pt"),
+        ngx_string("arg_q"),
+        ngx_string("arg_of"),
+        ngx_string("arg_jpeghint"),
+        ngx_string("arg_rmprof"),
+        ngx_string("arg_embedicon"),
+        ngx_string("arg_ix"),
+        ngx_string("arg_iy"),
+        ngx_string("arg_angle"),
+        ngx_string("arg_e")
+    };
+    ngx_uint_t                 i;
+    size_t                     args_size;
+    u_char                    *low;
+    ngx_http_variable_value_t *var;
+    ngx_uint_t                 key;
+    ngx_str_t                  ks;
+    char                       pv[BUFSIZ];
+    u_char                    *v;
+
+    pv[0] = '\0';
+    args_size = sizeof(args) / sizeof(ngx_str_t);
+    for (i=0;i<args_size;i++) {
+        low = ngx_pnalloc(r->pool, args[i].len);
+        if (low == NULL) {
+            return NGX_ERROR;
+        }
+        key = ngx_hash_strlow(low, args[i].data, args[i].len);
+        var = ngx_http_get_variable(r, &args[i], key);
+
+        if (!var->not_found) {
+            ks.data = ngx_palloc(r->pool, args[i].len + 1);
+            ngx_cpystrn(ks.data, args[i].data + 4, args[i].len - 4 + 1);
+            ks.len = args[i].len - 4;
+
+            if (i == 0) { // arg_p is found
+                ngx_cpystrn((u_char *)pv, var->data, var->len + 1);
+            } else {
+                v = ngx_palloc(r->pool, var->len + 1);
+                ngx_cpystrn(v, var->data, var->len + 1);
+                ngx_hash_add_key(&ctx->params, &ks, v, NGX_HASH_READONLY_KEY);
+            }
+        }
+    }
+
+    if (*pv != '\0') {
+        char *pval;
+        pval = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&srv_conf->hash, pv);
+        if (pval == NULL) {
+            ngx_http_small_light_init_params_default(ctx);
+            return NGX_OK;
+        }
+        ngx_str_t pval_str;
+        pval_str.data = (u_char *)pval;
+        pval_str.len  = ngx_strlen(pval);
+        if (ngx_http_small_light_parse_params(r, ctx, &pval_str, pv) != NGX_OK) {
+            return NGX_ERROR;
+        }
+    }
+
+    ngx_http_small_light_init_params_default(ctx);
+
+    return NGX_OK;
+}
