@@ -87,8 +87,8 @@ static ngx_command_t  ngx_http_small_light_commands[] = {
         offsetof(ngx_http_small_light_conf_t, enable_getparam_mode),
         NULL
     },
-    
-    { 
+
+    {
         ngx_string("small_light_pattern_define"),
         NGX_HTTP_SRV_CONF|NGX_CONF_TAKE2,
         ngx_http_small_light_pattern_define,

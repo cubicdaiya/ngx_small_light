@@ -116,7 +116,7 @@ ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small
 
 ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_http_small_light_conf_t *srv_conf)
 {
-    ngx_str_t args[] = { 
+    ngx_str_t args[] = {
         ngx_string("arg_p"),
         ngx_string("arg_sx"),
         ngx_string("arg_sy"),
