@@ -1,3 +1,11 @@
+2013-09-28 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* add directive 'small_light_getparam_mode'
+
+	* remove parameter 'inhexif'
+
+	* 0.5.0 released
+
 2013-09-26 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix bug(Content-Type becomes invalid when processing image with Imlib2 and `of` is not used)
