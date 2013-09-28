@@ -21,7 +21,7 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
     make
     make install
 
-If you want to enable the libraries expect ImageMagick in ngx_small_light, add following options when executing setup. (ImageMagick is always enabled)
+If you want to enable the libraries except ImageMagick in ngx_small_light, add following options when executing setup. (ImageMagick is always enabled)
 
 ```sh
 ./setup --with-imlib2           # enable ImageMagick and Imlib2
