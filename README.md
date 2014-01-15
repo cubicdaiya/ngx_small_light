@@ -17,7 +17,7 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
     cd ${ngx_small_light_src_dir}
     ./setup
     cd {$nginx_src_dir}
-    ./configure --with-pcre --add-module=${ngx_small_light_src_dir}
+    ./configure --add-module=${ngx_small_light_src_dir}
     make
     make install
 
