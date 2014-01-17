@@ -29,7 +29,7 @@ If you want to enable the libraries except ImageMagick in ngx_small_light, add f
 ./setup --with-imlib2 --with-gd # enable ImageMagick and Imlib2 and GD
 ```
 
-## How to
+## How To
 
 See the [configuration guide](https://github.com/cubicdaiya/ngx_small_light/wiki/Configuration).
 
