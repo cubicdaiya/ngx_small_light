@@ -270,10 +270,12 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
 
 static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
 {
-    ngx_http_small_light_conf_t            *loc_conf;
-    ngx_http_small_light_ctx_t             *ctx;
-    ngx_chain_t                             out;
-    ngx_int_t                               rc;
+    ngx_http_small_light_conf_t *loc_conf;
+    ngx_http_small_light_ctx_t  *ctx;
+    ngx_buf_t                   *b;
+    ngx_pool_cleanup_t          *cln;
+    ngx_chain_t                  out;
+    ngx_int_t                    rc;
 
     if (in == NULL) {
         return ngx_http_next_body_filter(r, in);
@@ -324,7 +326,7 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
         return NGX_ERROR;
     }
 
-    ngx_buf_t *b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
+    b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
     if (b == NULL) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
         return NGX_ERROR;
@@ -346,8 +348,6 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
     r->headers_out.content_type.len     = ngx_strlen(ctx->of);
     r->headers_out.content_type_lowcase = NULL;
 
-
-    ngx_pool_cleanup_t *cln;
     cln = ngx_pool_cleanup_add(r->pool, 0);
     if (cln == NULL) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
