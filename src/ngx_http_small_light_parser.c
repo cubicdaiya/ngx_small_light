@@ -25,18 +25,14 @@
 
 ngx_int_t ngx_http_small_light_parse_define_pattern(ngx_http_request_t *r, ngx_str_t *unparsed_uri, ngx_str_t *define_pattern)
 {
-    char *pattern_s = "small_light\\(([^\\)]*)\\)";
     int rc, captures[(1 + 2) * 3];
     u_char errstr[NGX_MAX_CONF_ERRSTR];
-    ngx_str_t pattern;
     ngx_regex_compile_t rgc;
     u_char *define_pattern_s;
+    ngx_str_t pattern = ngx_string("small_light\\(([^\\)]*)\\)");
 
     ngx_memzero(&rgc, sizeof(ngx_regex_compile_t));
 
-    pattern.data = (u_char *)pattern_s;
-    pattern.len  = ngx_strlen(pattern_s);
-    
     rgc.pattern  = pattern;
     rgc.pool     = r->pool;
     rgc.err.len  = NGX_MAX_CONF_ERRSTR;
