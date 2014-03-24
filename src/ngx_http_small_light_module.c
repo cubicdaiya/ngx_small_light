@@ -430,6 +430,7 @@ static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *
     ngx_str_t                   *ptn_name;
     ngx_str_t                   *ptn_str;
     ngx_str_t                   *value;
+    ngx_hash_init_t              hash;
     
     srv_conf = conf;
     value    = cf->args->elts;
@@ -441,8 +442,6 @@ static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *
     if (rc != NGX_OK) {
         return NGX_CONF_ERROR;
     }
-
-    ngx_hash_init_t hash;
 
     hash.hash        = &srv_conf->hash;
     hash.key         = ngx_hash_key_lc;
@@ -480,10 +479,10 @@ static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cm
 
 static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chain_t *in, ngx_http_small_light_ctx_t *ctx)
 {
-    u_char                      *p;
-    size_t                       size, rest;
-    ngx_buf_t                   *b;
-    ngx_chain_t                 *cl;
+    u_char      *p;
+    size_t       size, rest;
+    ngx_buf_t   *b;
+    ngx_chain_t *cl;
 
     if (ctx->content == NULL) {
         ctx->content = ngx_pcalloc(r->pool, ctx->content_length);
@@ -518,7 +517,7 @@ static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chai
 
 static ngx_int_t ngx_http_small_light_finish(ngx_http_request_t *r, ngx_chain_t *out)
 {
-    ngx_int_t  rc;
+    ngx_int_t rc;
 
     rc = ngx_http_next_header_filter(r);
 
