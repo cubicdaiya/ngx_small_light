@@ -224,7 +224,7 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     ctx->material_dir   = &srv_conf->material_dir;
     ctx->imlib2_temp_dir = loc_conf->imlib2_temp_dir;
 
-    converter = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "e");
+    converter = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "e");
     if (ngx_strcmp(converter, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK) == 0) {
         ctx->converter.init    = ngx_http_small_light_imagemagick_init;
         ctx->converter.term    = ngx_http_small_light_imagemagick_term;

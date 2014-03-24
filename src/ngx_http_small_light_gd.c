@@ -222,7 +222,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     }
 
     // effects.
-    char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "sharpen");
+    char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen != NULL) {
         int radius = ngx_http_small_light_parse_int(sharpen);
         if (radius > 0) {
@@ -263,7 +263,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         }
     }
 
-    char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "of");
+    char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
         ngx_int_t type;
         type = ngx_http_small_light_type(of);
@@ -278,7 +278,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     u_char *out;
     int size;
-    double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "q"));
+    double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q == 0) {
         q = 100;
     }

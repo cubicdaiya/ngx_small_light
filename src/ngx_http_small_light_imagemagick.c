@@ -94,7 +94,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     // remove all profiles
-    int rmprof_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "rmprof"));
+    int rmprof_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "rmprof"));
     if (rmprof_flg != 0) {
         status = MagickProfileImage(ictx->wand, "*", NULL, 0);
         if (status == MagickFalse) {
@@ -185,7 +185,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     // effects.
-    char *unsharp = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "unsharp");
+    char *unsharp = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "unsharp");
     if (unsharp != NULL) {
         GeometryInfo geo;
         ParseGeometry(unsharp, &geo);
@@ -195,7 +195,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-    char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "sharpen");
+    char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen != NULL) {
         GeometryInfo geo;
         ParseGeometry(sharpen, &geo);
@@ -205,7 +205,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-    char *blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "blur");
+    char *blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
     if (blur) {
         GeometryInfo geo;
         ParseGeometry(blur, &geo);
@@ -245,7 +245,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     // embed icon
-    u_char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "embedicon");
+    u_char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "embedicon");
     if (ngx_strlen(ctx->material_dir) > 0 && ngx_strlen(embedicon) > 0) {
         ngx_fd_t fd;
         MagickWand *icon_wand;
@@ -295,12 +295,12 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     // set params.
-    double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "q"));
+    double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q > 0.0) {
         MagickSetImageCompressionQuality(ictx->wand, q);
     }
 
-    char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&ctx->hash, "of");
+    char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
         ngx_int_t type;
         type = ngx_http_small_light_type(of);
