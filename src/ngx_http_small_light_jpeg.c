@@ -65,7 +65,7 @@ typedef struct ImLib_JPEG_error_mgr *emptr;
 static void
 _JPEGFatalErrorHandler(j_common_ptr cinfo)
 {
-    emptr               errmgr;
+    emptr errmgr;
 
     errmgr = (emptr) cinfo->err;
     /*   cinfo->err->output_message(cinfo);*/
@@ -100,11 +100,15 @@ ngx_int_t ngx_http_small_light_load_jpeg(
           void **dest_data, int *width, int *height, const ngx_http_request_t *r,
           const char *filename, int hint_w, int hint_h)
 {
-    int                 w, h;
-    struct jpeg_decompress_struct cinfo;
-    struct ImLib_JPEG_error_mgr jerr;
-    FILE *f;
-    ngx_int_t fd;
+    int                            w, h;
+    struct jpeg_decompress_struct  cinfo;
+    struct ImLib_JPEG_error_mgr    jerr;
+    FILE                          *f;
+    ngx_int_t                      fd;
+    int                            denom;
+    DATA8                         *ptr, *line[16], *data;
+    DATA32                        *ptr2, *dest;
+    int                            x, y, l, i, scans;
 
     *dest_data = NULL;
     *width = *height = 0;
@@ -119,13 +123,12 @@ ngx_int_t ngx_http_small_light_load_jpeg(
     jerr.pub.error_exit = _JPEGFatalErrorHandler;
     jerr.pub.emit_message = _JPEGErrorHandler2;
     jerr.pub.output_message = _JPEGErrorHandler;
-    if (sigsetjmp(jerr.setjmp_buffer, 1))
-        {
-            jpeg_destroy_decompress(&cinfo);
-            ngx_close_file(fd);
-            fclose(f);
-            return NGX_ERROR;
-        }
+    if (sigsetjmp(jerr.setjmp_buffer, 1)) {
+        jpeg_destroy_decompress(&cinfo);
+        ngx_close_file(fd);
+        fclose(f);
+        return NGX_ERROR;
+    }
     jpeg_create_decompress(&cinfo);
     jpeg_stdio_src(&cinfo, f);
     jpeg_read_header(&cinfo, TRUE);
@@ -135,7 +138,6 @@ ngx_int_t ngx_http_small_light_load_jpeg(
     jpeg_start_decompress(&cinfo);
     w = cinfo.output_width;
     h = cinfo.output_height;
-    int denom;
     denom = w / hint_w;
     if (denom > h / hint_h) {
         denom = h / hint_h;
@@ -152,9 +154,6 @@ ngx_int_t ngx_http_small_light_load_jpeg(
     cinfo.scale_denom = denom;
 
     jpeg_start_decompress(&cinfo);
-    DATA8              *ptr, *line[16], *data;
-    DATA32             *ptr2, *dest;
-    int                 x, y, l, i, scans;
 
     w = cinfo.output_width;
     h = cinfo.output_height;
@@ -183,19 +182,22 @@ ngx_int_t ngx_http_small_light_load_jpeg(
         return NGX_ERROR;
     }
     if (cinfo.output_components > 1) {
-        for (i = 0; i < cinfo.rec_outbuf_height; i++)
+        for (i = 0; i < cinfo.rec_outbuf_height; i++) {
             line[i] = data + (i * w * cinfo.output_components);
+        }
         for (l = 0; l < h; l += cinfo.rec_outbuf_height) {
             jpeg_read_scanlines(&cinfo, line, cinfo.rec_outbuf_height);
             scans = cinfo.rec_outbuf_height;
-            if ((h - l) < scans)
+            if ((h - l) < scans) {
                 scans = h - l;
+            }
             ptr = data;
             for (y = 0; y < scans; y++) {
                 for (x = 0; x < w; x++) {
                     *ptr2 =
-                        (0xff000000) | ((ptr[0]) << 16) | ((ptr[1]) <<
-                                                           8) |
+                        (0xff000000)     |
+                        ((ptr[0]) << 16) |
+                        ((ptr[1]) <<  8) |
                         (ptr[2]);
                     ptr += cinfo.output_components;
                     ptr2++;
@@ -203,19 +205,22 @@ ngx_int_t ngx_http_small_light_load_jpeg(
             }
         }
     } else if (cinfo.output_components == 1) {
-        for (i = 0; i < cinfo.rec_outbuf_height; i++)
+        for (i = 0; i < cinfo.rec_outbuf_height; i++) {
             line[i] = data + (i * w);
+        }
         for (l = 0; l < h; l += cinfo.rec_outbuf_height) {
             jpeg_read_scanlines(&cinfo, line, cinfo.rec_outbuf_height);
             scans = cinfo.rec_outbuf_height;
-            if ((h - l) < scans)
+            if ((h - l) < scans) {
                 scans = h - l;
+            }
             ptr = data;
             for (y = 0; y < scans; y++) {
                 for (x = 0; x < w; x++) {
                     *ptr2 =
-                        (0xff000000) | ((ptr[0]) << 16) | ((ptr[0]) <<
-                                                           8) |
+                        (0xff000000)     |
+                        ((ptr[0]) << 16) |
+                        ((ptr[0]) <<  8) |
                         (ptr[0]);
                     ptr++;
                     ptr2++;
@@ -223,6 +228,7 @@ ngx_int_t ngx_http_small_light_load_jpeg(
             }
         }
     }
+
     jpeg_finish_decompress(&cinfo);
     jpeg_destroy_decompress(&cinfo);
     ngx_close_file(fd);
