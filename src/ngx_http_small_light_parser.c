@@ -82,6 +82,9 @@ ngx_int_t ngx_http_small_light_parse_params(ngx_http_request_t *r, ngx_http_smal
             return NGX_OK;
         }
         kk = ngx_palloc(r->pool, ngx_strlen(k) + 1);
+        if (kk == NULL) {
+            return NGX_ERROR;
+        }
         ngx_cpystrn((u_char *)kk, (u_char *)k, ngx_strlen(k) + 1);
         ks.data = (u_char *)kk;
         ks.len  = ngx_strlen(kk);
@@ -89,6 +92,9 @@ ngx_int_t ngx_http_small_light_parse_params(ngx_http_request_t *r, ngx_http_smal
             ngx_cpystrn((u_char *)pv, (u_char *)v, ngx_strlen(v) + 1);
         } else {
             vv = ngx_palloc(r->pool, ngx_strlen(v) + 1);
+            if (vv == NULL) {
+                return NGX_ERROR;
+            }
             ngx_cpystrn((u_char *)vv, (u_char *)v, ngx_strlen(v) + 1);
             ngx_hash_add_key(&ctx->params, &ks, vv, NGX_HASH_READONLY_KEY);
         }

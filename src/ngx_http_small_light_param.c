@@ -166,6 +166,15 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
 
         if (!var->not_found) {
             ks.data = ngx_palloc(r->pool, args[i].len + 1);
+            if (ks.data == NULL) {
+                ngx_log_error(NGX_LOG_ERR,
+                              r->connection->log,
+                              0,
+                              "failed to allocate memory from r->pool %s:%d",
+                              __FUNCTION__,
+                              __LINE__);
+                return NGX_ERROR;
+            }
             ngx_cpystrn(ks.data, args[i].data + 4, args[i].len - 4 + 1);
             ks.len = args[i].len - 4;
 
@@ -173,6 +182,15 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
                 ngx_cpystrn((u_char *)pv, var->data, var->len + 1);
             } else {
                 v = ngx_palloc(r->pool, var->len + 1);
+                if (v == NULL) {
+                    ngx_log_error(NGX_LOG_ERR,
+                                  r->connection->log,
+                                  0,
+                                  "failed to allocate memory from r->pool %s:%d",
+                                  __FUNCTION__,
+                                  __LINE__);
+                    return NGX_ERROR;
+                }
                 ngx_cpystrn(v, var->data, var->len + 1);
                 ngx_hash_add_key(&ctx->params, &ks, v, NGX_HASH_READONLY_KEY);
             }

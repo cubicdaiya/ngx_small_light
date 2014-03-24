@@ -264,6 +264,10 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         embedicon_len      = ngx_strlen(embedicon);
         embedicon_path_len = ctx->material_dir->len + ngx_strlen("/") + embedicon_len;
         embedicon_path     = ngx_palloc(r->pool, embedicon_path_len + 1);
+        if (embedicon_path == NULL) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+            return NGX_ERROR;
+        }
 
         p = embedicon_path;
         p = ngx_cpystrn(p, ctx->material_dir->data, ctx->material_dir->len + 1);

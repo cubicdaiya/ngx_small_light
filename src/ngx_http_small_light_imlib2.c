@@ -274,6 +274,10 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     char *buf;
     buf = ngx_palloc(r->pool, ngx_file_size(&fi));
+    if (buf == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        return NGX_ERROR;
+    }
     ssize_t size = ngx_read_fd(fd, buf, ngx_file_size(&fi));
     if (size == -1) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to ngx_read_fd %s:%d", __FUNCTION__, __LINE__);
