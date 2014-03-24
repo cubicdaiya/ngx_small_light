@@ -167,9 +167,7 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
         if (!var->not_found) {
             ks.data = ngx_palloc(r->pool, args[i].len + 1);
             if (ks.data == NULL) {
-                ngx_log_error(NGX_LOG_ERR,
-                              r->connection->log,
-                              0,
+                ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                               "failed to allocate memory from r->pool %s:%d",
                               __FUNCTION__,
                               __LINE__);
@@ -183,9 +181,7 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
             } else {
                 v = ngx_palloc(r->pool, var->len + 1);
                 if (v == NULL) {
-                    ngx_log_error(NGX_LOG_ERR,
-                                  r->connection->log,
-                                  0,
+                    ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                                   "failed to allocate memory from r->pool %s:%d",
                                   __FUNCTION__,
                                   __LINE__);

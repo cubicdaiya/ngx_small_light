@@ -39,12 +39,18 @@ ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small
     ictx->image_len = ctx->content_length;
     ictx->type      = ngx_http_small_light_type_detect(ictx->image, ictx->image_len);
     if (ictx->type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to get image type %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to get image type %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
     ictx->tf        = ngx_pcalloc(r->pool, sizeof(ngx_temp_file_t));
     if (ictx->tf == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to allocate memory from r->pool %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
     ictx->tf->file.fd  = NGX_INVALID_FILE;
@@ -53,12 +59,18 @@ ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small
     ictx->tf->pool     = r->pool;
 
     if (ngx_create_temp_file(&ictx->tf->file, ictx->tf->path, ictx->tf->pool, 1, 0, 0600) != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to create temporary file %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to create temporary file %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     if (ngx_write_file(&ictx->tf->file, ictx->image, ictx->image_len, 0) == NGX_ERROR) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to save temporary file %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to save temporary file %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         ngx_http_small_light_imlib2_term(r, ctx);
         return NGX_ERROR;
     }
@@ -72,7 +84,10 @@ ngx_int_t ngx_http_small_light_imlib2_term(ngx_http_request_t *r, ngx_http_small
     ictx = (ngx_http_small_light_imlib2_ctx_t *)ctx->ictx;
 
     if (ngx_delete_file(ictx->tf->file.name.data) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to delete temporary file %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to delete temporary file %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
     }
 
     return NGX_OK;
@@ -103,7 +118,10 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         if (ngx_http_small_light_load_jpeg((void**)&data, &w, &h, r, filename, sz.dw, sz.dh) != NGX_OK) {
             image_org = imlib_load_image_immediately_without_cache(filename);
             if (image_org == NULL) {
-                ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to load image %s:%d", __FUNCTION__, __LINE__);
+                ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                              "failed to load image %s:%d",
+                              __FUNCTION__,
+                              __LINE__);
                 return NGX_ERROR;
             }
         } else {
@@ -112,7 +130,10 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     } else {
         image_org = imlib_load_image_immediately_without_cache(filename);
         if (image_org == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to load image %s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "failed to load image %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
             return NGX_ERROR;
         }
     }
@@ -140,7 +161,10 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     }
 
     if (image_dst == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "imlib_create_cropped_scaled_image failed. %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "imlib_create_cropped_scaled_image failed. %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
@@ -231,7 +255,11 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         ngx_int_t type;
         type = ngx_http_small_light_type(of);
         if (type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "of is invalid(%s) %s:%d", of, __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "of is invalid(%s) %s:%d",
+                          of,
+                          __FUNCTION__,
+                          __LINE__);
             of = (char *)ngx_http_small_light_image_exts[ictx->type - 1];
         } else {
             ictx->type = type;
@@ -251,43 +279,64 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     // check error.
     if (err != IMLIB_LOAD_ERROR_NONE) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to imlib_save_error %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to imlib_save_error %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     ngx_file_info_t fi;
     if (ngx_file_info(filename, &fi) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to ngx_file_info %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to ngx_file_info %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     ngx_fd_t fd = ngx_open_file(filename, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
     if (fd == NGX_INVALID_FILE) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to open fd %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to open fd %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     if (ngx_fd_info(fd, &fi) == NGX_FILE_ERROR) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to ngx_fd_info %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to ngx_fd_info %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     } 
 
     char *buf;
     buf = ngx_palloc(r->pool, ngx_file_size(&fi));
     if (buf == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to allocate memory from r->pool %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
     ssize_t size = ngx_read_fd(fd, buf, ngx_file_size(&fi));
     if (size == -1) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to ngx_read_fd %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to ngx_read_fd %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     if ((size_t)size > ctx->content_length) {
         ctx->content = ngx_palloc(r->pool, size);
         if (ctx->content == NULL) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "failed to allocate memory from r->pool %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
             return NGX_ERROR;
         }
     }

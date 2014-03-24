@@ -183,25 +183,39 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     }
 
     if ((ctx = ngx_pcalloc(r->pool, sizeof(*ctx))) == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to allocate memory from r->pool %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     ctx->params.keys.pool = r->pool;
     ctx->params.temp_pool = r->pool;
     if (ngx_hash_keys_array_init(&ctx->params, NGX_HASH_SMALL) != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to init hash keys for parameters %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to init hash keys for parameters %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     if (loc_conf->enable_getparam_mode) {
         if (ngx_http_small_light_init_getparams(r, ctx, srv_conf) != NGX_OK) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to analyze parameters:%s %s:%d", define_pattern.data, __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "failed to analyze parameters:%s %s:%d",
+                          define_pattern.data,
+                          __FUNCTION__,
+                          __LINE__);
             return NGX_ERROR;
         }
     } else {
         if (ngx_http_small_light_init_params(r, ctx, &define_pattern, srv_conf) != NGX_OK) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to analyze parameters:%s %s:%d", define_pattern.data, __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "failed to analyze parameters:%s %s:%d",
+                          define_pattern.data,
+                          __FUNCTION__,
+                          __LINE__);
             return NGX_ERROR;
         }
     }
@@ -215,7 +229,10 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     hash_init.temp_pool   = NULL;
 
     if (ngx_hash_init(&hash_init, ctx->params.keys.elts, ctx->params.keys.nelts) != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to init hash table for parameters %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to init hash table for parameters %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
@@ -252,7 +269,10 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     }
 
     if (ctx->ictx == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to allocate memory from r->pool %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
@@ -297,7 +317,10 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
         if (rc == NGX_AGAIN) {
             return NGX_OK;
         }
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to read image %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to read image %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
@@ -305,15 +328,24 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
 
     rc = ctx->converter.init(r, ctx);
     if (rc != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to process image %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to process image %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
     rc = ctx->converter.process(r, ctx);
     if (rc != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to process image %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to process image %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         rc = ctx->converter.term(r, ctx);
         if (rc != NGX_OK) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to terminate processing image %s:%d", __FUNCTION__, __LINE__);
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "failed to terminate processing image %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
             return NGX_ERROR;
         }
         return ngx_http_filter_finalize_request(r,
@@ -322,13 +354,19 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
     }
     rc = ctx->converter.term(r, ctx);
     if (rc != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to terminate processing image %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to terminate processing image %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
 
     b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
     if (b == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to allocate memory from r->pool %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
     b->pos      = ctx->content;
@@ -350,7 +388,10 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
 
     cln = ngx_pool_cleanup_add(r->pool, 0);
     if (cln == NULL) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "failed to allocate memory from r->pool %s:%d", __FUNCTION__, __LINE__);
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to allocate memory from r->pool %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
         return NGX_ERROR;
     }
     cln->handler = ngx_http_small_light_cleanup;
