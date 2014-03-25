@@ -1,8 +1,8 @@
 ngx_small_light
 ==================
 
-ngx_small_light is a dynamic image transformation module for nginx.
-And ngx_small_light is written for using as the same way as [mod_small_light](http://code.google.com/p/smalllight/) as possible in nginx.(mod_small_light is an apache module)
+`ngx_small_light` is a dynamic image transformation module for nginx.
+And `ngx_small_light` is written for using as the same way as [mod_small_light](http://code.google.com/p/smalllight/) as possible in nginx.([mod_small_light](http://code.google.com/p/smalllight/) is an apache module)
 
 ## Dependencies
 
@@ -21,7 +21,7 @@ And ngx_small_light is written for using as the same way as [mod_small_light](ht
     make
     make install
 
-If you want to enable the libraries except ImageMagick in ngx_small_light, add following options when executing setup. (ImageMagick is always enabled)
+If you want to enable the libraries except ImageMagick in `ngx_small_light`, add following options when executing setup. (ImageMagick is always enabled)
 
 ```sh
 ./setup --with-imlib2           # enable ImageMagick and Imlib2
