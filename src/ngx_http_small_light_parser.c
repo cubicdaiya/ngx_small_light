@@ -25,11 +25,12 @@
 
 ngx_int_t ngx_http_small_light_parse_define_pattern(ngx_http_request_t *r, ngx_str_t *unparsed_uri, ngx_str_t *define_pattern)
 {
-    int rc, captures[(1 + 2) * 3];
     u_char errstr[NGX_MAX_CONF_ERRSTR];
     ngx_regex_compile_t rgc;
     u_char *define_pattern_s;
     ngx_str_t pattern = ngx_string("small_light\\(([^\\)]*)\\)");
+    int capture_start, capture_end, capture_len, captures[(1 + 2) * 3];;
+    ngx_int_t rc;
 
     ngx_memzero(&rgc, sizeof(ngx_regex_compile_t));
 
@@ -46,9 +47,9 @@ ngx_int_t ngx_http_small_light_parse_define_pattern(ngx_http_request_t *r, ngx_s
     rc = ngx_regex_exec(rgc.regex, unparsed_uri, captures, (1 + 2) * 3);
 
     if (rc >= 0) {
-        int capture_start = captures[2];
-        int capture_end   = captures[3];
-        int capture_len   = capture_end - capture_start;
+        capture_start = captures[2];
+        capture_end   = captures[3];
+        capture_len   = capture_end - capture_start;
         define_pattern_s  = ngx_pcalloc(r->pool, capture_len + 1);
         if (define_pattern_s == NULL) {
             return NGX_ERROR;
@@ -159,7 +160,7 @@ double ngx_http_small_light_calc_coord(ngx_http_small_light_coord_t *crd, double
 ngx_int_t ngx_http_small_light_parse_color(ngx_http_small_light_color_t *color, const char *s)
 {
     int res;
-    int len = strlen(s);
+    size_t len = strlen(s);
     if (len == 3) {
         res = sscanf(s, "%1hx%1hx%1hx", &color->r, &color->g, &color->b);
         if (res != EOF) {

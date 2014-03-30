@@ -88,20 +88,20 @@ static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t 
 
 ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_str_t *define_pattern, ngx_http_small_light_conf_t *srv_conf)
 {
-    char pv[BUFSIZ];
+    char      pv[BUFSIZ], *pval;
+    ngx_str_t pval_str;
+
     pv[0] = '\0';
     if (ngx_http_small_light_parse_params(r, ctx, define_pattern, pv) != NGX_OK) {
         return NGX_ERROR;
     }
 
     if (*pv != '\0') {
-        char *pval;
         pval = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&srv_conf->hash, pv);
         if (pval == NULL) {
             ngx_http_small_light_init_params_default(ctx);
             return NGX_OK;
         }
-        ngx_str_t pval_str;
         pval_str.data = (u_char *)pval;
         pval_str.len  = ngx_strlen(pval);
         if (ngx_http_small_light_parse_params(r, ctx, &pval_str, pv) != NGX_OK) {
@@ -147,12 +147,11 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
     };
     ngx_uint_t                 i;
     size_t                     args_size;
-    u_char                    *low;
+    u_char                    *low, *v;
     ngx_http_variable_value_t *var;
     ngx_uint_t                 key;
-    ngx_str_t                  ks;
-    char                       pv[BUFSIZ];
-    u_char                    *v;
+    ngx_str_t                  ks, pval_str;
+    char                       pv[BUFSIZ], *pval;
 
     pv[0] = '\0';
     args_size = sizeof(args) / sizeof(ngx_str_t);
@@ -194,13 +193,11 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
     }
 
     if (*pv != '\0') {
-        char *pval;
         pval = NGX_HTTP_SMALL_LIGHT_PARAM_GET(&srv_conf->hash, pv);
         if (pval == NULL) {
             ngx_http_small_light_init_params_default(ctx);
             return NGX_OK;
         }
-        ngx_str_t pval_str;
         pval_str.data = (u_char *)pval;
         pval_str.len  = ngx_strlen(pval);
         if (ngx_http_small_light_parse_params(r, ctx, &pval_str, pv) != NGX_OK) {

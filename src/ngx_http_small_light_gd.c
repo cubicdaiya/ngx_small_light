@@ -112,10 +112,16 @@ ngx_int_t ngx_http_small_light_gd_term(ngx_http_request_t *r, ngx_http_small_lig
 
 ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
-    ngx_http_small_light_gd_ctx_t *ictx;
-    ngx_http_small_light_image_size_t sz;
-    gdImagePtr src, dst;
-    ngx_int_t colors, transparent, palette, red, green, blue;
+    ngx_http_small_light_gd_ctx_t     *ictx;
+    ngx_http_small_light_image_size_t  sz;
+    gdImagePtr                         src, dst, canvas;
+    ngx_int_t                          colors, transparent, palette, red, green, blue;
+    ngx_int_t                          ax, ay, ox, oy, t, type;
+    int                                iw, ih, radius, ccolor, bcolor;
+    char                              *sharpen, *of;
+    u_char                            *out;
+    int                                size;
+    double                             q;
 
     ictx = (ngx_http_small_light_gd_ctx_t *)ctx->ictx;
     src  = ngx_http_small_light_gd_src(ictx);
@@ -127,8 +133,8 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         return NGX_ERROR;
     }
 
-    int iw = gdImageSX(src);
-    int ih = gdImageSY(src);
+    iw = gdImageSX(src);
+    ih = gdImageSY(src);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
     /* pass through. */
@@ -181,7 +187,6 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     }
 
     if (sz.angle) {
-        ngx_int_t ax, ay, ox, oy, t;
         src = dst;
         ax  = ((ngx_int_t)sz.dw % 2 == 0) ? 1 : 0;
         ay  = ((ngx_int_t)sz.dh % 2 == 0) ? 1 : 0;
@@ -228,9 +233,9 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     }
 
     /* effects. */
-    char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
+    sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen != NULL) {
-        int radius = ngx_http_small_light_parse_int(sharpen);
+        radius = ngx_http_small_light_parse_int(sharpen);
         if (radius > 0) {
             gdImageSharpen(dst, radius);
         }
@@ -241,12 +246,12 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     /* create canvas then draw image to the canvas. */
     if (sz.cw > 0.0 && sz.ch > 0.0) {
-        gdImagePtr canvas = gdImageCreateTrueColor(sz.cw, sz.ch);
+        canvas = gdImageCreateTrueColor(sz.cw, sz.ch);
         if (canvas == NULL) {
             gdImageDestroy(dst);
             return NGX_ERROR;
         }
-        int ccolor = gdImageColorAllocateAlpha(canvas, sz.cc.r, sz.cc.g, sz.cc.b, sz.cc.a);
+        ccolor = gdImageColorAllocateAlpha(canvas, sz.cc.r, sz.cc.g, sz.cc.b, sz.cc.a);
         gdImageFilledRectangle(canvas, 0, 0, sz.cw, sz.ch, ccolor);
         gdImageCopy(canvas, dst, sz.dx, sz.dy, 0, 0, sz.dw, sz.dh);
         gdImageDestroy(dst);
@@ -255,7 +260,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     /* border. */
     if (sz.bw > 0.0 || sz.bh > 0.0) {
-        int bcolor = gdImageColorAllocateAlpha(dst, sz.bc.r, sz.bc.g, sz.bc.b, sz.bc.a);
+        bcolor = gdImageColorAllocateAlpha(dst, sz.bc.r, sz.bc.g, sz.bc.b, sz.bc.a);
         if (sz.cw > 0.0 && sz.ch > 0.0) {
             gdImageFilledRectangle(dst, 0, 0, sz.cw, sz.bh, bcolor);
             gdImageFilledRectangle(dst, 0, 0, sz.bw, sz.ch, bcolor);
@@ -269,9 +274,8 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         }
     }
 
-    char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
+    of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
-        ngx_int_t type;
         type = ngx_http_small_light_type(of);
         if (type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -286,9 +290,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     
     ctx->of = ngx_http_small_light_image_types[ictx->type - 1];
 
-    u_char *out;
-    int size;
-    double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
+    q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q == 0) {
         q = 100;
     }

@@ -35,8 +35,11 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                                           double iw, double ih)
 {
     
-    ngx_http_small_light_coord_t sx_coord, sy_coord, sw_coord, sh_coord;
-    ngx_http_small_light_coord_t dx_coord, dy_coord, dw_coord, dh_coord;
+    ngx_http_small_light_coord_t  sx_coord, sy_coord, sw_coord, sh_coord;
+    ngx_http_small_light_coord_t  dx_coord, dy_coord, dw_coord, dh_coord;
+    char                         *da_str, *pt, *prm_ds_str, da, prm_ds;
+    double                        dwo;
+    ngx_int_t                     pt_flg;
 
     ngx_http_small_light_parse_coord(&sx_coord, NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sx"));
     ngx_http_small_light_parse_coord(&sy_coord, NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sy"));
@@ -69,8 +72,8 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     sz->dh = ngx_http_small_light_calc_coord(&dh_coord, ih);
     sz->aspect = sz->sw / sz->sh;
 
-    char *da_str = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "da");
-    char  da     = da_str[0] ? da_str[0] : 'l';
+    da_str = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "da");
+    da     = da_str[0] ? da_str[0] : 'l';
     if (sz->dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         if (da == 'l') {
             if (sz->sw / sz->dw < sz->sh / sz->dh) {
@@ -87,7 +90,7 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         }
     } else {
         if (sz->dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dh == sz->dw) {
-            double dwo = sz->dw;
+            dwo = sz->dw;
             sz->dw = sz->dh / sz->aspect;
             sz->dh = dwo / sz->aspect;
         } else if (sz->dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
@@ -113,8 +116,8 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
 #endif
 
     /* get pass through option. */
-    ngx_int_t  pt_flg = 0;
-    char      *pt     = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "pt");
+    pt_flg = 0;
+    pt     = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "pt");
     if (pt[0] == '\0' || ngx_strcmp(pt, "ptss") == 0) {
         if (sz->sw < sz->cw && sz->sh < sz->ch) {
             pt_flg = 1;
@@ -127,8 +130,8 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     sz->pt_flg = pt_flg;
 
     /* get scaling option. */
-    char *prm_ds_str = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ds");
-    char  prm_ds     = prm_ds_str[0] ? prm_ds_str[0] : 'l';
+    prm_ds_str = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ds");
+    prm_ds     = prm_ds_str[0] ? prm_ds_str[0] : 'l';
     if (prm_ds == 's' || (sz->dw < sz->sw - sz->sx) || (sz->dh < sz->sh - sz->sy)) {
         sz->scale_flg = 1;
     } else {

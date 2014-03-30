@@ -102,7 +102,17 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 {
     ngx_http_small_light_imlib2_ctx_t *ictx;
     ngx_http_small_light_image_size_t sz;
-    char *filename;
+    Imlib_Image image_org, image_dst, image_tmp;
+    Imlib_Load_Error err;
+    ngx_file_info_t fi;
+    ngx_fd_t fd;
+    char *filename, *sharpen, *blur, *of, *buf;
+    void *data;
+    int w, h, radius;
+    double iw, ih, q;
+    ngx_int_t t, type;
+    const char *ext;
+    ssize_t size;
 
     ictx = (ngx_http_small_light_imlib2_ctx_t *)ctx->ictx;
 
@@ -111,11 +121,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     /* adjust image size */
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
-    Imlib_Image image_org;
-
     if (sz.jpeghint_flg != 0) {
-        void *data;
-        int w, h;
         if (ngx_http_small_light_load_jpeg((void**)&data, &w, &h, r, filename, sz.dw, sz.dh) != NGX_OK) {
             image_org = imlib_load_image_immediately_without_cache(filename);
             if (image_org == NULL) {
@@ -141,16 +147,14 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     /* calc size. */
     imlib_context_set_image(image_org);
-    double iw = (double)imlib_image_get_width();
-    double ih = (double)imlib_image_get_height();
+    iw = (double)imlib_image_get_width();
+    ih = (double)imlib_image_get_height();
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
     /* pass through. */
     if (sz.pt_flg != 0) {
         return NGX_OK;
     }
-
-    Imlib_Image image_dst;
 
     /* crop, scale. */
     if (sz.scale_flg != 0) {
@@ -170,7 +174,6 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     }
 
     if (sz.angle == 90 || sz.angle == 180 || sz.angle == 270) {
-        ngx_int_t t;
         imlib_context_set_image(image_dst);
         switch(sz.angle) {
         case 90:
@@ -192,7 +195,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     /* create canvas then draw image to the canvas. */
     if (sz.cw > 0.0 && sz.ch > 0.0) {
-        Imlib_Image image_tmp = imlib_create_image(sz.cw, sz.ch);
+        image_tmp = imlib_create_image(sz.cw, sz.ch);
         if (image_tmp == NULL) {
             imlib_context_set_image(image_dst);
             imlib_free_image();
@@ -209,18 +212,18 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     }
 
     /* effects. */
-    char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
+    sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen) {
-        int radius = ngx_http_small_light_parse_int(sharpen);
+        radius = ngx_http_small_light_parse_int(sharpen);
         if (radius > 0) {
             imlib_context_set_image(image_dst);
             imlib_image_sharpen(radius);
         }
     }
 
-    char *blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
+    blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
     if (blur) {
-        int radius = ngx_http_small_light_parse_int(blur);
+        radius = ngx_http_small_light_parse_int(blur);
         if (radius > 0) {
             imlib_context_set_image(image_dst);
             imlib_image_blur(radius);
@@ -246,14 +249,13 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     /* set params. */
     imlib_context_set_image(image_dst);
-    double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
+    q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q > 0.0) {
         imlib_image_attach_data_value("quality", NULL, q, NULL);
     }
 
-    char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
+    of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
-        ngx_int_t type;
         type = ngx_http_small_light_type(of);
         if (type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -268,13 +270,12 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         imlib_image_set_format(of);
         ctx->of = ngx_http_small_light_image_types[ictx->type - 1];
     } else {
-        const char *ext = ngx_http_small_light_image_exts[ictx->type - 1];
+        ext = ngx_http_small_light_image_exts[ictx->type - 1];
         imlib_image_set_format(ext);
         ctx->of = ctx->inf;
     }
 
     /* save image. */
-    Imlib_Load_Error err;
     imlib_save_image_with_error_return(filename, &err);
     imlib_free_image();
 
@@ -287,7 +288,6 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         return NGX_ERROR;
     }
 
-    ngx_file_info_t fi;
     if (ngx_file_info(filename, &fi) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to ngx_file_info %s:%d",
@@ -296,7 +296,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         return NGX_ERROR;
     }
 
-    ngx_fd_t fd = ngx_open_file(filename, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
+    fd = ngx_open_file(filename, NGX_FILE_RDONLY, NGX_FILE_OPEN, 0);
     if (fd == NGX_INVALID_FILE) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to open fd %s:%d",
@@ -313,7 +313,6 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         return NGX_ERROR;
     } 
 
-    char *buf;
     buf = ngx_palloc(r->pool, ngx_file_size(&fi));
     if (buf == NULL) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -322,7 +321,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
                       __LINE__);
         return NGX_ERROR;
     }
-    ssize_t size = ngx_read_fd(fd, buf, ngx_file_size(&fi));
+    size = ngx_read_fd(fd, buf, ngx_file_size(&fi));
     if (size == -1) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to ngx_read_fd %s:%d",

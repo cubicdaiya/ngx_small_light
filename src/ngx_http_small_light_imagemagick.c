@@ -65,8 +65,21 @@ ngx_int_t ngx_http_small_light_imagemagick_term(ngx_http_request_t *r, ngx_http_
 ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
     ngx_http_small_light_imagemagick_ctx_t *ictx;
-    ngx_http_small_light_image_size_t sz;
-    MagickBooleanType status;
+    ngx_http_small_light_image_size_t       sz;
+    MagickBooleanType                       status;
+    int                                     rmprof_flg;
+    double                                  iw, ih, q;
+    char                                   *jpeg_size_opt, *of_orig, *crop_geo, *size_geo;
+    char                                   *unsharp, *sharpen, *blur, *of;
+    MagickWand                             *trans_wand, *canvas_wand;
+    DrawingWand                            *border_wand;
+    PixelWand                              *bg_color, *canvas_color, *border_color;
+    GeometryInfo                            geo;
+    ngx_fd_t                                fd;
+    MagickWand                             *icon_wand;
+    u_char                                 *p, *embedicon, *embedicon_path, *canvas_buf, *sled_image;
+    size_t                                  embedicon_path_len, embedicon_len, sled_image_size;
+    ngx_int_t                               type;
 
     status = MagickFalse;
 
@@ -80,7 +93,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     /* prepare */
     if (sz.jpeghint_flg != 0) {
-        char *jpeg_size_opt;
         jpeg_size_opt = ngx_pcalloc(r->pool, 32 + 1);
         if (jpeg_size_opt == NULL) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -104,7 +116,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     /* remove all profiles */
-    int rmprof_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "rmprof"));
+    rmprof_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "rmprof"));
     if (rmprof_flg != 0) {
         status = MagickProfileImage(ictx->wand, "*", NULL, 0);
         if (status == MagickFalse) {
@@ -116,8 +128,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     /* calc size. */
-    double iw = (double)MagickGetImageWidth(ictx->wand);
-    double ih = (double)MagickGetImageHeight(ictx->wand);
+    iw = (double)MagickGetImageWidth(ictx->wand);
+    ih = (double)MagickGetImageHeight(ictx->wand);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
     /* pass through. */
@@ -125,13 +137,11 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         return NGX_OK;
     }
 
-    char *of_orig = MagickGetImageFormat(ictx->wand);
+    of_orig = MagickGetImageFormat(ictx->wand);
 
     /* crop, scale. */
     status = MagickTrue;
     if (sz.scale_flg != 0) {
-        char *crop_geo;
-        char *size_geo;
         crop_geo = ngx_pcalloc(r->pool, 128 + 1);
         if (crop_geo == NULL) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -150,7 +160,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
         ngx_snprintf((u_char *)crop_geo, 128 + 1, "%f!x%f!+%f+%f", sz.sw, sz.sh, sz.sx, sz.sy);
         ngx_snprintf((u_char *)size_geo, 128 + 1, "%f!x%f!",       sz.dw, sz.dh);
-        MagickWand *trans_wand;
         trans_wand = MagickTransformImage(ictx->wand, crop_geo, size_geo);
         if (trans_wand == NULL || trans_wand == ictx->wand) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
@@ -162,7 +171,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     /* rotate */
     if (sz.angle) {
-        PixelWand  *bg_color;
         bg_color = NewPixelWand();
         PixelSetRed(bg_color,   sz.cc.r / 255.0);
         PixelSetGreen(bg_color, sz.cc.g / 255.0);
@@ -182,8 +190,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     /* create canvas then draw image to the canvas. */
     if (sz.cw > 0.0 && sz.ch > 0.0) {
-        MagickWand *canvas_wand  = NewMagickWand();
-        PixelWand  *canvas_color = NewPixelWand();
+        canvas_wand  = NewMagickWand();
+        canvas_color = NewPixelWand();
         PixelSetRed(canvas_color,   sz.cc.r / 255.0);
         PixelSetGreen(canvas_color, sz.cc.g / 255.0);
         PixelSetBlue(canvas_color,  sz.cc.b / 255.0);
@@ -204,9 +212,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     /* effects. */
-    char *unsharp = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "unsharp");
+    unsharp = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "unsharp");
     if (unsharp != NULL) {
-        GeometryInfo geo;
         ParseGeometry(unsharp, &geo);
         status = MagickUnsharpMaskImage(ictx->wand, geo.rho, geo.sigma, geo.xi, geo.psi);
         if (status == MagickFalse) {
@@ -217,9 +224,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-    char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
+    sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen != NULL) {
-        GeometryInfo geo;
         ParseGeometry(sharpen, &geo);
         status = MagickSharpenImage(ictx->wand, geo.rho, geo.sigma);
         if (status == MagickFalse) {
@@ -230,9 +236,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-    char *blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
+    blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
     if (blur) {
-        GeometryInfo geo;
         ParseGeometry(blur, &geo);
         status = MagickBlurImage(ictx->wand, geo.rho, geo.sigma);
         if (status == MagickFalse) {
@@ -245,8 +250,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     /* border. */
     if (sz.bw > 0.0 || sz.bh > 0.0) {
-        DrawingWand *border_wand = NewDrawingWand();
-        PixelWand *border_color;
+        border_wand = NewDrawingWand();
         border_color = NewPixelWand();
         PixelSetRed(border_color,   sz.bc.r / 255.0);
         PixelSetGreen(border_color, sz.bc.g / 255.0);
@@ -273,15 +277,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     /* embed icon */
-    u_char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "embedicon");
+    embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "embedicon");
     if (ngx_strlen(ctx->material_dir) > 0 && ngx_strlen(embedicon) > 0) {
-        ngx_fd_t fd;
-        MagickWand *icon_wand;
-        u_char  *p;
-        u_char  *embedicon_path;
-        size_t  embedicon_path_len;
-        size_t  embedicon_len;
-
         if (ngx_strstrn((u_char *)embedicon, "/", 1 - 1)) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                           "invalid parameter 'embedicon':%s %s:%d",
@@ -350,14 +347,13 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     /* set params. */
-    double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
+    q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q > 0.0) {
         MagickSetImageCompressionQuality(ictx->wand, q);
     }
 
-    char *of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
+    of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
     if (ngx_strlen(of) > 0) {
-        ngx_int_t type;
         type = ngx_http_small_light_type(of);
         if (type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -377,9 +373,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     /* get small_lighted image as binary. */
-    u_char *canvas_buf;
-    u_char *sled_image;
-    size_t sled_image_size;
     canvas_buf = MagickGetImageBlob(ictx->wand, &sled_image_size);
     sled_image = ngx_pcalloc(r->pool, sled_image_size);
     if (sled_image == NULL) {
