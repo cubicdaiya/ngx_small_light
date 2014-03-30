@@ -35,4 +35,4 @@ double ngx_http_small_light_calc_coord(ngx_http_small_light_coord_t *crd, double
 ngx_int_t ngx_http_small_light_parse_coord(ngx_http_small_light_coord_t *crd, const char *s);
 ngx_int_t ngx_http_small_light_parse_color(ngx_http_small_light_color_t *color, const char *s);
 
-#endif // NGX_HTTP_SMALL_LIGHT_PARSER_H
+#endif /* NGX_HTTP_SMALL_LIGHT_PARSER_H */

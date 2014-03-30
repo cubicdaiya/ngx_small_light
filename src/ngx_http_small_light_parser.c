@@ -104,9 +104,10 @@ ngx_int_t ngx_http_small_light_parse_params(ngx_http_request_t *r, ngx_http_smal
     return NGX_OK;
 }
 
-// 
-// following original functions are brought from mod_small_light(Dynamic image transformation module for Apache2) and customed
-// 
+/** 
+ * following original functions are brought from
+ * mod_small_light(Dynamic image transformation module for Apache2) and customed
+ */
 
 ngx_int_t ngx_http_small_light_parse_flag(const char *s)
 {

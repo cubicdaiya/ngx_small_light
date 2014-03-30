@@ -93,9 +93,10 @@ ngx_int_t ngx_http_small_light_imlib2_term(ngx_http_request_t *r, ngx_http_small
     return NGX_OK;
 }
 
-// 
-// following original functions are brought from mod_small_light(Dynamic image transformation module for Apache2) and customed
-// 
+/** 
+ * following original functions are brought from
+ * mod_small_light(Dynamic image transformation module for Apache2) and customed
+ */
 
 ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
@@ -107,7 +108,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     filename = (char *)ictx->tf->file.name.data;
 
-    // adjust image size
+    /* adjust image size */
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
     Imlib_Image image_org;
@@ -138,20 +139,20 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         }
     }
 
-    // calc size.
+    /* calc size. */
     imlib_context_set_image(image_org);
     double iw = (double)imlib_image_get_width();
     double ih = (double)imlib_image_get_height();
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
-    // pass through.
+    /* pass through. */
     if (sz.pt_flg != 0) {
         return NGX_OK;
     }
 
     Imlib_Image image_dst;
 
-    // crop, scale.
+    /* crop, scale. */
     if (sz.scale_flg != 0) {
         image_dst = imlib_create_cropped_scaled_image((int)sz.sx, (int)sz.sy, (int)sz.sw, (int)sz.sh, (int)sz.dw, (int)sz.dh);
         imlib_context_set_image(image_org);
@@ -189,7 +190,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     }
 
-    // create canvas then draw image to the canvas.
+    /* create canvas then draw image to the canvas. */
     if (sz.cw > 0.0 && sz.ch > 0.0) {
         Imlib_Image image_tmp = imlib_create_image(sz.cw, sz.ch);
         if (image_tmp == NULL) {
@@ -207,7 +208,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         image_dst = image_tmp;
     }
 
-    // effects.
+    /* effects. */
     char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen) {
         int radius = ngx_http_small_light_parse_int(sharpen);
@@ -226,7 +227,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         }
     }
 
-    // border.
+    /* border. */
     if (sz.bw > 0.0 || sz.bh > 0.0) {
         imlib_context_set_color(sz.bc.r, sz.bc.g, sz.bc.b, sz.bc.a);
         imlib_context_set_image(image_dst);
@@ -243,7 +244,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         }
     }
 
-    // set params.
+    /* set params. */
     imlib_context_set_image(image_dst);
     double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q > 0.0) {
@@ -272,12 +273,12 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         ctx->of = ctx->inf;
     }
 
-    // save image.
+    /* save image. */
     Imlib_Load_Error err;
     imlib_save_image_with_error_return(filename, &err);
     imlib_free_image();
 
-    // check error.
+    /* check error. */
     if (err != IMLIB_LOAD_ERROR_NONE) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to imlib_save_error %s:%d",

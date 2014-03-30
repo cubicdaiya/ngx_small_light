@@ -30,4 +30,4 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                                           ngx_http_small_light_image_size_t *sz,
                                           double iw, double ih);
 
-#endif // NGX_HTTP_SMALL_LIGHT_SIZE_H
+#endif /* NGX_HTTP_SMALL_LIGHT_SIZE_H */

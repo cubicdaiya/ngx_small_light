@@ -39,4 +39,4 @@ ngx_int_t ngx_http_small_light_imagemagick_term(ngx_http_request_t *r, ngx_http_
 ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
 
 
-#endif // NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
+#endif /* NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H */

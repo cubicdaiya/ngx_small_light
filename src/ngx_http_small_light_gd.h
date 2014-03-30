@@ -37,4 +37,4 @@ ngx_int_t ngx_http_small_light_gd_init(ngx_http_request_t *r, ngx_http_small_lig
 ngx_int_t ngx_http_small_light_gd_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
 ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
 
-#endif // NGX_HTTP_SMALL_LIGHT_GD_H
+#endif /* NGX_HTTP_SMALL_LIGHT_GD_H */

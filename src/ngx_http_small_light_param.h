@@ -28,4 +28,4 @@
 ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_str_t *define_pattern, ngx_http_small_light_conf_t *srv_conf);
 ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_http_small_light_conf_t *srv_conf);
 
-#endif // NGX_HTTP_SMALL_LIGHT_PARAM_H
+#endif /* NGX_HTTP_SMALL_LIGHT_PARAM_H */

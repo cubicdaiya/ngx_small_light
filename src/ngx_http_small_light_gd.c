@@ -131,7 +131,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     int ih = gdImageSY(src);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
-    // pass through.
+    /* pass through. */
     if (sz.pt_flg != 0) {
         return NGX_OK;
     }
@@ -156,7 +156,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     gdImageColorTransparent(src, -1);
 
-    // crop, scale.
+    /* crop, scale. */
     if (sz.scale_flg != 0) {
         dst = ngx_http_small_light_gd_new(sz.dw, sz.dh, palette);
         if (dst == NULL) {
@@ -227,7 +227,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         gdImageColorTransparent(dst, gdImageColorExact(dst, red, green, blue));
     }
 
-    // effects.
+    /* effects. */
     char *sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen != NULL) {
         int radius = ngx_http_small_light_parse_int(sharpen);
@@ -236,10 +236,10 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         }
     }
 
-    // interlace
+    /* interlace */
     gdImageInterlace(dst, 1);
 
-    // create canvas then draw image to the canvas.
+    /* create canvas then draw image to the canvas. */
     if (sz.cw > 0.0 && sz.ch > 0.0) {
         gdImagePtr canvas = gdImageCreateTrueColor(sz.cw, sz.ch);
         if (canvas == NULL) {
@@ -253,7 +253,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         dst = canvas;
     }
 
-    // border.
+    /* border. */
     if (sz.bw > 0.0 || sz.bh > 0.0) {
         int bcolor = gdImageColorAllocateAlpha(dst, sz.bc.r, sz.bc.g, sz.bc.b, sz.bc.a);
         if (sz.cw > 0.0 && sz.ch > 0.0) {
@@ -299,7 +299,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         return NGX_ERROR;
     }
 
-    // get small_lighted image as binary.
+    /* get small_lighted image as binary. */
     ctx->content        = out;
     ctx->content_length = size;
 

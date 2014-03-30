@@ -57,9 +57,10 @@ ngx_int_t ngx_http_small_light_imagemagick_term(ngx_http_request_t *r, ngx_http_
     return NGX_OK;
 }
 
-// 
-// following original functions are brought from mod_small_light(Dynamic image transformation module for Apache2) and customed
-// 
+/** 
+ * following original functions are brought from
+ * mod_small_light(Dynamic image transformation module for Apache2) and customed
+ */
 
 ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
@@ -71,13 +72,13 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     ictx = (ngx_http_small_light_imagemagick_ctx_t *)ctx->ictx;
 
-    // adjust image size
+    /* adjust image size */
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
-    // init
+    /* init */
     ictx->wand = NewMagickWand();
 
-    // prepare
+    /* prepare */
     if (sz.jpeghint_flg != 0) {
         char *jpeg_size_opt;
         jpeg_size_opt = ngx_pcalloc(r->pool, 32 + 1);
@@ -92,7 +93,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         MagickSetOption(ictx->wand, "jpeg:size", jpeg_size_opt);
     }
 
-    // load image.
+    /* load image. */
     status = MagickReadImageBlob(ictx->wand, (void *)ictx->image, ictx->image_len);
     if (status == MagickFalse) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
@@ -102,7 +103,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         return NGX_ERROR;
     }
 
-    // remove all profiles
+    /* remove all profiles */
     int rmprof_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "rmprof"));
     if (rmprof_flg != 0) {
         status = MagickProfileImage(ictx->wand, "*", NULL, 0);
@@ -114,19 +115,19 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-    // calc size.
+    /* calc size. */
     double iw = (double)MagickGetImageWidth(ictx->wand);
     double ih = (double)MagickGetImageHeight(ictx->wand);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
-    // pass through.
+    /* pass through. */
     if (sz.pt_flg != 0) {
         return NGX_OK;
     }
 
     char *of_orig = MagickGetImageFormat(ictx->wand);
 
-    // crop, scale.
+    /* crop, scale. */
     status = MagickTrue;
     if (sz.scale_flg != 0) {
         char *crop_geo;
@@ -159,7 +160,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ictx->wand = trans_wand;
     }
 
-    // rotate
+    /* rotate */
     if (sz.angle) {
         PixelWand  *bg_color;
         bg_color = NewPixelWand();
@@ -179,7 +180,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         DestroyPixelWand(bg_color);
     }
 
-    // create canvas then draw image to the canvas.
+    /* create canvas then draw image to the canvas. */
     if (sz.cw > 0.0 && sz.ch > 0.0) {
         MagickWand *canvas_wand  = NewMagickWand();
         PixelWand  *canvas_color = NewPixelWand();
@@ -202,7 +203,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ictx->wand = canvas_wand;
     }
 
-    // effects.
+    /* effects. */
     char *unsharp = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "unsharp");
     if (unsharp != NULL) {
         GeometryInfo geo;
@@ -242,7 +243,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-    // border.
+    /* border. */
     if (sz.bw > 0.0 || sz.bh > 0.0) {
         DrawingWand *border_wand = NewDrawingWand();
         PixelWand *border_color;
@@ -271,7 +272,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         DestroyDrawingWand(border_wand);
     }
 
-    // embed icon
+    /* embed icon */
     u_char *embedicon = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "embedicon");
     if (ngx_strlen(ctx->material_dir) > 0 && ngx_strlen(embedicon) > 0) {
         ngx_fd_t fd;
@@ -348,7 +349,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ClearMagickWand(icon_wand);
     }
 
-    // set params.
+    /* set params. */
     double q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q > 0.0) {
         MagickSetImageCompressionQuality(ictx->wand, q);
@@ -375,7 +376,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ctx->of = ctx->inf;
     }
 
-    // get small_lighted image as binary.
+    /* get small_lighted image as binary. */
     u_char *canvas_buf;
     u_char *sled_image;
     size_t sled_image_size;

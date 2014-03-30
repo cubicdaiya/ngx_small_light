@@ -24,9 +24,10 @@
 #include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
 
-// 
-// following original functions are brought from mod_small_light(Dynamic image transformation module for Apache2) and customed
-// 
+/** 
+ * following original functions are brought from
+ * mod_small_light(Dynamic image transformation module for Apache2) and customed
+ */ 
 
 void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                                           ngx_http_small_light_ctx_t *ctx,
@@ -111,7 +112,7 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                   sz->ix, sz->iy);
 #endif
 
-    // get pass through option.
+    /* get pass through option. */
     ngx_int_t  pt_flg = 0;
     char      *pt     = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "pt");
     if (pt[0] == '\0' || ngx_strcmp(pt, "ptss") == 0) {
@@ -125,7 +126,7 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     }
     sz->pt_flg = pt_flg;
 
-    // get scaling option.
+    /* get scaling option. */
     char *prm_ds_str = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ds");
     char  prm_ds     = prm_ds_str[0] ? prm_ds_str[0] : 'l';
     if (prm_ds == 's' || (sz->dw < sz->sw - sz->sx) || (sz->dh < sz->sh - sz->sy)) {

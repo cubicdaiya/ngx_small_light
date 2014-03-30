@@ -44,18 +44,18 @@
 #define M_APP       0xe0
 #define M_APP0      (M_APP + 0)
 #define M_APP1      (M_APP + 1)
-#define M_COM       0xfe // comment
+#define M_COM       0xfe /* comment */
 
 /*
 ** functions.
 */
 
-// this IMAGE_DIMENSION_OK was ported from Imlib2 loader.
+/* this IMAGE_DIMENSION_OK was ported from Imlib2 loader. */
 # define IMAGE_DIMENSIONS_OK(w, h) \
     ( ((w) > 0) && ((h) > 0) && \
       ((unsigned long long)(w) * (unsigned long long)(h) <= (1ULL << 29) - 1) )
 
-// Some ImLib2_JPEG structures or JPEGHandler functions were ported from Imlib2 loader.
+/* Some ImLib2_JPEG structures or JPEGHandler functions were ported from Imlib2 loader. */
 struct ImLib_JPEG_error_mgr {
     struct jpeg_error_mgr pub;
     sigjmp_buf          setjmp_buffer;
@@ -95,7 +95,7 @@ _JPEGErrorHandler2(j_common_ptr cinfo, int msg_level)
     return;
 }
 
-// The load_jpeg function is based on Imlib2 loader.
+/* The load_jpeg function is based on Imlib2 loader. */
 ngx_int_t ngx_http_small_light_load_jpeg(
           void **dest_data, int *width, int *height, const ngx_http_request_t *r,
           const char *filename, int hint_w, int hint_h)

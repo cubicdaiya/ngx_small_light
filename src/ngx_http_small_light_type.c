@@ -40,9 +40,10 @@ ngx_int_t ngx_http_small_light_type(const char *of)
     return type;
 }
 
-//
-// this original function is brought from nginx/src/http/modules/ngx_http_image_filter_module.c
-//
+/**
+ * this original function is brought from 
+ * nginx/src/http/modules/ngx_http_image_filter_module.c
+ */
 ngx_int_t ngx_http_small_light_type_detect(u_char *image, size_t image_len)
 {
     u_char  *p;

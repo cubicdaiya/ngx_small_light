@@ -176,7 +176,7 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
             ngx_cpystrn(ks.data, args[i].data + 4, args[i].len - 4 + 1);
             ks.len = args[i].len - 4;
 
-            if (i == 0) { // arg_p is found
+            if (i == 0) { /* arg_p is found */
                 ngx_cpystrn((u_char *)pv, var->data, var->len + 1);
             } else {
                 v = ngx_palloc(r->pool, var->len + 1);
