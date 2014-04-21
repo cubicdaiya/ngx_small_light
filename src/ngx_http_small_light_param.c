@@ -26,64 +26,81 @@
 
 static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t *ctx);
 
+typedef struct ngx_http_small_light_param_t {
+    ngx_str_t param;
+    char *default_param;
+} ngx_http_small_light_param_t;
+
+static const ngx_http_small_light_param_t ngx_http_small_light_params[] = {
+    { ngx_string("p"),         ""},
+    { ngx_string("sx"),        ""},
+    { ngx_string("sy"),        ""},
+    { ngx_string("sw"),        ""},
+    { ngx_string("sh"),        ""},
+    { ngx_string("dx"),        ""},
+    { ngx_string("dy"),        ""},
+    { ngx_string("dw"),        ""},
+    { ngx_string("dh"),        ""},
+    { ngx_string("da"),        "l"},
+    { ngx_string("ds"),        "n"},
+    { ngx_string("cw"),        ""},
+    { ngx_string("ch"),        ""},
+    { ngx_string("cc"),        "000000"},
+    { ngx_string("bw"),        ""},
+    { ngx_string("bh"),        ""},
+    { ngx_string("bc"),        "000000"},
+    { ngx_string("pt"),        "n"},
+    { ngx_string("q"),         "0"},
+    { ngx_string("of"),        ""},
+    { ngx_string("jpeghint"),  "n"},
+    { ngx_string("rmprof"),    "n"},
+    { ngx_string("embedicon"), ""},
+    { ngx_string("ix"),        "0"},
+    { ngx_string("iy"),        "0"},
+    { ngx_string("angle"),     "0"},
+    { ngx_string("e"),         NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK }
+};
+
+static const ngx_str_t ngx_http_small_light_getparams[] = {
+    ngx_string("arg_p"),
+    ngx_string("arg_sx"),
+    ngx_string("arg_sy"),
+    ngx_string("arg_sw"),
+    ngx_string("arg_sh"),
+    ngx_string("arg_dx"),
+    ngx_string("arg_dy"),
+    ngx_string("arg_dw"),
+    ngx_string("arg_dh"),
+    ngx_string("arg_da"),
+    ngx_string("arg_ds"),
+    ngx_string("arg_cw"),
+    ngx_string("arg_ch"),
+    ngx_string("arg_cc"),
+    ngx_string("arg_bw"),
+    ngx_string("arg_bh"),
+    ngx_string("arg_bc"),
+    ngx_string("arg_pt"),
+    ngx_string("arg_q"),
+    ngx_string("arg_of"),
+    ngx_string("arg_jpeghint"),
+    ngx_string("arg_rmprof"),
+    ngx_string("arg_embedicon"),
+    ngx_string("arg_ix"),
+    ngx_string("arg_iy"),
+    ngx_string("arg_angle"),
+    ngx_string("arg_e")
+};
+
 static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t *ctx)
 {
-    ngx_str_t p         = ngx_string("p");
-    ngx_str_t sx        = ngx_string("sx");
-    ngx_str_t sy        = ngx_string("sy");
-    ngx_str_t sw        = ngx_string("sw");
-    ngx_str_t sh        = ngx_string("sh");
-    ngx_str_t dx        = ngx_string("dx");
-    ngx_str_t dy        = ngx_string("dy");
-    ngx_str_t dw        = ngx_string("dw");
-    ngx_str_t dh        = ngx_string("dh");
-    ngx_str_t da        = ngx_string("da");
-    ngx_str_t ds        = ngx_string("ds");
-    ngx_str_t cw        = ngx_string("cw");
-    ngx_str_t ch        = ngx_string("ch");
-    ngx_str_t cc        = ngx_string("cc");
-    ngx_str_t bw        = ngx_string("bw");
-    ngx_str_t bh        = ngx_string("bh");
-    ngx_str_t bc        = ngx_string("bc");
-    ngx_str_t pt        = ngx_string("pt");
-    ngx_str_t q         = ngx_string("q");
-    ngx_str_t of        = ngx_string("of");
-    ngx_str_t jpeghint  = ngx_string("jpeghint");
-    ngx_str_t rmprof    = ngx_string("rmprof");
-    ngx_str_t embedicon = ngx_string("embedicon");
-    ngx_str_t ix        = ngx_string("ix");
-    ngx_str_t iy        = ngx_string("iy");
-    ngx_str_t angle     = ngx_string("angle");
-    ngx_str_t e         = ngx_string("e");
-
-    ngx_hash_add_key(&ctx->params, &p,         "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sx,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sy,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sw,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &sh,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dx,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dy,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dw,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &dh,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &da,        "l",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &ds,        "n",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &cw,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &ch,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &cc,        "000000", NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &bw,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &bh,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &bc,        "000000", NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &pt,        "n",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &q,         "0",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &of,        "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &jpeghint,  "n",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &rmprof,    "n",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &embedicon, "",       NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &ix,        "0",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &iy,        "0",      NGX_HASH_READONLY_KEY);
-    ngx_hash_add_key(&ctx->params, &angle,     "0",      NGX_HASH_READONLY_KEY);
-
-    ngx_hash_add_key(&ctx->params, &e, NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK, NGX_HASH_READONLY_KEY);
+    ngx_uint_t i, c;
+    c = sizeof(ngx_http_small_light_params) / sizeof(ngx_http_small_light_param_t);
+    for (i=0;i<c;i++) {
+        ngx_hash_add_key(&ctx->params,
+                         (ngx_str_t *)&ngx_http_small_light_params[i].param,
+                         ngx_http_small_light_params[i].default_param,
+                         NGX_HASH_READONLY_KEY);
+    }
 }
 
 ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_str_t *define_pattern, ngx_http_small_light_conf_t *srv_conf)
@@ -116,45 +133,17 @@ ngx_int_t ngx_http_small_light_init_params(ngx_http_request_t *r, ngx_http_small
 
 ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx, ngx_http_small_light_conf_t *srv_conf)
 {
-    ngx_str_t args[] = {
-        ngx_string("arg_p"),
-        ngx_string("arg_sx"),
-        ngx_string("arg_sy"),
-        ngx_string("arg_sw"),
-        ngx_string("arg_sh"),
-        ngx_string("arg_dx"),
-        ngx_string("arg_dy"),
-        ngx_string("arg_dw"),
-        ngx_string("arg_dh"),
-        ngx_string("arg_da"),
-        ngx_string("arg_ds"),
-        ngx_string("arg_cw"),
-        ngx_string("arg_ch"),
-        ngx_string("arg_cc"),
-        ngx_string("arg_bw"),
-        ngx_string("arg_bh"),
-        ngx_string("arg_bc"),
-        ngx_string("arg_pt"),
-        ngx_string("arg_q"),
-        ngx_string("arg_of"),
-        ngx_string("arg_jpeghint"),
-        ngx_string("arg_rmprof"),
-        ngx_string("arg_embedicon"),
-        ngx_string("arg_ix"),
-        ngx_string("arg_iy"),
-        ngx_string("arg_angle"),
-        ngx_string("arg_e")
-    };
     ngx_uint_t                 i;
     size_t                     args_size;
     u_char                    *low, *v;
     ngx_http_variable_value_t *var;
     ngx_uint_t                 key;
-    ngx_str_t                  ks, pval_str;
+    ngx_str_t                  ks, pval_str, *args;
     char                       pv[BUFSIZ], *pval;
 
     pv[0] = '\0';
-    args_size = sizeof(args) / sizeof(ngx_str_t);
+    args = (ngx_str_t *)&ngx_http_small_light_getparams;
+    args_size = sizeof(ngx_http_small_light_getparams) / sizeof(ngx_str_t);
     for (i=0;i<args_size;i++) {
         low = ngx_pnalloc(r->pool, args[i].len);
         if (low == NULL) {
