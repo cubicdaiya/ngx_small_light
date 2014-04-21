@@ -107,8 +107,8 @@ typedef struct ngx_http_small_light_ctx_t {
     ngx_path_t *imlib2_temp_dir;
     struct ngx_http_small_light_converter_t {
         ngx_int_t (*init)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
-        ngx_int_t (*term)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
         ngx_int_t (*process)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
+        ngx_pool_cleanup_pt term;
     } converter;
 } ngx_http_small_light_ctx_t;
 

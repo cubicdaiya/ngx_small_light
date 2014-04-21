@@ -48,13 +48,19 @@ ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_
     return NGX_OK;
 }
 
-ngx_int_t ngx_http_small_light_imagemagick_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
+void ngx_http_small_light_imagemagick_term(void *data)
 {
+    ngx_http_small_light_ctx_t *ctx;
     ngx_http_small_light_imagemagick_ctx_t *ictx;
+    ctx  = (ngx_http_small_light_ctx_t *)data;
     ictx = (ngx_http_small_light_imagemagick_ctx_t *)ctx->ictx;
+
+    if (ctx->content != NULL) {
+        MagickRelinquishMemory(ctx->content);
+    }
+
     DestroyMagickWand(ictx->wand);
     MagickWandTerminus();
-    return NGX_OK;
 }
 
 /** 
@@ -77,7 +83,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     GeometryInfo                            geo;
     ngx_fd_t                                fd;
     MagickWand                             *icon_wand;
-    u_char                                 *p, *embedicon, *embedicon_path, *canvas_buf, *sled_image;
+    u_char                                 *p, *embedicon, *embedicon_path;
     size_t                                  embedicon_path_len, embedicon_len, sled_image_size;
     ngx_int_t                               type;
 
@@ -372,21 +378,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ctx->of = ctx->inf;
     }
 
-    /* get small_lighted image as binary. */
-    canvas_buf = MagickGetImageBlob(ictx->wand, &sled_image_size);
-    sled_image = ngx_pcalloc(r->pool, sled_image_size);
-    if (sled_image == NULL) {
-        MagickRelinquishMemory(canvas_buf);
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                      "failed to allocate memory from r->pool %s:%d",
-                      __FUNCTION__,
-                      __LINE__);
-        return NGX_ERROR;
-    }
-    ngx_memcpy(sled_image, canvas_buf, sled_image_size);
-    MagickRelinquishMemory(canvas_buf);
-
-    ctx->content        = sled_image;
+    ctx->content        = MagickGetImageBlob(ictx->wand, &sled_image_size);
     ctx->content_length = sled_image_size;
 
     return NGX_OK;

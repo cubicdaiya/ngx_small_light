@@ -35,7 +35,7 @@ typedef struct {
 } ngx_http_small_light_imlib2_ctx_t;
 
 ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
-ngx_int_t ngx_http_small_light_imlib2_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
 ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);
+void ngx_http_small_light_imlib2_term(void *data);
 
 #endif /* NGX_HTTP_SMALL_LIGHT_IMLIB2_H */

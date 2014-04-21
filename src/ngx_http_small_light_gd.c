@@ -105,9 +105,13 @@ ngx_int_t ngx_http_small_light_gd_init(ngx_http_request_t *r, ngx_http_small_lig
     return NGX_OK;
 }
 
-ngx_int_t ngx_http_small_light_gd_term(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
+void ngx_http_small_light_gd_term(void *data)
 {
-    return NGX_OK;
+    ngx_http_small_light_ctx_t *ctx;
+    ctx = (ngx_http_small_light_ctx_t *)data;
+    if (ctx->content != NULL) {
+        gdFree(ctx->content);
+    }
 }
 
 ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)

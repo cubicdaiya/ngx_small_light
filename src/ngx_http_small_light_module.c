@@ -24,8 +24,6 @@
 #include <ngx_core.h>
 #include <ngx_http.h>
 
-#include <wand/MagickWand.h>
-
 #include "ngx_http_small_light_module.h"
 #include "ngx_http_small_light_param.h"
 #include "ngx_http_small_light_parser.h"
@@ -50,14 +48,6 @@ const char *ngx_http_small_light_image_exts[] = {
     "gif",
     "png"
 };
-
-static void ngx_http_small_light_cleanup(void *data);
-static void ngx_http_small_light_cleanup(void *data)
-{
-    ngx_http_small_light_ctx_t *ctx;
-    ctx = (ngx_http_small_light_ctx_t *)data;
-    ngx_memzero(ctx, sizeof(ngx_http_small_light_ctx_t));
-}
 
 static void *ngx_http_small_light_create_srv_conf(ngx_conf_t *cf);
 static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf);
@@ -344,25 +334,10 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
                       "failed to process image %s:%d",
                       __FUNCTION__,
                       __LINE__);
-        rc = ctx->converter.term(r, ctx);
-        if (rc != NGX_OK) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "failed to terminate processing image %s:%d",
-                          __FUNCTION__,
-                          __LINE__);
-            return NGX_ERROR;
-        }
+        ctx->converter.term(ctx);
         return ngx_http_filter_finalize_request(r,
                                                 &ngx_http_small_light_module,
                                                 NGX_HTTP_UNSUPPORTED_MEDIA_TYPE);
-    }
-    rc = ctx->converter.term(r, ctx);
-    if (rc != NGX_OK) {
-        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                      "failed to terminate processing image %s:%d",
-                      __FUNCTION__,
-                      __LINE__);
-        return NGX_ERROR;
     }
 
     b = ngx_pcalloc(r->pool, sizeof(ngx_buf_t));
@@ -371,6 +346,7 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
                       "failed to allocate memory from r->pool %s:%d",
                       __FUNCTION__,
                       __LINE__);
+        ctx->converter.term(ctx);
         return NGX_ERROR;
     }
     b->pos      = ctx->content;
@@ -396,9 +372,10 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
                       "failed to allocate memory from r->pool %s:%d",
                       __FUNCTION__,
                       __LINE__);
+        ctx->converter.term(ctx);
         return NGX_ERROR;
     }
-    cln->handler = ngx_http_small_light_cleanup;
+    cln->handler = ctx->converter.term;
     cln->data    = ctx;
 
     return ngx_http_small_light_finish(r, &out);
