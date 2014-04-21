@@ -1,3 +1,19 @@
+2014-04-22 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix memory leak in processing image by GD
+
+	* return 415 when smalllight failed to process image
+
+	* improve error handling
+
+	* minor optimizing
+
+	* make code C89 compatible
+
+	* clean up code
+
+	* 0.5.1 released
+
 2013-09-28 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* add directive 'small_light_getparam_mode'
