@@ -68,6 +68,7 @@ ngx_int_t ngx_http_small_light_parse_params(ngx_http_request_t *r, ngx_http_smal
 {
     char *tk, *tv, *sp1, *sp2;
     char *k, *kk, *v, *vv;
+    size_t kl, vl;
     ngx_str_t ks;
     char p[BUFSIZ];
     if (define_pattern->len > BUFSIZ - 1) {
@@ -82,21 +83,23 @@ ngx_int_t ngx_http_small_light_parse_params(ngx_http_request_t *r, ngx_http_smal
         if (k == NULL || v == NULL) {
             return NGX_OK;
         }
-        kk = ngx_palloc(r->pool, ngx_strlen(k) + 1);
+        kl = ngx_strlen(k);
+        vl = ngx_strlen(v);
+        kk = ngx_palloc(r->pool, kl + 1);
         if (kk == NULL) {
             return NGX_ERROR;
         }
-        ngx_cpystrn((u_char *)kk, (u_char *)k, ngx_strlen(k) + 1);
+        ngx_cpystrn((u_char *)kk, (u_char *)k, kl + 1);
         ks.data = (u_char *)kk;
-        ks.len  = ngx_strlen(kk);
+        ks.len  = kl;
         if (ngx_strcmp(k, "p") == 0) {
-            ngx_cpystrn((u_char *)pv, (u_char *)v, ngx_strlen(v) + 1);
+            ngx_cpystrn((u_char *)pv, (u_char *)v, vl + 1);
         } else {
-            vv = ngx_palloc(r->pool, ngx_strlen(v) + 1);
+            vv = ngx_palloc(r->pool, vl + 1);
             if (vv == NULL) {
                 return NGX_ERROR;
             }
-            ngx_cpystrn((u_char *)vv, (u_char *)v, ngx_strlen(v) + 1);
+            ngx_cpystrn((u_char *)vv, (u_char *)v, vl + 1);
             ngx_hash_add_key(&ctx->params, &ks, vv, NGX_HASH_READONLY_KEY);
         }
         tk = strtok_r(NULL, ",", &sp1);
