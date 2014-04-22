@@ -38,6 +38,7 @@ ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_
     ictx->image     = ctx->content;
     ictx->image_len = ctx->content_length;
     ictx->type      = ngx_http_small_light_type_detect(ictx->image, ictx->image_len);
+    ictx->complete  = 0;
     if (ictx->type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to get image type %s:%d",
@@ -55,7 +56,7 @@ void ngx_http_small_light_imagemagick_term(void *data)
     ctx  = (ngx_http_small_light_ctx_t *)data;
     ictx = (ngx_http_small_light_imagemagick_ctx_t *)ctx->ictx;
 
-    if (ctx->content != NULL) {
+    if (ictx->complete) {
         MagickRelinquishMemory(ctx->content);
     }
 
@@ -380,6 +381,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     ctx->content        = MagickGetImageBlob(ictx->wand, &sled_image_size);
     ctx->content_length = sled_image_size;
+
+    ictx->complete = 1;
 
     return NGX_OK;
 }

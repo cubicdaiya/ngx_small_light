@@ -31,6 +31,7 @@ typedef struct {
     u_char *image;
     size_t image_len;
     ngx_int_t type;
+    ngx_flag_t complete;
 } ngx_http_small_light_gd_ctx_t;
 
 ngx_int_t ngx_http_small_light_gd_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx);

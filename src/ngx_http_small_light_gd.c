@@ -92,6 +92,7 @@ ngx_int_t ngx_http_small_light_gd_init(ngx_http_request_t *r, ngx_http_small_lig
     ictx            = (ngx_http_small_light_gd_ctx_t *)ctx->ictx;
     ictx->image     = ctx->content;
     ictx->image_len = ctx->content_length;
+    ictx->complete  = 0;
 
     ictx->type = ngx_http_small_light_type_detect(ictx->image, ictx->image_len);
     if (ictx->type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
@@ -308,6 +309,8 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     /* get small_lighted image as binary. */
     ctx->content        = out;
     ctx->content_length = size;
+
+    ictx->complete = 1;
 
     return NGX_OK;
 }
