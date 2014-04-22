@@ -45,7 +45,7 @@ ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small
                       __LINE__);
         return NGX_ERROR;
     }
-    ictx->tf        = ngx_pcalloc(r->pool, sizeof(ngx_temp_file_t));
+    ictx->tf = ngx_pcalloc(r->pool, sizeof(ngx_temp_file_t));
     if (ictx->tf == NULL) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to allocate memory from r->pool %s:%d",
