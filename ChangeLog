@@ -1,5 +1,9 @@
 2014-04-22 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
+	* fix bug((invalid free-call when processing image failed)
+
+	* 0.5.2 released
+
 	* fix memory leak in processing image by GD
 
 	* return 415 when smalllight failed to process image
