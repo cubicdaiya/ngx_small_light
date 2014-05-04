@@ -115,6 +115,20 @@ void ngx_http_small_light_gd_term(void *data)
     }
 }
 
+short ngx_http_small_light_gd_alpha_from_8_bit_alpha(short alpha8)
+{
+    // GD's alpha is inverted relative to RGBA; 0 is opaque, 127 is transparent
+    // https://bitbucket.org/libgd/gd-libgd/src/4b86e06937bc5ff116be969137f8da9d1a7869d5/src/gd.h?at=master#cl-780
+
+    // Invert: 0 =>255, 255 => 0
+    short gd_alpha = ~alpha8 & 0xff;
+
+    // Reduce to 7-bit (max value is 127)
+    gd_alpha = gd_alpha >> 1;
+
+    return gd_alpha;
+}
+
 ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
     ngx_http_small_light_gd_ctx_t     *ictx;
@@ -256,7 +270,10 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
             gdImageDestroy(dst);
             return NGX_ERROR;
         }
-        ccolor = gdImageColorAllocateAlpha(canvas, sz.cc.r, sz.cc.g, sz.cc.b, sz.cc.a);
+
+        short canvas_gd_alpha = ngx_http_small_light_gd_alpha_from_8_bit_alpha(sz.cc.a);
+
+        ccolor = gdImageColorAllocateAlpha(canvas, sz.cc.r, sz.cc.g, sz.cc.b, canvas_gd_alpha);
         gdImageFilledRectangle(canvas, 0, 0, sz.cw, sz.ch, ccolor);
         gdImageCopy(canvas, dst, sz.dx, sz.dy, 0, 0, sz.dw, sz.dh);
         gdImageDestroy(dst);
@@ -265,7 +282,9 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     /* border. */
     if (sz.bw > 0.0 || sz.bh > 0.0) {
-        bcolor = gdImageColorAllocateAlpha(dst, sz.bc.r, sz.bc.g, sz.bc.b, sz.bc.a);
+        short border_gd_alpha = ngx_http_small_light_gd_alpha_from_8_bit_alpha(sz.bc.a);
+
+        bcolor = gdImageColorAllocateAlpha(dst, sz.bc.r, sz.bc.g, sz.bc.b, border_gd_alpha);
         if (sz.cw > 0.0 && sz.ch > 0.0) {
             gdImageFilledRectangle(dst, 0, 0, sz.cw, sz.bh, bcolor);
             gdImageFilledRectangle(dst, 0, 0, sz.bw, sz.ch, bcolor);
