@@ -526,7 +526,10 @@ static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chai
         b->pos += size;
         if (b->last_buf) {
             ctx->last = p;
-            return NGX_OK;
+            if (ctx->last - ctx->content == ctx->content_length)
+                return NGX_OK;
+            else
+                return NGX_ERROR;
         }
     }
 
