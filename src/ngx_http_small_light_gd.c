@@ -109,8 +109,11 @@ ngx_int_t ngx_http_small_light_gd_init(ngx_http_request_t *r, ngx_http_small_lig
 void ngx_http_small_light_gd_term(void *data)
 {
     ngx_http_small_light_ctx_t *ctx;
+    ngx_http_small_light_gd_ctx_t *ictx;
     ctx = (ngx_http_small_light_ctx_t *)data;
-    if (ctx->content != NULL) {
+    ictx = (ngx_http_small_light_gd_ctx_t *)ctx->ictx;
+
+    if (ictx->complete) {
         gdFree(ctx->content);
     }
 }
