@@ -68,6 +68,7 @@ typedef struct {
     ngx_hash_keys_arrays_t patterns;
     ngx_str_t material_dir;
     ngx_path_t *imlib2_temp_dir;
+    size_t buffer_size;
 } ngx_http_small_light_conf_t;
 
 typedef struct {
