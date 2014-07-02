@@ -264,6 +264,12 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
                           __FUNCTION__,
                           __LINE__);
             of = (char *)ngx_http_small_light_image_exts[ictx->type - 1];
+        } else if (type == NGX_HTTP_SMALL_LIGHT_IMAGE_WEBP) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "WebP is not supported %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
+            of = (char *)ngx_http_small_light_image_exts[ictx->type - 1];
         } else {
             ictx->type = type;
         }

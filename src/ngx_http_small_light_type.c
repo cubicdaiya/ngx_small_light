@@ -33,6 +33,8 @@ ngx_int_t ngx_http_small_light_type(const char *of)
         type = NGX_HTTP_SMALL_LIGHT_IMAGE_GIF;
     } else if (strcmp(of, "png") == 0) {
         type = NGX_HTTP_SMALL_LIGHT_IMAGE_PNG;
+    } else if (strcmp(of, "webp") == 0) {
+        type = NGX_HTTP_SMALL_LIGHT_IMAGE_WEBP;
     } else {
         type = NGX_HTTP_SMALL_LIGHT_IMAGE_NONE;
     }

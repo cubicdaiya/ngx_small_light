@@ -78,6 +78,11 @@ static u_char *ngx_http_small_light_gd_out(gdImagePtr img, ngx_int_t type, int *
     case NGX_HTTP_SMALL_LIGHT_IMAGE_PNG:
         out = gdImagePngPtr(img, size);
         break;
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_WEBP:
+#ifdef NGX_HTTP_SMALL_LIGHT_GD_WEBP_ENABLED
+        out = gdImageWebpPtrEx(img, size, (int)q);
+#endif
+        break;
     default:
         break;
     }
@@ -292,11 +297,20 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
                           of,
                           __FUNCTION__,
                           __LINE__);
+        } else if (type == NGX_HTTP_SMALL_LIGHT_IMAGE_WEBP) {
+#ifdef NGX_HTTP_SMALL_LIGHT_GD_WEBP_ENABLED
+            ictx->type = type;
+#else
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "WebP is not supported %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
+#endif
         } else {
             ictx->type = type;
         }
     }
-    
+
     ctx->of = ngx_http_small_light_image_types[ictx->type - 1];
 
     q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));

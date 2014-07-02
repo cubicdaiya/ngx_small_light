@@ -40,13 +40,15 @@
 const char *ngx_http_small_light_image_types[] = {
     "image/jpeg",
     "image/gif",
-    "image/png"
+    "image/png",
+    "image/webp"
 };
 
 const char *ngx_http_small_light_image_exts[] = {
     "jpeg",
     "gif",
     "png"
+    "webp"
 };
 
 static void *ngx_http_small_light_create_srv_conf(ngx_conf_t *cf);

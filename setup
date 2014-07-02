@@ -32,8 +32,28 @@ sub gd_is_take_off_line
     my $line = shift;
     if ($line =~ /#include <gd\.h>$/ ||
         $line =~ /gdImageCreate/     ||
+        $line =~ /gdImagePtr/        ||
+        $line =~ /gdImageWebpPtr/    ||
         $line =~ /ngx_http_small_light_gd\.(c|h)/)
     {
+        return 1;
+    }
+    return 0;
+}
+
+sub gd_is_enabled_webp
+{
+    my $gd_libs = shift;
+    if ($gd_libs =~ /-lvpx/) {
+        return 1;
+    }
+    return 0;
+}
+
+sub gd_webp_is_take_off_line
+{
+    my $line = shift;
+    if ($line =~ /img_gd_webp/) {
         return 1;
     }
     return 0;
@@ -136,6 +156,15 @@ while (my $line = <CONFIG_IN>) {
             next;
         }
     } else {
+        if (!gd_is_enabled_webp($gd_libs)) {
+            $line =~ s/\{\$GD_WEBP_FLAGS\}//;
+            if (gd_webp_is_take_off_line($line)) {
+                next;
+            }
+        } else {
+            my $macro_gd_webp_enabled = "-DNGX_HTTP_SMALL_LIGHT_GD_WEBP_ENABLED";
+            $line =~ s/\{\$GD_WEBP_FLAGS\}/$macro_gd_webp_enabled/;
+        }
         $line =~ s/\{\$CFLAGS\}/$includes $macro_imlib2_enabled $macro_gd_enabled/;
     }
     print CONFIG $line;
