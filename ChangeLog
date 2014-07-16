@@ -1,3 +1,13 @@
+2014-07-17 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix a problem that small_light_getparam_mode doesn't work. thanks @yano3
+
+	* add directive 'small_light_buffer'
+
+	* support WebP in output format by ImageMagick & GD
+
+	* 0.6.0 released
+
 2014-06-24 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix memory leak when 'pt' is not null
