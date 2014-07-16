@@ -144,7 +144,7 @@ ngx_int_t ngx_http_small_light_init_getparams(ngx_http_request_t *r, ngx_http_sm
     pv[0] = '\0';
     args = (ngx_str_t *)&ngx_http_small_light_getparams;
     args_size = sizeof(ngx_http_small_light_getparams) / sizeof(ngx_str_t);
-    arg_prefix_len = sizeof("arg_");
+    arg_prefix_len = sizeof("arg_") - 1;
     for (i=0;i<args_size;i++) {
         low = ngx_pnalloc(r->pool, args[i].len);
         if (low == NULL) {
