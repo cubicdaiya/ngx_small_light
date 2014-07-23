@@ -1,6 +1,12 @@
+2014-07-23 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix build issue with `--with-gd`. Thanks @yano3
+
+	* 0.6.1 released
+
 2014-07-17 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
-	* fix a problem that small_light_getparam_mode doesn't work. thanks @yano3
+	* fix a problem that small_light_getparam_mode doesn't work. Thanks @yano3
 
 	* add directive 'small_light_buffer'
 
