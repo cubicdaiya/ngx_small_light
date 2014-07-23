@@ -152,6 +152,7 @@ while (my $line = <CONFIG_IN>) {
         $line =~ s/\{\$CFLAGS\}/$includes $macro_imlib2_enabled $macro_gd_enabled/;
     }
     if ($gd_enabled != 1) {
+        $line =~ s/\{\$GD_WEBP_FLAGS\}//;
         if (gd_is_take_off_line($line)) {
             next;
         }
