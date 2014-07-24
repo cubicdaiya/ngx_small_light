@@ -38,6 +38,7 @@ ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small
     ictx->image     = ctx->content;
     ictx->image_len = ctx->content_length;
     ictx->type      = ngx_http_small_light_type_detect(ictx->image, ictx->image_len);
+    ictx->r         = r;
     if (ictx->type == NGX_HTTP_SMALL_LIGHT_IMAGE_NONE) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to get image type %s:%d",
@@ -71,7 +72,7 @@ ngx_int_t ngx_http_small_light_imlib2_init(ngx_http_request_t *r, ngx_http_small
                       "failed to save temporary file %s:%d",
                       __FUNCTION__,
                       __LINE__);
-        ngx_http_small_light_imlib2_term(r, ctx);
+        ngx_http_small_light_imlib2_term(ctx);
         return NGX_ERROR;
     }
 
@@ -82,8 +83,10 @@ void ngx_http_small_light_imlib2_term(void *data)
 {
     ngx_http_small_light_ctx_t *ctx;
     ngx_http_small_light_imlib2_ctx_t *ictx;
+    ngx_http_request_t *r;
     ctx  = (ngx_http_small_light_ctx_t *)data;
     ictx = (ngx_http_small_light_imlib2_ctx_t *)ctx->ictx;
+    r    = ictx->r;
 
     if (ngx_delete_file(ictx->tf->file.name.data) == NGX_FILE_ERROR) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
