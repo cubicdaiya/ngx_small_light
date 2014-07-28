@@ -1,3 +1,9 @@
+2014-07-28 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* fix build issue with `--with-imlib2`. Thanks @Ajido
+
+	* 0.6.2 released
+
 2014-07-23 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* fix build issue with `--with-gd`. Thanks @yano3
