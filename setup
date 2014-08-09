@@ -102,6 +102,7 @@ my $imlib2_libs     = "";
 my $imlib2_includes = "";
 if ($imlib2_enabled == 1) {
     $imlib2_libs     = `imlib2-config --libs`;
+    $imlib2_libs     =~ s/\s*?\@my_libs\@\s*?//;
     $imlib2_includes = `imlib2-config --cflags`;
     chomp($imlib2_libs);
     chomp($imlib2_includes);
