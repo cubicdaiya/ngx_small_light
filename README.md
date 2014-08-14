@@ -53,6 +53,18 @@ server {
 } 
 ```
 
+## Optimizing Tips
+
+When the output format is JPEG and image-converting engine is ImageMagick or Imlib2,
+you may give 'y' to the parameter `jpeghint`. The speed of processing images is improved dramatically.
+
+And when image-converting engine is ImageMagick, giving 1 to `OMP_NUM_THREADS` in `nginx.conf` is recommended strongly.
+Because OpenMP is enabled in ImageMagick by default and ImageMagick enabled OpenMP is very slow on multi-process environment.
+
+```
+env OMP_NUM_THREADS=1;
+```
+
 ## Running Test
 
 	perl Build.PL
@@ -60,7 +72,3 @@ server {
 	NGINX_BIN=${nginx_prefix_dir}/sbin/nginx ./Build test
 	# or
 	NGINX_BIN=${nginx_prefix_dir}/sbin/nginx prove t/**/*.t
-
-## Todo
-
-  - add various convenient options
