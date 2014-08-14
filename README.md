@@ -61,7 +61,7 @@ you may give 'y' to the parameter `jpeghint`. The speed of processing images is 
 And when image-converting engine is ImageMagick, giving 1 to `OMP_NUM_THREADS` in `nginx.conf` is recommended strongly.
 Because OpenMP is enabled in ImageMagick by default and ImageMagick enabled OpenMP is very slow on multi-process environment.
 
-```
+```nginx
 env OMP_NUM_THREADS=1;
 ```
 
