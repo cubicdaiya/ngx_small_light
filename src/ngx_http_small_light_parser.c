@@ -29,7 +29,7 @@ ngx_int_t ngx_http_small_light_parse_define_pattern(ngx_http_request_t *r, ngx_s
     ngx_regex_compile_t rgc;
     u_char *define_pattern_s;
     ngx_str_t pattern = ngx_string("small_light\\(([^\\)]*)\\)");
-    int capture_start, capture_end, capture_len, captures[(1 + 2) * 3];;
+    int capture_start, capture_end, capture_len, captures[(1 + 2) * 3];
     ngx_int_t rc;
 
     ngx_memzero(&rgc, sizeof(ngx_regex_compile_t));
