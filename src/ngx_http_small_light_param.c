@@ -58,7 +58,8 @@ static const ngx_http_small_light_param_t ngx_http_small_light_params[] = {
     { ngx_string("ix"),        "0"},
     { ngx_string("iy"),        "0"},
     { ngx_string("angle"),     "0"},
-    { ngx_string("e"),         NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK }
+    { ngx_string("e"),         NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK },
+    { ngx_string("progressive"), "n"}
 };
 
 static const ngx_str_t ngx_http_small_light_getparams[] = {
@@ -88,7 +89,8 @@ static const ngx_str_t ngx_http_small_light_getparams[] = {
     ngx_string("arg_ix"),
     ngx_string("arg_iy"),
     ngx_string("arg_angle"),
-    ngx_string("arg_e")
+    ngx_string("arg_e"),
+    ngx_string("arg_progressive")
 };
 
 static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t *ctx)

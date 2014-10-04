@@ -74,7 +74,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
-    int                                     rmprof_flg;
+    int                                     rmprof_flg, progressive_flg;
     double                                  iw, ih, q;
     char                                   *jpeg_size_opt, *of_orig, *crop_geo, *size_geo;
     char                                   *unsharp, *sharpen, *blur, *of;
@@ -357,6 +357,11 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
     if (q > 0.0) {
         MagickSetImageCompressionQuality(ictx->wand, q);
+    }
+
+    progressive_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "progressive"));
+    if (progressive_flg != 0) {
+        MagickSetInterlaceScheme(ictx->wand, LineInterlace);
     }
 
     of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
