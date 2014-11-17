@@ -139,6 +139,14 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->dw = iw;
         sz->dh = ih;
     }
+
+    if (sz->cw == 0.0 && sz->ch > 0.0) {
+        sz->cw = sz->dw;
+    }
+    if (sz->ch == 0.0 && sz->cw > 0.0) {
+        sz->ch = sz->dh;
+    }
+
     if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
     }
