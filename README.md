@@ -65,6 +65,8 @@ Because OpenMP is enabled in ImageMagick by default and ImageMagick enabled Open
 env OMP_NUM_THREADS=1;
 ```
 
+Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
+
 ## Running Test
 
 	perl Build.PL
