@@ -13,12 +13,14 @@ And `ngx_small_light` is written for using as the same way as [mod_small_light](
 
 ## Build
 
-    cd ${ngx_small_light_src_dir}
-    ./setup
-    cd {$nginx_src_dir}
-    ./configure --add-module=${ngx_small_light_src_dir}
-    make
-    make install
+```sh
+cd ${ngx_small_light_src_dir}
+./setup
+cd {$nginx_src_dir}
+./configure --add-module=${ngx_small_light_src_dir}
+make
+make install
+```
 
 If you want to enable the libraries except ImageMagick in `ngx_small_light`, add following options when executing setup. (ImageMagick is always enabled)
 
@@ -69,8 +71,10 @@ Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
 
 ## Running Test
 
-	perl Build.PL
-	cpanm --installdeps .
-	NGINX_BIN=${nginx_prefix_dir}/sbin/nginx ./Build test
-	# or
-	NGINX_BIN=${nginx_prefix_dir}/sbin/nginx prove t/**/*.t
+```sh
+perl Build.PL
+cpanm --installdeps .
+NGINX_BIN=${nginx_prefix_dir}/sbin/nginx ./Build test
+# or
+NGINX_BIN=${nginx_prefix_dir}/sbin/nginx prove t/**/*.t
+```
