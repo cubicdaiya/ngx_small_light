@@ -55,6 +55,29 @@ server {
 } 
 ```
 
+## Features
+
+Supports following image-processings.
+
+ * Resize
+ * Rotate
+ * Sharpen
+ * Unsharpen
+ * Blur
+ * Border
+ * Canvas
+ * Crop
+ * Composition
+ * JPEG down-scaling(except GD)
+ * Format convert(e.g. PNG -> JPEG)
+
+Supports following formats
+
+ * JPEG
+ * GIF(except Imlib2)
+ * PNG
+ * WebP(except Imlib2)
+
 ## Optimizing Tips
 
 When the output format is JPEG and image-converting engine is ImageMagick or Imlib2,
