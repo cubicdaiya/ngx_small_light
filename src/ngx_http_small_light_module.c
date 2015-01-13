@@ -60,6 +60,8 @@ static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cm
 static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chain_t *in, size_t buffer_size, ngx_http_small_light_ctx_t *ctx);
 static ngx_int_t ngx_http_small_light_finish(ngx_http_request_t *r, ngx_chain_t *out);
 static ngx_int_t ngx_http_small_light_init(ngx_conf_t *cf);
+static ngx_int_t ngx_http_small_light_init_process(ngx_cycle_t *cycle);
+static void ngx_http_small_light_exit_process(ngx_cycle_t *cycle);
 
 static ngx_command_t  ngx_http_small_light_commands[] = {
     { 
@@ -135,18 +137,32 @@ static ngx_http_module_t  ngx_http_small_light_module_ctx = {
 
 ngx_module_t  ngx_http_small_light_module = {
     NGX_MODULE_V1,
-    &ngx_http_small_light_module_ctx, /* module context */
-    ngx_http_small_light_commands,    /* module directives */
-    NGX_HTTP_MODULE,                  /* module type */
-    NULL,                             /* init master */
-    NULL,                             /* init module */
-    NULL,                             /* init process */
-    NULL,                             /* init thread */
-    NULL,                             /* exit thread */
-    NULL,                             /* exit process */
-    NULL,                             /* exit master */
+    &ngx_http_small_light_module_ctx,  /* module context */
+    ngx_http_small_light_commands,     /* module directives */
+    NGX_HTTP_MODULE,                   /* module type */
+    NULL,                              /* init master */
+    NULL,                              /* init module */
+    ngx_http_small_light_init_process, /* init process */
+    NULL,                              /* init thread */
+    NULL,                              /* exit thread */
+    ngx_http_small_light_exit_process, /* exit process */
+    NULL,                              /* exit master */
     NGX_MODULE_V1_PADDING
 };
+
+static ngx_int_t ngx_http_small_light_init_process(ngx_cycle_t *cycle) {
+    /* TODO: Consider about other image processors */
+
+    ngx_http_small_light_imagemagick_genesis();
+
+    return NGX_OK;
+}
+
+static void ngx_http_small_light_exit_process(ngx_cycle_t *cycle) {
+    /* TODO: Consider about other image processors */
+
+    ngx_http_small_light_imagemagick_terminus();
+}
 
 static ngx_http_output_header_filter_pt  ngx_http_next_header_filter;
 static ngx_http_output_body_filter_pt    ngx_http_next_body_filter;
