@@ -151,16 +151,12 @@ ngx_module_t  ngx_http_small_light_module = {
 };
 
 static ngx_int_t ngx_http_small_light_init_worker(ngx_cycle_t *cycle) {
-    /* TODO: Consider about other image processors */
-
     ngx_http_small_light_imagemagick_genesis();
 
     return NGX_OK;
 }
 
 static void ngx_http_small_light_exit_worker(ngx_cycle_t *cycle) {
-    /* TODO: Consider about other image processors */
-
     ngx_http_small_light_imagemagick_terminus();
 }
 
