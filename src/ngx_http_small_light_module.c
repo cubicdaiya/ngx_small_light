@@ -137,16 +137,16 @@ static ngx_http_module_t  ngx_http_small_light_module_ctx = {
 
 ngx_module_t  ngx_http_small_light_module = {
     NGX_MODULE_V1,
-    &ngx_http_small_light_module_ctx,  /* module context */
-    ngx_http_small_light_commands,     /* module directives */
-    NGX_HTTP_MODULE,                   /* module type */
-    NULL,                              /* init master */
-    NULL,                              /* init module */
-    ngx_http_small_light_init_worker,  /* init process */
-    NULL,                              /* init thread */
-    NULL,                              /* exit thread */
-    ngx_http_small_light_exit_worker,  /* exit process */
-    NULL,                              /* exit master */
+    &ngx_http_small_light_module_ctx, /* module context */
+    ngx_http_small_light_commands,    /* module directives */
+    NGX_HTTP_MODULE,                  /* module type */
+    NULL,                             /* init master */
+    NULL,                             /* init module */
+    ngx_http_small_light_init_worker, /* init process */
+    NULL,                             /* init thread */
+    NULL,                             /* exit thread */
+    ngx_http_small_light_exit_worker, /* exit process */
+    NULL,                             /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
