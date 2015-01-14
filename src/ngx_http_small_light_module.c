@@ -60,8 +60,8 @@ static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cm
 static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chain_t *in, size_t buffer_size, ngx_http_small_light_ctx_t *ctx);
 static ngx_int_t ngx_http_small_light_finish(ngx_http_request_t *r, ngx_chain_t *out);
 static ngx_int_t ngx_http_small_light_init(ngx_conf_t *cf);
-static ngx_int_t ngx_http_small_light_init_process(ngx_cycle_t *cycle);
-static void ngx_http_small_light_exit_process(ngx_cycle_t *cycle);
+static ngx_int_t ngx_http_small_light_init_worker(ngx_cycle_t *cycle);
+static void ngx_http_small_light_exit_worker(ngx_cycle_t *cycle);
 
 static ngx_command_t  ngx_http_small_light_commands[] = {
     { 
@@ -142,15 +142,15 @@ ngx_module_t  ngx_http_small_light_module = {
     NGX_HTTP_MODULE,                   /* module type */
     NULL,                              /* init master */
     NULL,                              /* init module */
-    ngx_http_small_light_init_process, /* init process */
+    ngx_http_small_light_init_worker,  /* init process */
     NULL,                              /* init thread */
     NULL,                              /* exit thread */
-    ngx_http_small_light_exit_process, /* exit process */
+    ngx_http_small_light_exit_worker,  /* exit process */
     NULL,                              /* exit master */
     NGX_MODULE_V1_PADDING
 };
 
-static ngx_int_t ngx_http_small_light_init_process(ngx_cycle_t *cycle) {
+static ngx_int_t ngx_http_small_light_init_worker(ngx_cycle_t *cycle) {
     /* TODO: Consider about other image processors */
 
     ngx_http_small_light_imagemagick_genesis();
@@ -158,7 +158,7 @@ static ngx_int_t ngx_http_small_light_init_process(ngx_cycle_t *cycle) {
     return NGX_OK;
 }
 
-static void ngx_http_small_light_exit_process(ngx_cycle_t *cycle) {
+static void ngx_http_small_light_exit_worker(ngx_cycle_t *cycle) {
     /* TODO: Consider about other image processors */
 
     ngx_http_small_light_imagemagick_terminus();
