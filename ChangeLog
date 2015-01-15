@@ -1,3 +1,9 @@
+2015-01-15 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: ImageMagick semaphore error(#20). Thanks @dtan4
+
+	* 0.6.4 released
+
 2014-10-23 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* Support progressive JPEG by ImageMagick.
