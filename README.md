@@ -68,7 +68,7 @@ Supports following image-processings.
  * Canvas
  * Crop
  * Composition
- * JPEG down-scaling(except GD)
+ * JPEG Hinting(except GD)
  * Format convert(e.g. PNG -> JPEG)
 
 Supports following formats
