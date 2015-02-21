@@ -83,18 +83,18 @@ ngx_int_t ngx_http_small_light_parse_params(ngx_http_request_t *r, ngx_http_smal
         if (k == NULL || v == NULL) {
             return NGX_OK;
         }
-        kl = ngx_strlen(k);
         vl = ngx_strlen(v);
-        kk = ngx_palloc(r->pool, kl + 1);
-        if (kk == NULL) {
-            return NGX_ERROR;
-        }
-        ngx_cpystrn((u_char *)kk, (u_char *)k, kl + 1);
-        ks.data = (u_char *)kk;
-        ks.len  = kl;
         if (ngx_strcmp(k, "p") == 0) {
             ngx_cpystrn((u_char *)pv, (u_char *)v, vl + 1);
         } else {
+            kl = ngx_strlen(k);
+            kk = ngx_palloc(r->pool, kl + 1);
+            if (kk == NULL) {
+                return NGX_ERROR;
+            }
+            ngx_cpystrn((u_char *)kk, (u_char *)k, kl + 1);
+            ks.data = (u_char *)kk;
+            ks.len  = kl;
             vv = ngx_palloc(r->pool, vl + 1);
             if (vv == NULL) {
                 return NGX_ERROR;
