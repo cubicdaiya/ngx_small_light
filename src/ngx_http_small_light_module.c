@@ -543,7 +543,7 @@ static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chai
     ngx_chain_t *cl;
 
     if (ctx->content == NULL) {
-        ctx->content = ngx_pcalloc(r->pool, ctx->content_length);
+        ctx->content = ngx_palloc(r->pool, ctx->content_length);
         if (ctx->content == NULL) {
             return NGX_ERROR;
         }

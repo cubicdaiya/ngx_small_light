@@ -50,7 +50,7 @@ ngx_int_t ngx_http_small_light_parse_define_pattern(ngx_http_request_t *r, ngx_s
         capture_start = captures[2];
         capture_end   = captures[3];
         capture_len   = capture_end - capture_start;
-        define_pattern_s  = ngx_pcalloc(r->pool, capture_len + 1);
+        define_pattern_s  = ngx_palloc(r->pool, capture_len + 1);
         if (define_pattern_s == NULL) {
             return NGX_ERROR;
         }
