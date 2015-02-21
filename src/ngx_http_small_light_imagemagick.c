@@ -100,6 +100,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     if (sz.jpeghint_flg != 0) {
         p = ngx_snprintf((u_char *)jpeg_size_opt, sizeof(jpeg_size_opt) - 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
         *p = '\0';
+        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "jpeg_size_opt:%s", jpeg_size_opt);
         MagickSetOption(ictx->wand, "jpeg:size", (char *)jpeg_size_opt);
     }
 
@@ -144,6 +145,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         *p = '\0';
         p = ngx_snprintf(size_geo, sizeof(size_geo) - 1, "%f!x%f!",       sz.dw, sz.dh);
         *p = '\0';
+        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "crop_geo:%s", crop_geo);
+        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "size_geo:%s", size_geo);
         trans_wand = MagickTransformImage(ictx->wand, (char *)crop_geo, (char *)size_geo);
         if (trans_wand == NULL || trans_wand == ictx->wand) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
@@ -278,7 +281,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         embedicon_path_len = ctx->material_dir->len + ngx_strlen("/") + embedicon_len;
         if (embedicon_path_len > sizeof(embedicon_path) - 1) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "embedicon path is too long. maximun value is %zd. %s:%d",
+                          "embedicon path is too long. maximun value is %d %s:%d",
                           sizeof(embedicon_path) - 1,
                           __FUNCTION__,
                           __LINE__);
