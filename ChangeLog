@@ -1,3 +1,9 @@
+2015-02-24 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* optimization: reduced memory-allocations.
+
+	* 0.6.5 released
+
 2015-01-15 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: ImageMagick semaphore error(#20). Thanks @dtan4
