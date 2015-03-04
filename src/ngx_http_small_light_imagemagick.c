@@ -85,6 +85,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     size_t                                  embedicon_path_len, embedicon_len, sled_image_size;
     ngx_int_t                               type;
     u_char                                  jpeg_size_opt[32], crop_geo[128], size_geo[128], embedicon_path[256];
+    ColorspaceType                          color_space;
 
     status = MagickFalse;
 
@@ -113,6 +114,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                       __LINE__);
         return NGX_ERROR;
     }
+
+    color_space = MagickGetImageColorspace(ictx->wand);
 
     /* remove all profiles */
     rmprof_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "rmprof"));
@@ -189,6 +192,13 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
             return NGX_ERROR;
         }
+
+        status = MagickTransformImageColorspace(canvas_wand, color_space);
+        if (status == MagickFalse) {
+            r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            return NGX_ERROR;
+        }
+
         status = MagickCompositeImage(canvas_wand, ictx->wand, AtopCompositeOp, sz.dx, sz.dy);
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
