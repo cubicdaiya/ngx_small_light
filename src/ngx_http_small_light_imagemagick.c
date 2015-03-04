@@ -72,7 +72,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
-    int                                     rmprof_flg, progressive_flg;
+    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
     double                                  iw, ih, q;
     char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
     MagickWand                             *trans_wand, *canvas_wand;
@@ -206,6 +206,16 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
         DestroyMagickWand(ictx->wand);
         ictx->wand = canvas_wand;
+    }
+
+    /* CMYK to sRGB */
+    cmyk2rgb_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cmyk2rgb"));
+    if (cmyk2rgb_flg != 0 && color_space == CMYKColorspace) {
+        status = MagickTransformImageColorspace(ictx->wand, sRGBColorspace);
+        if (status == MagickFalse) {
+            r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            return NGX_ERROR;
+        }
     }
 
     /* effects. */
