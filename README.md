@@ -70,6 +70,7 @@ Supports following image-processings.
  * Composition
  * JPEG Hinting(except GD)
  * Format convert(e.g. PNG -> JPEG)
+ * Color-space convert(e.g. CMYK -> sRGB)
 
 Supports following formats
 
