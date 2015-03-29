@@ -111,7 +111,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     ngx_fd_t fd;
     char *filename, *sharpen, *blur, *of, *buf;
     void *data;
-    int w, h, radius;
+    int w, h, radius, orientation;
     double iw, ih, q;
     ngx_int_t t, type;
     const char *ext;
@@ -176,24 +176,33 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         return NGX_ERROR;
     }
 
-    if (sz.angle == 90 || sz.angle == 180 || sz.angle == 270) {
-        imlib_context_set_image(image_dst);
+    if (sz.angle) {
         switch(sz.angle) {
         case 90:
-            imlib_image_orientate(1);
+            orientation = 1;
             break;
         case 180:
-            imlib_image_orientate(2);
+            orientation = 2;
             break;
         case 270:
-            imlib_image_orientate(3);
+            orientation = 3;
+            break;
+        default:
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "image not rotated. 'angle'(%d) must be 90 or 180 or 270. %s:%d",
+                          sz.angle,
+                          __FUNCTION__,
+                          __LINE__);
             break;
         }
 
-        t     = sz.dw;
-        sz.dw = sz.dh;
-        sz.dh = t;
-
+        if (sz.angle == 90 || sz.angle == 180 || sz.angle == 270) {
+            imlib_context_set_image(image_dst);
+            imlib_image_orientate(orientation);
+            t     = sz.dw;
+            sz.dw = sz.dh;
+            sz.dh = t;
+        }
     }
 
     /* create canvas then draw image to the canvas. */
