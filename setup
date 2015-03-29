@@ -113,6 +113,7 @@ my $gd_lds      = "";
 my $gd_includes = "";
 if ($gd_enabled == 1) {
     $gd_libs     = `gdlib-config --libs`;
+    $gd_libs     =~ s/\s*?\@LIBICONV\@\s*?//;
     $gd_lds      = `gdlib-config --ldflags`;
     $gd_includes = `gdlib-config --cflags`;
     chomp($gd_libs);
