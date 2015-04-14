@@ -351,6 +351,9 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
 
     rc = ctx->converter.init(r, ctx);
     if (rc != NGX_OK) {
+
+        ngx_pfree(r->pool, ctx->content_orig);
+
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to process image %s:%d",
                       __FUNCTION__,
@@ -360,6 +363,9 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
                                                 NGX_HTTP_UNSUPPORTED_MEDIA_TYPE);
     }
     rc = ctx->converter.process(r, ctx);
+
+    ngx_pfree(r->pool, ctx->content_orig);
+
     if (rc != NGX_OK) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to process image %s:%d",
@@ -549,6 +555,7 @@ static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chai
         }
 
         ctx->last = ctx->content;
+        ctx->content_orig = ctx->content;
     }
 
     p = ctx->last;
