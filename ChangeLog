@@ -1,3 +1,11 @@
+2015-04-14 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* imagemagick, imlib2, gd: improved error handling with rotating image.
+
+	* bugfix: fixed `setup --with-gd` error with libgd-2.1.1.
+
+	* 0.6.7 released
+
 2015-03-07 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* feature: added parameter 'cmyk2rgb'.
