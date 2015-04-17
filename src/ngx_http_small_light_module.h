@@ -102,6 +102,7 @@ typedef struct ngx_http_small_light_ctx_t {
     size_t content_length;
     const char *inf;
     const char *of;
+    u_char *content_orig;
     u_char *content;
     u_char *last;
     void *ictx;
