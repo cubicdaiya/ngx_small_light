@@ -302,8 +302,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             return NGX_ERROR;
         }
 
-        icon_wand = NewMagickWand();
-
         embedicon_len      = ngx_strlen(embedicon);
         embedicon_path_len = ctx->material_dir->len + ngx_strlen("/") + embedicon_len;
         if (embedicon_path_len > sizeof(embedicon_path) - 1) {
@@ -347,12 +345,14 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             return NGX_ERROR;
         }
 
+        icon_wand = NewMagickWand();
         if (MagickReadImage(icon_wand, (char *)embedicon_path) == MagickFalse) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                           "failed to read embed icon image file:%s %s:%d",
                           embedicon_path,
                           __FUNCTION__,
                           __LINE__);
+            DestroyMagickWand(icon_wand);
             return NGX_ERROR;
         }
 
