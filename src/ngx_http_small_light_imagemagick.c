@@ -194,18 +194,21 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         DestroyPixelWand(canvas_color);
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyMagickWand(canvas_wand);
             return NGX_ERROR;
         }
 
         status = MagickTransformImageColorspace(canvas_wand, color_space);
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyMagickWand(canvas_wand);
             return NGX_ERROR;
         }
 
         status = MagickCompositeImage(canvas_wand, ictx->wand, AtopCompositeOp, sz.dx, sz.dy);
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyMagickWand(canvas_wand);
             return NGX_ERROR;
         }
         DestroyMagickWand(ictx->wand);
