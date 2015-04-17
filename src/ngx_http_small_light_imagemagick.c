@@ -94,9 +94,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     /* adjust image size */
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
-    /* init */
-    ictx->wand = NewMagickWand();
-
     /* prepare */
     if (sz.jpeghint_flg != 0) {
         p = ngx_snprintf((u_char *)jpeg_size_opt, sizeof(jpeg_size_opt) - 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
@@ -357,7 +354,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
 
         MagickCompositeImageChannel(ictx->wand, AllChannels, icon_wand, OverCompositeOp, sz.ix, sz.iy);
-        ClearMagickWand(icon_wand);
+        DestroyMagickWand(icon_wand);
     }
 
     /* set params. */
