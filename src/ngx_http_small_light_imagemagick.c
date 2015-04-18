@@ -133,6 +133,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     /* pass through. */
     if (sz.pt_flg != 0) {
+        ctx->of = ctx->inf;
         return NGX_OK;
     }
 
