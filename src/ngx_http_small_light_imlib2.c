@@ -156,6 +156,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     /* pass through. */
     if (sz.pt_flg != 0) {
+        ctx->of = ctx->inf;
         return NGX_OK;
     }
 

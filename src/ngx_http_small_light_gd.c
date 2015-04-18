@@ -153,6 +153,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     /* pass through. */
     if (sz.pt_flg != 0) {
         gdImageDestroy(src);
+        ctx->of = ctx->inf;
         return NGX_OK;
     }
 
