@@ -328,6 +328,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
                       "failed to ngx_fd_info %s:%d",
                       __FUNCTION__,
                       __LINE__);
+        ngx_close_file(fd);
         return NGX_ERROR;
     } 
 
@@ -337,6 +338,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
                       "failed to allocate memory from r->pool %s:%d",
                       __FUNCTION__,
                       __LINE__);
+        ngx_close_file(fd);
         return NGX_ERROR;
     }
     size = ngx_read_fd(fd, buf, ngx_file_size(&fi));
@@ -345,6 +347,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
                       "failed to ngx_read_fd %s:%d",
                       __FUNCTION__,
                       __LINE__);
+        ngx_close_file(fd);
         return NGX_ERROR;
     }
 
@@ -355,6 +358,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
                           "failed to allocate memory from r->pool %s:%d",
                           __FUNCTION__,
                           __LINE__);
+            ngx_close_file(fd);
             return NGX_ERROR;
         }
     }
