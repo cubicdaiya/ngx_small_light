@@ -1,5 +1,5 @@
 /**
-   Copyright (c) 2012-2014 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+   Copyright (c) 2012-2015 Tatsuhiko Kubo <cubicdaiya@gmail.com>
    Copyright (c) 1996-2011 livedoor Co.,Ltd.
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
