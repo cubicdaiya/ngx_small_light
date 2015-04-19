@@ -1,3 +1,17 @@
+2015-04-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: fixed SEGV when pass-through is enabled for imagemagick and imlib2 and gd.
+
+	* bugfix: fixed fd leak for imlib2 when processing image failed.
+
+	* bugfix: fixed memory leak for imagemagick when processing embedicon and canvas failed.
+
+	* bugfix: fixed memory leak for imagemagick in all cases.
+
+	* optimize: release large memory blocks with ngx_pfree().
+
+	* 0.6.8 released
+
 2015-04-14 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* imagemagick, imlib2, gd: improved error handling with rotating image.
