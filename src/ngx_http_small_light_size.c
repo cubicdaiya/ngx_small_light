@@ -131,7 +131,7 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
 
     /* get scaling option. */
     prm_ds_str = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ds");
-    prm_ds     = prm_ds_str[0] ? prm_ds_str[0] : 'l';
+    prm_ds     = prm_ds_str[0];
     if (prm_ds == 's' || (sz->dw < sz->sw - sz->sx) || (sz->dh < sz->sh - sz->sy)) {
         sz->scale_flg = 1;
     } else {
