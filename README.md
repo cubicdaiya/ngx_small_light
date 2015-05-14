@@ -72,12 +72,16 @@ Supports following image-processings.
  * Format convert(e.g. PNG -> JPEG)
  * Color-space convert(e.g. CMYK -> sRGB)
 
-Supports following formats
+Supports following formats.
 
  * JPEG
  * GIF(except Imlib2)
  * PNG
  * WebP(except Imlib2)
+
+On the other hand, `ngx_small_light` does not suport Animated GIF.
+Because it takes long time to transform(e.g. resize, crop) Animated GIF with animation.
+So it is not realistic for ngx_small_light to support an animated GIF.
 
 ## Optimizing Tips
 
