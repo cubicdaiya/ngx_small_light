@@ -81,7 +81,7 @@ Supports following formats.
 
 On the other hand, `ngx_small_light` does not suport Animated GIF.
 Because it takes long time to transform(e.g. resize, crop) Animated GIF with animation.
-So it is not realistic for ngx_small_light to support an animated GIF.
+So it is not realistic for `ngx_small_light` to support an animated GIF.
 
 ## Optimizing Tips
 
