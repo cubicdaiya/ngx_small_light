@@ -126,38 +126,10 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-    /* calc size. */
-    iw = (double)MagickGetImageWidth(ictx->wand);
-    ih = (double)MagickGetImageHeight(ictx->wand);
-    ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
-
-    /* pass through. */
-    if (sz.pt_flg != 0) {
-        ctx->of = ctx->inf;
-        return NGX_OK;
-    }
-
     of_orig = MagickGetImageFormat(ictx->wand);
-
-    /* crop, scale. */
     status = MagickTrue;
-    if (sz.scale_flg != 0) {
-        p = ngx_snprintf(crop_geo, sizeof(crop_geo) - 1, "%f!x%f!+%f+%f", sz.sw, sz.sh, sz.sx, sz.sy);
-        *p = '\0';
-        p = ngx_snprintf(size_geo, sizeof(size_geo) - 1, "%f!x%f!",       sz.dw, sz.dh);
-        *p = '\0';
-        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "crop_geo:%s", crop_geo);
-        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "size_geo:%s", size_geo);
-        trans_wand = MagickTransformImage(ictx->wand, (char *)crop_geo, (char *)size_geo);
-        if (trans_wand == NULL || trans_wand == ictx->wand) {
-            r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
-            return NGX_ERROR;
-        }
-        DestroyMagickWand(ictx->wand);
-        ictx->wand = trans_wand;
-    }
 
-    /* rotate */
+    /* rotate. */
     if (sz.angle) {
         bg_color = NewPixelWand();
         PixelSetRed(bg_color,   sz.cc.r / 255.0);
@@ -181,6 +153,34 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
 
         DestroyPixelWand(bg_color);
+    }
+
+    /* calc size. */
+    iw = (double)MagickGetImageWidth(ictx->wand);
+    ih = (double)MagickGetImageHeight(ictx->wand);
+    ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
+
+    /* pass through. */
+    if (sz.pt_flg != 0) {
+        ctx->of = ctx->inf;
+        return NGX_OK;
+    }
+
+    /* crop, scale. */
+    if (sz.scale_flg != 0) {
+        p = ngx_snprintf(crop_geo, sizeof(crop_geo) - 1, "%f!x%f!+%f+%f", sz.sw, sz.sh, sz.sx, sz.sy);
+        *p = '\0';
+        p = ngx_snprintf(size_geo, sizeof(size_geo) - 1, "%f!x%f!",       sz.dw, sz.dh);
+        *p = '\0';
+        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "crop_geo:%s", crop_geo);
+        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "size_geo:%s", size_geo);
+        trans_wand = MagickTransformImage(ictx->wand, (char *)crop_geo, (char *)size_geo);
+        if (trans_wand == NULL || trans_wand == ictx->wand) {
+            r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            return NGX_ERROR;
+        }
+        DestroyMagickWand(ictx->wand);
+        ictx->wand = trans_wand;
     }
 
     /* create canvas then draw image to the canvas. */
