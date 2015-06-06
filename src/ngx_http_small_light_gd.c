@@ -129,7 +129,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     ngx_http_small_light_image_size_t  sz;
     gdImagePtr                         src, dst, canvas;
     ngx_int_t                          colors, transparent, palette, red, green, blue;
-    ngx_int_t                          ax, ay, ox, oy, t, type;
+    ngx_int_t                          ax, ay, ox, oy, type;
     int                                iw, ih, radius, ccolor, bcolor;
     char                              *sharpen, *of;
     u_char                            *out;
@@ -146,16 +146,10 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         return NGX_ERROR;
     }
 
+    /* adjust image size */
     iw = gdImageSX(src);
     ih = gdImageSY(src);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
-
-    /* pass through. */
-    if (sz.pt_flg != 0) {
-        gdImageDestroy(src);
-        ctx->of = ctx->inf;
-        return NGX_OK;
-    }
 
     colors      = gdImageColorsTotal(src);
     palette     = 0;
@@ -176,6 +170,66 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     }
 
     gdImageColorTransparent(src, -1);
+
+    /* rotate. */
+    if (sz.angle) {
+        dst = src;
+        ax  = (iw % 2 == 0) ? 1 : 0;
+        ay  = (ih % 2 == 0) ? 1 : 0;
+        switch (sz.angle) {
+        case 90:
+        case 270:
+            dst = ngx_http_small_light_gd_new(ih, iw, palette);
+            if (dst == NULL) {
+                gdImageDestroy(src);
+                return NGX_ERROR;
+            }
+
+            if (sz.angle == 90) {
+                ox = ih / 2 - ay;
+                oy = iw / 2 + ax;
+            } else {
+                ox = ih / 2 + ay;
+                oy = iw / 2 - ax;
+            }
+
+            gdImageCopyRotated(dst, src, ox, oy, 0, 0,
+                               iw, ih, -sz.angle);
+            gdImageDestroy(src);
+
+            break;
+        case 180:
+            dst = ngx_http_small_light_gd_new(iw, ih, palette);
+            if (dst == NULL) {
+                gdImageDestroy(src);
+                return NGX_ERROR;
+            }
+            gdImageCopyRotated(dst, src, iw / 2 - ax, ih / 2 - ay, 0, 0,
+                               iw + ax, ih + ay, sz.angle);
+            gdImageDestroy(src);
+            break;
+        default:
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "image not rotated. 'angle'(%d) must be 90 or 180 or 270. %s:%d",
+                          sz.angle,
+                          __FUNCTION__,
+                          __LINE__);
+            break;
+        }
+        src = dst;
+    }
+
+    /* calc size. */
+    iw = gdImageSX(src);
+    ih = gdImageSY(src);
+    ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
+
+    /* pass through. */
+    if (sz.pt_flg != 0) {
+        gdImageDestroy(src);
+        ctx->of = ctx->inf;
+        return NGX_OK;
+    }
 
     /* crop, scale. */
     if (sz.scale_flg != 0) {
@@ -199,55 +253,6 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         gdImageDestroy(src);
     } else {
         dst = src;
-    }
-
-    if (sz.angle) {
-        src = dst;
-        ax  = ((ngx_int_t)sz.dw % 2 == 0) ? 1 : 0;
-        ay  = ((ngx_int_t)sz.dh % 2 == 0) ? 1 : 0;
-        switch (sz.angle) {
-        case 90:
-        case 270:
-            dst = ngx_http_small_light_gd_new(sz.dh, sz.dw, palette);
-            if (dst == NULL) {
-                gdImageDestroy(src);
-                return NGX_ERROR;
-            }
-
-            if (sz.angle == 90) {
-                ox = sz.dh / 2 - ay;
-                oy = sz.dw / 2 + ax;
-            } else {
-                ox = sz.dh / 2 + ay;
-                oy = sz.dw / 2 - ax;
-            }
-
-            gdImageCopyRotated(dst, src, ox, oy, 0, 0,
-                               sz.dw, sz.dh, -sz.angle);
-            gdImageDestroy(src);
-
-            t     = sz.dw;
-            sz.dw = sz.dh;
-            sz.dh = t;
-            break;
-        case 180:
-            dst = ngx_http_small_light_gd_new(sz.dw, sz.dh, palette);
-            if (dst == NULL) {
-                gdImageDestroy(src);
-                return NGX_ERROR;
-            }
-            gdImageCopyRotated(dst, src, sz.dw / 2 - ax, sz.dh / 2 - ay, 0, 0,
-                               sz.dw + ax, sz.dh + ay, sz.angle);
-            gdImageDestroy(src);
-            break;
-        default:
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "image not rotated. 'angle'(%d) must be 90 or 180 or 270. %s:%d",
-                          sz.angle,
-                          __FUNCTION__,
-                          __LINE__);
-            break;
-        }
     }
 
     if (transparent != -1 && colors) {
