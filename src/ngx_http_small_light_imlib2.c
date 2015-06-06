@@ -113,7 +113,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     void *data;
     int w, h, radius, orientation;
     double iw, ih, q;
-    ngx_int_t t, type;
+    ngx_int_t type;
     const char *ext;
     ssize_t size;
 
@@ -148,6 +148,32 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         }
     }
 
+    /* rotate. */
+    if (sz.angle) {
+        orientation = 0;
+        switch (sz.angle) {
+        case 90:
+            orientation = 1;
+            break;
+        case 180:
+            orientation = 2;
+            break;
+        case 270:
+            orientation = 3;
+            break;
+        default:
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "image not rotated. 'angle'(%d) must be 90 or 180 or 270. %s:%d",
+                          sz.angle,
+                          __FUNCTION__,
+                          __LINE__);
+            break;
+        }
+
+        imlib_context_set_image(image_org);
+        imlib_image_orientate(orientation);
+    }
+
     /* calc size. */
     imlib_context_set_image(image_org);
     iw = (double)imlib_image_get_width();
@@ -175,35 +201,6 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
                       __FUNCTION__,
                       __LINE__);
         return NGX_ERROR;
-    }
-
-    if (sz.angle) {
-        switch(sz.angle) {
-        case 90:
-            orientation = 1;
-            break;
-        case 180:
-            orientation = 2;
-            break;
-        case 270:
-            orientation = 3;
-            break;
-        default:
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "image not rotated. 'angle'(%d) must be 90 or 180 or 270. %s:%d",
-                          sz.angle,
-                          __FUNCTION__,
-                          __LINE__);
-            break;
-        }
-
-        if (sz.angle == 90 || sz.angle == 180 || sz.angle == 270) {
-            imlib_context_set_image(image_dst);
-            imlib_image_orientate(orientation);
-            t     = sz.dw;
-            sz.dw = sz.dh;
-            sz.dh = t;
-        }
     }
 
     /* create canvas then draw image to the canvas. */
