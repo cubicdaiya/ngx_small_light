@@ -365,16 +365,6 @@ static ngx_int_t ngx_http_small_light_body_filter(ngx_http_request_t *r, ngx_cha
 
     rc = ctx->converter.process(r, ctx);
 
-#ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
-    if (ngx_strcmp(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "e"),
-                   NGX_HTTP_SMALL_LIGHT_CONVERTER_IMLIB2) != 0)
-    {
-        ngx_pfree(r->pool, ctx->content_orig);
-    }
-#else
-    ngx_pfree(r->pool, ctx->content_orig);
-#endif /* NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED */
-
     if (rc != NGX_OK) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                       "failed to process image %s:%d",

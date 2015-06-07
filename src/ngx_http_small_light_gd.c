@@ -336,6 +336,8 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     ctx->content        = out;
     ctx->content_length = size;
 
+    ngx_pfree(r->pool, ctx->content_orig);
+
     ictx->complete = 1;
 
     return NGX_OK;
