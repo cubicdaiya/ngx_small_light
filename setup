@@ -106,6 +106,8 @@ if ($imlib2_enabled == 1) {
     $imlib2_includes = `imlib2-config --cflags`;
     chomp($imlib2_libs);
     chomp($imlib2_includes);
+    # the output of `imlib2-config --libs` does not include '-ljpeg'.
+    $imlib2_libs    .= " -ljpeg";
 }
 
 my $gd_libs     = "";
