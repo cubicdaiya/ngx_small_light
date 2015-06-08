@@ -1,3 +1,17 @@
+2015-06-09 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: fixed image corruption by the combination of cropping and rotation. Thanks @gunyoki
+
+	* bugfix: fixed memory corruption when pass-through is enabled.
+
+	* bugfix: fixed memory corruption when imlib2 is selected.
+
+	* bugfix: fixed compilation error for using libjpeg8.
+
+	* removed unused code refs #24. Thanks @kaneshin
+
+	* 0.6.9 released
+
 2015-04-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: fixed SEGV when pass-through is enabled for imagemagick and imlib2 and gd.
