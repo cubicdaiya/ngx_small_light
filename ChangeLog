@@ -1,3 +1,9 @@
+2015-06-29 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: fixed the exit status for `./configure`.
+
+	* 0.6.10 released
+
 2015-06-09 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: fixed image corruption by the combination of cropping and rotation. Thanks @gunyoki
