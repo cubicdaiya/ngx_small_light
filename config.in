@@ -19,7 +19,7 @@ unsigned char *out = gdImageWebpPtr(img_gd_webp, &size);
 . auto/feature
 
 if [ $ngx_found = no ]; then
-   exit
+   exit 1
 fi
 
 CORE_LIBS="$CORE_LIBS $ngx_feature_libs"
