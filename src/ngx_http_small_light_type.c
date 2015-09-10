@@ -67,6 +67,14 @@ ngx_int_t ngx_http_small_light_type_detect(u_char *image, size_t image_len)
                p[4] == 0x0d && p[5] == 0x0a && p[6] == 0x1a && p[7] == 0x0a)
     {
         return NGX_HTTP_SMALL_LIGHT_IMAGE_PNG;
+    } else
+    {
+        uint32_t webp_magic1 = ((uint32_t)p[0] << 24) | (p[1] << 16) | (p[2] << 8) | p[3];
+        uint32_t webp_magic2 = ((uint32_t)p[8] << 24) | (p[9] << 16) | (p[10] << 8) | p[11];
+
+        // "RIFF", "WEBP"
+        if (webp_magic1 == 0x52494646 && webp_magic2 == 0x57454250)
+            return NGX_HTTP_SMALL_LIGHT_IMAGE_WEBP;
     }
 
     return NGX_HTTP_SMALL_LIGHT_IMAGE_NONE;
