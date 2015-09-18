@@ -58,6 +58,11 @@ static gdImagePtr ngx_http_small_light_gd_src(ngx_http_small_light_gd_ctx_t *ict
     case NGX_HTTP_SMALL_LIGHT_IMAGE_PNG:
         src = gdImageCreateFromPngPtr(ictx->image_len,  ictx->image);
         break;
+    case NGX_HTTP_SMALL_LIGHT_IMAGE_WEBP:
+#ifdef NGX_HTTP_SMALL_LIGHT_GD_WEBP_ENABLED
+        src = gdImageCreateFromWebpPtr(ictx->image_len,  ictx->image);
+#endif
+        break;
     default:
         break;
     }
