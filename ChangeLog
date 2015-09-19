@@ -1,3 +1,9 @@
+2015-09-20 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* feature: supported WebP-input with ImageMagick. Thanks @cgs3238. #31
+
+	* 0.6.11 released
+
 2015-06-29 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: fixed the exit status for `./configure`.
