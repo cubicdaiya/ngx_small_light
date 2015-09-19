@@ -57,7 +57,10 @@ static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, v
 static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child);
 static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
 static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
-static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chain_t *in, size_t buffer_size, ngx_http_small_light_ctx_t *ctx);
+static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r,
+                                                 ngx_chain_t *in,
+                                                 size_t buffer_size,
+                                                 ngx_http_small_light_ctx_t *ctx);
 static ngx_int_t ngx_http_small_light_finish(ngx_http_request_t *r, ngx_chain_t *out);
 static ngx_int_t ngx_http_small_light_init(ngx_conf_t *cf);
 static ngx_int_t ngx_http_small_light_init_worker(ngx_cycle_t *cycle);
@@ -540,7 +543,11 @@ static char *ngx_http_small_light_material_dir(ngx_conf_t *cf, ngx_command_t *cm
 }    
 
 
-static ngx_int_t ngx_http_small_light_image_read(ngx_http_request_t *r, ngx_chain_t *in, size_t buffer_size, ngx_http_small_light_ctx_t *ctx)
+static ngx_int_t
+ngx_http_small_light_image_read(ngx_http_request_t *r,
+                                ngx_chain_t *in,
+                                size_t buffer_size,
+                                ngx_http_small_light_ctx_t *ctx)
 {
     u_char      *p;
     size_t       size, rest;
