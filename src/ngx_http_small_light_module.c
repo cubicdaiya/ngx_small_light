@@ -47,7 +47,7 @@ const char *ngx_http_small_light_image_types[] = {
 const char *ngx_http_small_light_image_exts[] = {
     "jpeg",
     "gif",
-    "png"
+    "png",
     "webp"
 };
 
