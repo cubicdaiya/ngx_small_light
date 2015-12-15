@@ -1,3 +1,9 @@
+2015-12-16 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: fixed invalid definition for image_exts.
+
+	* 0.6.12 released
+
 2015-09-20 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* feature: supported WebP-input with ImageMagick. Thanks @cgs3238. #31
