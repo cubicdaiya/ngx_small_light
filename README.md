@@ -191,7 +191,7 @@ when Content-Length is not set in response headers.
 |sharpen    |string|           |radius,sigma                                    |        :o:|   :o:|:o:|
 |unsharp    |string|           |radius,sigma,amount,threshold                   |        :o:|   :x:|:x:|
 |blur       |string|           |radius,sigma                                    |        :o:|   :o:|:x:|
-|embedicon  |string|           |embedded icon file in 'small_light_material_dir'|        :o:|   :x:|:x:|
+|embedicon  |string|           |embedded icon file in `small_light_material_dir`|        :o:|   :x:|:x:|
 |ix         |number|0          |embedded icon x coordinate                      |        :o:|   :x:|:x:|
 |iy         |number|0          |embedded icon y coordinate                      |        :o:|   :x:|:x:|
 |jpeghint   |char  |n          |enable jpeg hinting                             |        :o:|   :o:|:x:|
