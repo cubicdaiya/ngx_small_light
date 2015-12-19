@@ -220,10 +220,8 @@ small_light_pattern_define small dw=120,dh=120,q=80,e=imagemagick,jpeghint=y;
 
 If the line above is added to some server context in nginx.conf, the two URLs below return same response.
 
-```
-http://$host:$port/small_light(p=lsize)/img/image.jpg
-http://$host:$port/small_light(dw=500,dh=500,da=l,q=95,e=imagemagick,jpeghint=y)/img/image.jpg
-```
+ * `http://$host:$port/small_light(p=lsize)/img/image.jpg`
+ * `http://$host:$port/small_light(dw=500,dh=500,da=l,q=95,e=imagemagick,jpeghint=y)/img/image.jpg`
 
 ## Using GET parameters
 
