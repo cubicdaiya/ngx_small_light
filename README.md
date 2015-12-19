@@ -159,7 +159,7 @@ This directive assigns the directory for temporary file for Imlib2 processing.
 
 |Syntax |small_light_imlib2_temp_dir size|
 |---------|-----------|
-|Default|1M|
+|Default|1m|
 |Context|server|
 
 This directive assigns the maximum size of the buffer used for reading images
