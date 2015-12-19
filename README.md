@@ -2,6 +2,31 @@
 
 A dynamic image transformation module for [nginx](http://nginx.org/).
 
+# Table of contents
+
+* [Features](#features)
+* [Supported Formats](#supported-formats)
+* [Dependencies](#dependencies)
+* [Installation](#installation)
+* [Getting started](#getting-stared)
+* [Configuration example](#configuration-example)
+* [Directives](#directives)
+ * [small_light](#small_light)
+ * [small_light_getparam_mode](#small_light_getparam_mode)
+ * [small_light_material_dir](#small_light_material_dir)
+ * [small_light_pattern_define](#small_light_pattern_define)
+ * [small_light_imlib2_temp_dir](#small_light_imlib2_temp_dir)
+ * [small_light_buffer](#small_light_buffer)
+* [Parameters for small_light function](##parameters-for-small_light-function)
+* [Named Pattern](#named-pattern)
+* [Using GET parameters](#using-get-parameters)
+* [Optimizing Tips](#optimizing-tips)
+* [Limitations](#limitations)
+ * [Not supported features with Imlib2](#not-supported-features-with-imlib2)
+ * [Not supported features with GD](#not-supported-features-with-gd)
+ * [Not supported animated GIF](#not-supported-animated-gif)
+* [Running Test](#running-test)
+
 ## Features
 
 Supports the various image-processings below.
