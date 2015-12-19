@@ -8,7 +8,7 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
 * [Supported Formats](#supported-formats)
 * [Dependencies](#dependencies)
 * [Installation](#installation)
-* [Getting started](#getting-stared)
+* [Getting started](#getting-started)
 * [Configuration example](#configuration-example)
 * [Directives](#directives)
  * [small_light](#small_light)
@@ -17,7 +17,7 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
  * [small_light_pattern_define](#small_light_pattern_define)
  * [small_light_imlib2_temp_dir](#small_light_imlib2_temp_dir)
  * [small_light_buffer](#small_light_buffer)
-* [Parameters for small_light function](##parameters-for-small_light-function)
+* [Parameters for small_light function](#parameters-for-small_light-function)
 * [Named Pattern](#named-pattern)
 * [Using GET parameters](#using-get-parameters)
 * [Optimizing Tips](#optimizing-tips)
@@ -25,7 +25,7 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
  * [Not supported features with Imlib2](#not-supported-features-with-imlib2)
  * [Not supported features with GD](#not-supported-features-with-gd)
  * [Not supported animated GIF](#not-supported-animated-gif)
-* [Running Test](#running-test)
+* [Running Tests](#running-tests)
 
 ## Features
 
@@ -311,7 +311,7 @@ The translation with GD supports to write WebP-image. But it is the experimental
 Because it takes long time to transform(e.g. resize, crop) Animated GIF with animation.
 So it is not realistic for `ngx_small_light` to support an animated GIF.
 
-# Running Test
+# Running Tests
 
 ```sh
 perl Build.PL
