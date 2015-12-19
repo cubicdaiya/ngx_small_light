@@ -136,8 +136,8 @@ server {
 
 |Syntax     |*small_light on &#124; off*|
 |-----------|---------------------------|
-|**Default**|*off*                      |
-|**Context**|*server*                   |
+|**Default**|off                        |
+|**Context**|server                     |
 
 This directive sets whether image-processing with `ngx_small_light` is enabled in a server context.
 
@@ -145,8 +145,8 @@ This directive sets whether image-processing with `ngx_small_light` is enabled i
 
 |Syntax     |*small_light_getparam_mode on &#124; off*|
 |-----------|-----------------------------------------|
-|**Default**|*off*                                    |
-|**Context**|*server*                                 |
+|**Default**|off                                      |
+|**Context**|server                                   |
 
 This directive sets whether converting-image is enabled by GET parameters 
 instead of **small_light function** (e.g. `/small_light(dw=200,dh=200)`).
@@ -158,7 +158,7 @@ But you need to set both `small_light` and `small_light_getparam_mode` **on** to
 |Syntax     |*small_light_material_dir path*|
 |-----------|---------------------------------------------|
 |**Default**|                                             |
-|**Context**|*server*                                     |
+|**Context**|server                                       |
 
 This directive assigns the directory for embedded icon images.
 
@@ -167,7 +167,7 @@ This directive assigns the directory for embedded icon images.
 |Syntax     |*small_light_pattern_define pattern_name parameters*|
 |-----------|----------------------------------------------------|
 |**Default**|                                                    |
-|**Context**|*server*                                            |
+|**Context**|server                                              |
 
 This directive names comma-delimited parameters.
 
@@ -175,8 +175,8 @@ This directive names comma-delimited parameters.
 
 |Syntax     |*small_light_imlib2_temp_dir path* [*level1* [*level2* [*level 3* ]]]|
 |-----------|---------------------------------------------------------------------|
-|**Default**|*/tmp 1 2*                                                           |
-|**Context**|*server*                                                             |
+|**Default**|/tmp 1 2                                                             |
+|**Context**|server                                                               |
 
 This directive assigns the directory for temporary file for Imlib2 processing.
 
@@ -184,8 +184,8 @@ This directive assigns the directory for temporary file for Imlib2 processing.
 
 |Syntax     |*small_ligh_buffer size*|
 |-----------|------------------------|
-|**Default**|*1m*                    |
-|**Context**|*server*                |
+|**Default**|1m                      |
+|**Context**|server                  |
 
 This directive assigns the maximum size of the buffer used for reading images
 when Content-Length is not set in response headers.
