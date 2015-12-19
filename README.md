@@ -123,8 +123,8 @@ This directive sets whether image-processing with `ngx_small_light` is enabled i
 |Context|server|
 
 This directive sets whether converting-image is enabled by GET parameters 
-instead of a specific pattern-url of small_light(e.g. `/small_light(dw=200,dh=200)`).
-At the expense of it, a specific pattern-url of `ngx_small_light` is disabled. 
+instead of **small_light function** (e.g. `/small_light(dw=200,dh=200)`).
+At the expense of it, a **small_light function** is disabled.
 But you need to set both `small_light` and `small_light_getparam_mode` **on** to enable the feature of this directive.
 
 ### small_light_material_dir
@@ -225,9 +225,9 @@ If the line above is added to some server context in nginx.conf, the two URLs be
 
 ## Using GET parameters
 
-`ngx_small_light` supports to convert image not only by a specific pattern-url of small_light but by GET paramenters from `v0.5.0`.
+`ngx_small_light` supports to convert image not only by **small_light function** but by GET paramenters from `v0.5.0`.
 You need to set both `small_light` and `small_light_getparam_mode` **on** to enable this feature.
-At the expense of enabling this feature, a specific pattern-url of `ngx_small_light` (e.g. `/small_light(dw=300,dh=300)/img.jpg` is disabled.
+At the expense of enabling this feature, **small_light function** (e.g. `/small_light(dw=300,dh=300)/img.jpg` is disabled.
 
 ```nginx
 small_light on;
