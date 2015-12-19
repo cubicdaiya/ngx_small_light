@@ -201,14 +201,17 @@ when Content-Length is not set in response headers.
 |progressive|char  |n          |make JPEG progressive                           |        :o:|   :x:|:x:|
 |rmprof     |char  |y          |remove profile                                  |        :o:|   :x:|:x:|
 
+`of=gif` and `of=webp` are not supported when `e=imlib2`.
+
+
 There are the types of each parameter below.
 
 |Type  |Description                                      |
 |------|-------------------------------------------------|
-|coord |coordicante or pixel. percent when appeinding 'p'|
+|coord |coordicante or pixel. percent when appending 'p' |
 |char  |character                                        |
-|number|number                                           |
-|color |rrggbb(aa)                                       |
+|number|integer number                                   |
+|color |rrggbb or rrggbbaa                               |
 |string|string                                           |
 
 ## Named Pattern
