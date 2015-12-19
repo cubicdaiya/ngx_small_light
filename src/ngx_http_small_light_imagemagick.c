@@ -163,6 +163,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     /* pass through. */
     if (sz.pt_flg != 0) {
         ctx->of = ctx->inf;
+        DestroyString(of_orig);
         return NGX_OK;
     }
 
@@ -177,6 +178,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         trans_wand = MagickTransformImage(ictx->wand, (char *)crop_geo, (char *)size_geo);
         if (trans_wand == NULL || trans_wand == ictx->wand) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
         DestroyMagickWand(ictx->wand);
@@ -196,6 +198,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
             DestroyMagickWand(canvas_wand);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -203,6 +206,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
             DestroyMagickWand(canvas_wand);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -210,6 +214,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
             DestroyMagickWand(canvas_wand);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
         DestroyMagickWand(ictx->wand);
@@ -222,6 +227,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         status = MagickTransformImageColorspace(ictx->wand, sRGBColorspace);
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
     }
@@ -300,6 +306,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                           embedicon,
                           __FUNCTION__,
                           __LINE__);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -311,6 +318,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                           sizeof(embedicon_path) - 1,
                           __FUNCTION__,
                           __LINE__);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -325,6 +333,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                           embedicon_path,
                           __FUNCTION__,
                           __LINE__);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -334,6 +343,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                           embedicon_path,
                           __FUNCTION__,
                           __LINE__);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -343,6 +353,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                           embedicon_path,
                           __FUNCTION__,
                           __LINE__);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -354,6 +365,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                           __FUNCTION__,
                           __LINE__);
             DestroyMagickWand(icon_wand);
+            DestroyString(of_orig);
             return NGX_ERROR;
         }
 
@@ -401,6 +413,8 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         MagickSetFormat(ictx->wand, of_orig);
         ctx->of = ctx->inf;
     }
+
+    DestroyString(of_orig);
 
     ctx->content        = MagickGetImageBlob(ictx->wand, &sled_image_size);
     ctx->content_length = sled_image_size;
