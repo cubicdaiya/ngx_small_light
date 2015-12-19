@@ -1,6 +1,6 @@
 # ngx_small_light
 
-A dynamic image transformation module for [nginx](http://nginx.org/). It is written for using as the same way as [mod_small_light](https://github.com/yamac/smalllight) as possible in nginx.
+A dynamic image transformation module for [nginx](http://nginx.org/).
 
 ## Features
 
@@ -18,6 +18,8 @@ Supports the various image-processings below.
  * JPEG Hinting(except GD)
  * Format convert(e.g. PNG -> JPEG)
  * Color-space convert(e.g. CMYK -> sRGB)
+
+`ngx_small_light` is developed for using as the same way as [mod_small_light](https://github.com/yamac/smalllight) as possible in nginx.
 
 ## Supported Formats
 
