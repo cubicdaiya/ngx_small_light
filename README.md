@@ -155,7 +155,7 @@ But you need to set both `small_light` and `small_light_getparam_mode` **on** to
 
 ### small_light_material_dir
 
-|Syntax     |*small_light_material_dir $material_dir_path*|
+|Syntax     |*small_light_material_dir path*|
 |-----------|---------------------------------------------|
 |**Default**|                                             |
 |**Context**|*server*                                     |
@@ -164,19 +164,19 @@ This directive assigns the directory for embedded icon images.
 
 ### small_light_pattern_define
 
-|Syntax     |*small_light_pattern_define $pattern_name $parameters*|
-|-----------|------------------------------------------------------|
-|**Default**||
-|**Context**|*server*|
+|Syntax     |*small_light_pattern_define pattern_name parameters*|
+|-----------|----------------------------------------------------|
+|**Default**|                                                    |
+|**Context**|*server*                                            |
 
 This directive names comma-delimited parameters.
 
 ### small_light_imlib2_temp_dir
 
-|Syntax     |*small_light_imlib2_temp_dir path [ level1 [ level2 [ level 3]]]*|
-|-----------|-----------------------------------------------------------------|
-|**Default**|*/tmp 1 2*                                                       |
-|**Context**|*server*                                                         |
+|Syntax     |*small_light_imlib2_temp_dir path* [*level1* [*level2* [*level 3* ]]]|
+|-----------|---------------------------------------------------------------------|
+|**Default**|*/tmp 1 2*                                                           |
+|**Context**|*server*                                                             |
 
 This directive assigns the directory for temporary file for Imlib2 processing.
 
