@@ -26,6 +26,7 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
  * [Not supported features with GD](#not-supported-features-with-gd)
  * [Not supported animated GIF](#not-supported-animated-gif)
 * [Running Tests](#running-tests)
+* [License](#license)
 
 ## Features
 
@@ -320,3 +321,7 @@ NGINX_BIN=${nginx_prefix_dir}/sbin/nginx ./Build test
 # or
 NGINX_BIN=${nginx_prefix_dir}/sbin/nginx prove t/**/*.t
 ```
+
+# License
+
+Please read the [COPYING](https://github.com/cubicdaiya/ngx_small_light/blob/master/COPYING).
