@@ -77,6 +77,7 @@ make install
 If you want to enable the libraries except ImageMagick in `ngx_small_light`, add the options below when executing `setup`. (ImageMagick is always enabled)
 
 ```sh
+./setup                         # enable ImageMagick
 ./setup --with-imlib2           # enable ImageMagick and Imlib2
 ./setup --with-gd               # enable ImageMagick and GD
 ./setup --with-imlib2 --with-gd # enable ImageMagick and Imlib2 and GD
