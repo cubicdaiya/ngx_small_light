@@ -19,7 +19,13 @@ unsigned char *out = gdImageWebpPtr(img_gd_webp, &size);
 . auto/feature
 
 if [ $ngx_found = no ]; then
-   exit 1
+    cat <<EOF
+The compilation test below failed:
+
+$ngx_feature_incs
+$ngx_feature_test
+EOF
+    exit 1
 fi
 
 CORE_LIBS="$CORE_LIBS $ngx_feature_libs"
