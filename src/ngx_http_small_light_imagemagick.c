@@ -435,3 +435,13 @@ void ngx_http_small_light_imagemagick_terminus(void)
 {
     MagickWandTerminus();
 }
+
+int ngx_http_small_light_imagemagick_set_thread_limit(int limit)
+{
+    MagickBooleanType status;
+    status = MagickSetResourceLimit(ThreadResource, limit);
+    if (status == MagickFalse) {
+        return 0;
+    }
+    return 1;
+}
