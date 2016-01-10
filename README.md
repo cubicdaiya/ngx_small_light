@@ -284,11 +284,11 @@ Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
 When the output format is JPEG and image-converting engine is ImageMagick or Imlib2,
 you may give 'y' to the parameter `jpeghint`. The speed of processing images is improved dramatically.
 
-And when image-converting engine is ImageMagick, giving 1 to `OMP_NUM_THREADS` in `nginx.conf` is recommended strongly.
+And when image-converting engine is ImageMagick, giving 1 to `OMP_NUM_THREADS` or `MAGICK_THREAD_LIMIT` in `nginx.conf` is recommended strongly.
 Because OpenMP is enabled in ImageMagick by default and ImageMagick enabled OpenMP is very slow on multi-process environment.
 
 ```nginx
-env OMP_NUM_THREADS=1;
+env OMP_NUM_THREADS=1; # or env MAGICK_THREAD_LIMIT=1;
 ```
 
 # Limitations
