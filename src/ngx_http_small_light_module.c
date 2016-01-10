@@ -156,6 +156,10 @@ ngx_module_t  ngx_http_small_light_module = {
 static ngx_int_t ngx_http_small_light_init_worker(ngx_cycle_t *cycle) {
     ngx_http_small_light_imagemagick_genesis();
 
+    if (ngx_http_small_light_imagemagick_set_thread_limit(1) == 0) {
+        ngx_log_error(NGX_LOG_WARN, cycle->log, 0,
+                      "failed to set thread limit");
+    }
     return NGX_OK;
 }
 
