@@ -1,3 +1,11 @@
+2016-01-10 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* config: output message on configure-error.
+
+	* imagemagick: set ThreadResource 1 always.
+
+	* 0.6.14 released
+
 2015-12-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: fixed a memory leak which caused by a call of MagickGetImageFormat(). Thanks @dmurasaki. #33
