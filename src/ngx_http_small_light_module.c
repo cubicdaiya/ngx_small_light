@@ -225,8 +225,8 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     if (loc_conf->enable_getparam_mode) {
         if (ngx_http_small_light_init_getparams(r, ctx, srv_conf) != NGX_OK) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "failed to analyze parameters:%s %s:%d",
-                          define_pattern.data,
+                          "failed to analyze parameters:%V %s:%d",
+                          &define_pattern,
                           __FUNCTION__,
                           __LINE__);
             return NGX_ERROR;
@@ -234,8 +234,8 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     } else {
         if (ngx_http_small_light_init_params(r, ctx, &define_pattern, srv_conf) != NGX_OK) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "failed to analyze parameters:%s %s:%d",
-                          define_pattern.data,
+                          "failed to analyze parameters:%V %s:%d",
+                          &define_pattern,
                           __FUNCTION__,
                           __LINE__);
             return NGX_ERROR;

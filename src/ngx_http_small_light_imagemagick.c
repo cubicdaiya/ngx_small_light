@@ -145,7 +145,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             break;
         default:
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "image not rotated. 'angle'(%d) must be 90 or 180 or 270. %s:%d",
+                          "image not rotated. 'angle'(%ui) must be 90 or 180 or 270. %s:%d",
                           sz.angle,
                           __FUNCTION__,
                           __LINE__);
@@ -314,7 +314,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         embedicon_path_len = ctx->material_dir->len + ngx_strlen("/") + embedicon_len;
         if (embedicon_path_len > sizeof(embedicon_path) - 1) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "embedicon path is too long. maximun value is %d %s:%d",
+                          "embedicon path is too long. maximun value is %z %s:%d",
                           sizeof(embedicon_path) - 1,
                           __FUNCTION__,
                           __LINE__);

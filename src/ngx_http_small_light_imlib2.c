@@ -163,7 +163,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
             break;
         default:
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "image not rotated. 'angle'(%d) must be 90 or 180 or 270. %s:%d",
+                          "image not rotated. 'angle'(%ui) must be 90 or 180 or 270. %s:%d",
                           sz.angle,
                           __FUNCTION__,
                           __LINE__);
