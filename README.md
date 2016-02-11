@@ -8,6 +8,7 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
 * [Supported Formats](#supported-formats)
 * [Dependencies](#dependencies)
 * [Installation](#installation)
+ * [Dynamic module](#dynamic-module)
 * [Getting started](#getting-started)
 * [Configuration example](#configuration-example)
 * [Directives](#directives)
@@ -81,6 +82,27 @@ If you want to enable the libraries except ImageMagick in `ngx_small_light`, add
 ./setup --with-imlib2           # enable ImageMagick and Imlib2
 ./setup --with-gd               # enable ImageMagick and GD
 ./setup --with-imlib2 --with-gd # enable ImageMagick and Imlib2 and GD
+```
+
+### Dynamic module
+
+You can also compile `ngx_small_light` as the dynamic module with `--add-dynamic-module` from nginx-1.9.11 and ngx_small_light-0.6.15.
+
+```sh
+cd ${ngx_small_light_src_dir}
+./setup
+cd {$nginx_src_dir}
+./configure \
+--modules-path=/usr/local/nginx/modules \
+--add-dynamic-module=${ngx_small_light_src_dir}
+make
+make install
+```
+
+Add the configuration below for loading module dynamically.
+
+```nginx
+load_module /usr/local/nginx/modules/ngx_http_small_light_module.so;
 ```
 
 ## Getting started
