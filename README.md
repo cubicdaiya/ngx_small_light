@@ -249,6 +249,7 @@ when Content-Length is not set in response headers.
 |angle      |number|0          |angle of rotation(90, 180, 270)                 |        :o:|   :o:|:o:|
 |progressive|char  |n          |make JPEG progressive                           |        :o:|   :x:|:x:|
 |rmprof     |char  |y          |remove profile                                  |        :o:|   :x:|:x:|
+|autoorient |char  |n          |enable adjust image orientation automatically   |        :o:|   :x:|:x:|
 
 `of=gif` and `of=webp` are not supported when `e=imlib2`.
 
