@@ -1,3 +1,9 @@
+2016-03-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* feature: introduced new parameter: autoorient. #35
+
+	* 0.6.16 released
+
 2016-02-11 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* feature: dynamic module is available from nginx-1.9.11.
