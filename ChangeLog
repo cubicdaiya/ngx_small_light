@@ -1,5 +1,11 @@
 2016-03-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
+	* bugfix: fixed compilation error when old ImageMagick version. Thanks @takp. #37
+
+	* 0.6.17 released
+
+2016-03-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
 	* feature: introduced new parameter: autoorient. #35
 
 	* 0.6.16 released
