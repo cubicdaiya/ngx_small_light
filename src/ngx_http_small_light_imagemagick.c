@@ -72,7 +72,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
-    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg, autoorient_flg;
+    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
     double                                  iw, ih, q;
     char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
     MagickWand                             *trans_wand, *canvas_wand;
@@ -86,6 +86,9 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_int_t                               type;
     u_char                                  jpeg_size_opt[32], crop_geo[128], size_geo[128], embedicon_path[256];
     ColorspaceType                          color_space;
+#if MagickLibVersion >= 0x690
+    int                                     autoorient_flg;
+#endif
 
     status = MagickFalse;
 
@@ -129,6 +132,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     of_orig = MagickGetImageFormat(ictx->wand);
     status = MagickTrue;
 
+#if MagickLibVersion >= 0x690
     /* auto-orient */
     autoorient_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "autoorient"));
     if (autoorient_flg != 0) {
@@ -139,6 +143,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             return NGX_ERROR;
         }
     }
+#endif
 
     /* rotate. */
     if (sz.angle) {
