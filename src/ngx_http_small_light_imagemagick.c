@@ -81,11 +81,14 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     GeometryInfo                            geo;
     ngx_fd_t                                fd;
     MagickWand                             *icon_wand;
-    u_char                                 *p, *embedicon;
-    size_t                                  embedicon_path_len, embedicon_len, sled_image_size;
+    u_char                                 *p, *embedicon, *profile;
+    size_t                                  embedicon_path_len, embedicon_len, sled_image_size, profile_len;
     ngx_int_t                               type;
     u_char                                  jpeg_size_opt[32], crop_geo[128], size_geo[128], embedicon_path[256];
     ColorspaceType                          color_space;
+    char                                  **origin_image_profiles;
+    unsigned long                           profile_count, i;
+
 #if MagickLibVersion >= 0x690
     int                                     autoorient_flg;
 #endif
@@ -233,6 +236,24 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             DestroyString(of_orig);
             return NGX_ERROR;
         }
+
+        /* copy original image profiles to the new canvas. */
+        origin_image_profiles = MagickGetImageProfiles(ictx->wand, "*", &profile_count);
+        if (profiles != (char **) NULL) {
+          for (i = 0; i < profile_count; i++) {
+            profile = MagickGetImageProfile(ictx->wand, origin_image_profiles[i], &profile_len);
+
+            status = MagickSetImageProfile(canvas_wand, origin_image_profiles[i], profile, profile_len);
+
+            if (status == MagickFalse) {
+              r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+              DestroyMagickWand(canvas_wand);
+              DestroyString(of_orig);
+              return NGX_ERROR;
+            }
+          }
+        }
+
         DestroyMagickWand(ictx->wand);
         ictx->wand = canvas_wand;
     }
