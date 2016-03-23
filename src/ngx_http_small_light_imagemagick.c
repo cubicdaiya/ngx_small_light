@@ -239,7 +239,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
         /* copy original image profiles to the new canvas. */
         origin_image_profiles = MagickGetImageProfiles(ictx->wand, "*", &profile_count);
-        if (profiles != (char **) NULL) {
+        if (origin_image_profiles != (char **) NULL) {
           for (i = 0; i < profile_count; i++) {
             profile = MagickGetImageProfile(ictx->wand, origin_image_profiles[i], &profile_len);
 
