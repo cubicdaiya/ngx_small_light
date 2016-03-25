@@ -237,19 +237,21 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             return NGX_ERROR;
         }
 
-        /* copy original image profiles to the new canvas. */
-        origin_image_profiles = MagickGetImageProfiles(ictx->wand, "*", &profile_count);
-        if (origin_image_profiles != (char **) NULL) {
-            for (i = 0; i < profile_count; i++) {
-                profile = MagickGetImageProfile(ictx->wand, origin_image_profiles[i], &profile_len);
+        if (rmprof_flg == 0) {
+            /* copy original image profiles to the new canvas. */
+            origin_image_profiles = MagickGetImageProfiles(ictx->wand, "*", &profile_count);
+            if (origin_image_profiles != (char **) NULL) {
+                for (i = 0; i < profile_count; i++) {
+                    profile = MagickGetImageProfile(ictx->wand, origin_image_profiles[i], &profile_len);
 
-                status = MagickSetImageProfile(canvas_wand, origin_image_profiles[i], profile, profile_len);
+                    status = MagickSetImageProfile(canvas_wand, origin_image_profiles[i], profile, profile_len);
 
-                if (status == MagickFalse) {
-                    r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
-                    DestroyMagickWand(canvas_wand);
-                    DestroyString(of_orig);
-                    return NGX_ERROR;
+                    if (status == MagickFalse) {
+                        r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+                        DestroyMagickWand(canvas_wand);
+                        DestroyString(of_orig);
+                        return NGX_ERROR;
+                    }
                 }
             }
         }
