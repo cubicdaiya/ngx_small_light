@@ -87,7 +87,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     u_char                                  jpeg_size_opt[32], crop_geo[128], size_geo[128], embedicon_path[256];
     ColorspaceType                          color_space;
     char                                  **origin_image_profiles;
-    unsigned long                           profile_count, i;
+    size_t                                  profile_count, i;
 
 #if MagickLibVersion >= 0x690
     int                                     autoorient_flg;
