@@ -323,15 +323,15 @@ From `v0.6.14`, `ngx_small_light` sets the thread-number with OpenMP 1 always.
 
 ## Not supported features with Imlib2
 
-The translation with Imlib2 does not support to write GIF-image.
+The transformation with Imlib2 does not support to write GIF-image.
 Because Imlib2 has the function for loading GIF-image but does not have the function for saving.
-Additionally, the translation by Imlib2 does not support to write and read WebP-image.
+Additionally, the transformation by Imlib2 does not support to write and read WebP-image.
 So `of=gif` and `e=imlib2` are not enabled to specify at once.
 If these are specified, `ngx_small_light` returns 415(Unsupported Media Type).
 
 ## Not supported features with GD
 
-The translation with GD supports to write WebP-image. But it is the experimental feature.
+The transformation with GD supports to write WebP-image. But it is the experimental feature.
 
 ## Not supported animated GIF
 
