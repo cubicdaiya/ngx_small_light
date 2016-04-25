@@ -251,7 +251,7 @@ when Content-Length is not set in response headers.
 |rmprof     |char  |n          |remove profile                                  |        :o:|   :x:|:x:|
 |autoorient |char  |n          |enable adjust image orientation automatically   |        :o:|   :x:|:x:|
 
-`of=gif` and `of=webp` are not supported when `e=imlib2`.
+`of=gif` and `of=webp` are not supported when `e=imlib2`. `autoorient` is available ImageMagick-6.9.0 or later.
 
 
 There are the types of each parameter below.
