@@ -59,10 +59,10 @@ Supports the formats below.
 
 ## Dependencies
 
-  - [PCRE](http://www.pcre.org/) (required)
-  - [ImageMagick](http://www.imagemagick.org/script/index.php) (required)
-  - [Imlib2](http://docs.enlightenment.org/api/imlib2/html/) (optional)
-  - [GD](http://libgd.bitbucket.org/) (optional)
+ - [PCRE](http://www.pcre.org/) (required)
+ - [ImageMagick](http://www.imagemagick.org/script/index.php) (required)
+ - [Imlib2](http://docs.enlightenment.org/api/imlib2/html/) (optional)
+ - [GD](http://libgd.bitbucket.org/) (optional)
 
 ## Installation
 
