@@ -95,6 +95,24 @@ static ngx_command_t  ngx_http_small_light_commands[] = {
     },
 
     {
+        ngx_string("small_light_radius_max"),
+        NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+        ngx_conf_set_num_slot,
+        NGX_HTTP_LOC_CONF_OFFSET,
+        offsetof(ngx_http_small_light_conf_t, radius_max),
+        NULL
+    },
+
+    {
+        ngx_string("small_light_sigma_max"),
+        NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+        ngx_conf_set_num_slot,
+        NGX_HTTP_LOC_CONF_OFFSET,
+        offsetof(ngx_http_small_light_conf_t, sigma_max),
+        NULL
+    },
+
+    {
         ngx_string("small_light_material_dir"),
         NGX_HTTP_SRV_CONF|NGX_CONF_TAKE1,
         ngx_http_small_light_material_dir,
@@ -261,6 +279,8 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     ctx->inf             = (char *)r->headers_out.content_type.data;
     ctx->material_dir    = &srv_conf->material_dir;
     ctx->imlib2_temp_dir = loc_conf->imlib2_temp_dir;
+    ctx->radius_max      = loc_conf->radius_max;
+    ctx->sigma_max       = loc_conf->sigma_max;
 
     if (r->headers_out.content_length_n < 0) {
         ctx->content_length = loc_conf->buffer_size;
@@ -460,6 +480,8 @@ static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf)
     loc_conf->enable               = NGX_CONF_UNSET;
     loc_conf->enable_getparam_mode = NGX_CONF_UNSET;
     loc_conf->buffer_size          = NGX_CONF_UNSET_SIZE;
+    loc_conf->radius_max           = NGX_CONF_UNSET_UINT;
+    loc_conf->sigma_max            = NGX_CONF_UNSET_UINT;
     return loc_conf;
 }
 
@@ -489,6 +511,9 @@ static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, v
     }
 
     ngx_conf_merge_size_value(conf->buffer_size, prev->buffer_size, 1 * 1024 * 1024);
+
+    ngx_conf_merge_uint_value(conf->radius_max, prev->radius_max, 10);
+    ngx_conf_merge_uint_value(conf->sigma_max, prev->sigma_max, 10);
 
     return NGX_CONF_OK;
 }

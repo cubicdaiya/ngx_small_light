@@ -195,6 +195,24 @@ This directive assigns the directory for embedded icon images.
 
 This directive names comma-delimited parameters.
 
+### small_light_radius_max
+
+|Syntax     |*small_light_radius_max number*|
+|-----------|-------------------------------|
+|**Default**|                               |
+|**Context**|server,location                |
+
+This directive sets maximum radius value of geometry for `sharpen` and `unsharp` and `blur`.
+
+### small_light_sigma_max
+
+|Syntax     |*small_light_sigma_max number*|
+|-----------|-------------------------------|
+|**Default**|                               |
+|**Context**|server,location                |
+
+This directive sets maximum sigma value of geometry for `sharpen` and `unsharp` and `blur`.
+
 ### small_light_imlib2_temp_dir
 
 |Syntax     |*small_light_imlib2_temp_dir path* [*level1* [*level2* [*level 3* ]]]|

@@ -225,18 +225,28 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen) {
         radius = ngx_http_small_light_parse_int(sharpen);
-        if (radius > 0) {
+        if (radius > 0 && radius <= (int)ctx->radius_max) {
             imlib_context_set_image(image_dst);
             imlib_image_sharpen(radius);
+        } else {
+            ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                          "As sharpen geometry is out of range, ignored. %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
         }
     }
 
     blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
     if (blur) {
         radius = ngx_http_small_light_parse_int(blur);
-        if (radius > 0) {
+        if (radius > 0 && radius <= (int)ctx->radius_max) {
             imlib_context_set_image(image_dst);
             imlib_image_blur(radius);
+        } else {
+            ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                          "As blur geometry is out of range, ignored. %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
         }
     }
 

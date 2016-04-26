@@ -263,8 +263,13 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen != NULL) {
         radius = ngx_http_small_light_parse_int(sharpen);
-        if (radius > 0) {
+        if (radius > 0 && radius <= (int)ctx->radius_max) {
             gdImageSharpen(dst, radius);
+        } else {
+            ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                          "As sharp geometry is out of range, ignored. %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
         }
     }
 

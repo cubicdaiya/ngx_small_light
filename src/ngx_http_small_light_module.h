@@ -70,6 +70,8 @@ typedef struct {
     ngx_str_t material_dir;
     ngx_path_t *imlib2_temp_dir;
     size_t buffer_size;
+    ngx_uint_t radius_max;
+    ngx_uint_t sigma_max;
 } ngx_http_small_light_conf_t;
 
 typedef struct {
@@ -106,6 +108,8 @@ typedef struct ngx_http_small_light_ctx_t {
     u_char *content;
     u_char *last;
     void *ictx;
+    ngx_uint_t radius_max;
+    ngx_uint_t sigma_max;
     ngx_str_t *material_dir;
     ngx_path_t *imlib2_temp_dir;
     struct ngx_http_small_light_converter_t {

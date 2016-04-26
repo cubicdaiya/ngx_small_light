@@ -252,36 +252,57 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     unsharp = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "unsharp");
     if (unsharp != NULL) {
         ParseGeometry(unsharp, &geo);
-        status = MagickUnsharpMaskImage(ictx->wand, geo.rho, geo.sigma, geo.xi, geo.psi);
-        if (status == MagickFalse) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "unsharp failed %s:%d",
+        if (geo.rho > ctx->radius_max || geo.sigma > ctx->sigma_max) {
+            ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                          "As unsharp geometry is too large, ignored. %s:%d",
                           __FUNCTION__,
                           __LINE__);
+        } else {
+            status = MagickUnsharpMaskImage(ictx->wand, geo.rho, geo.sigma, geo.xi, geo.psi);
+            if (status == MagickFalse) {
+                ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                              "unsharp failed %s:%d",
+                              __FUNCTION__,
+                              __LINE__);
+            }
         }
     }
 
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (sharpen != NULL) {
         ParseGeometry(sharpen, &geo);
-        status = MagickSharpenImage(ictx->wand, geo.rho, geo.sigma);
-        if (status == MagickFalse) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "sharpen failed %s:%d",
+        if (geo.rho > ctx->radius_max || geo.sigma > ctx->sigma_max) {
+            ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                          "As sharpen geometry is too large, ignored. %s:%d",
                           __FUNCTION__,
                           __LINE__);
+        } else {
+            status = MagickSharpenImage(ictx->wand, geo.rho, geo.sigma);
+            if (status == MagickFalse) {
+                ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                              "sharpen failed %s:%d",
+                              __FUNCTION__,
+                              __LINE__);
+            }
         }
     }
 
     blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
     if (blur) {
         ParseGeometry(blur, &geo);
-        status = MagickBlurImage(ictx->wand, geo.rho, geo.sigma);
-        if (status == MagickFalse) {
-            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
-                          "blur failed %s:%d",
+        if (geo.rho > ctx->radius_max || geo.sigma > ctx->sigma_max) {
+            ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                          "As blur geometry is too large, ignored. %s:%d",
                           __FUNCTION__,
                           __LINE__);
+        } else {
+            status = MagickBlurImage(ictx->wand, geo.rho, geo.sigma);
+            if (status == MagickFalse) {
+                ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                              "blur failed %s:%d",
+                              __FUNCTION__,
+                              __LINE__);
+            }
         }
     }
 
