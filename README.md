@@ -199,7 +199,7 @@ This directive names comma-delimited parameters.
 
 |Syntax     |*small_light_radius_max number*|
 |-----------|-------------------------------|
-|**Default**|                               |
+|**Default**|10                             |
 |**Context**|server,location                |
 
 This directive sets maximum radius value of geometry for `sharpen` and `unsharp` and `blur`.
@@ -208,7 +208,7 @@ This directive sets maximum radius value of geometry for `sharpen` and `unsharp`
 
 |Syntax     |*small_light_sigma_max number*|
 |-----------|-------------------------------|
-|**Default**|                               |
+|**Default**|10                             |
 |**Context**|server,location                |
 
 This directive sets maximum sigma value of geometry for `sharpen` and `unsharp` and `blur`.
