@@ -161,7 +161,7 @@ server {
 |Syntax     |*small_light on &#124; off*|
 |-----------|---------------------------|
 |**Default**|off                        |
-|**Context**|server                     |
+|**Context**|server, location           |
 
 This directive sets whether image-processing with `ngx_small_light` is enabled in a server context.
 
@@ -170,7 +170,7 @@ This directive sets whether image-processing with `ngx_small_light` is enabled i
 |Syntax     |*small_light_getparam_mode on &#124; off*|
 |-----------|-----------------------------------------|
 |**Default**|off                                      |
-|**Context**|server                                   |
+|**Context**|server, location                         |
 
 This directive sets whether converting-image is enabled by GET parameters 
 instead of **small_light function** (e.g. `/small_light(dw=200,dh=200)`).
