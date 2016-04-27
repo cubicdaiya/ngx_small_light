@@ -1,3 +1,11 @@
+2016-04-27 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* introduced new directives: small_light_(radius|sigma)_max.
+
+	* set 10 to radius and sigma for `sharpen` and `unsharp` and `blur` by default.
+
+	* 0.7.0 released
+
 2016-03-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: fixed compilation error when old ImageMagick version. Thanks @takp. #37
