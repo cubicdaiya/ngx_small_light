@@ -251,6 +251,7 @@ when Content-Length is not set in response headers.
 |cc         |color |000000     |canvas color                                    |        :o:|   :o:|:o:|
 |bw         |number|           |border width                                    |        :o:|   :o:|:o:|
 |bh         |number|           |border height                                   |        :o:|   :o:|:o:|
+|bc         |color |000000     |border color                                    |        :o:|   :o:|:o:|
 |pt         |char  |n          |pass through cntrol                             |        :o:|   :o:|:o:|
 |q          |number|           |quality                                         |        :o:|   :o:|:o:|
 |of         |string|           |output format(jpg, gif, png, webp)              |        :o:|   :o:|:o:|
