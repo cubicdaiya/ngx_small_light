@@ -270,8 +270,11 @@ when Content-Length is not set in response headers.
 |rmprof     |char  |n          |remove profile                                  |        :o:|   :x:|:x:|
 |autoorient |char  |n          |enable adjust image orientation automatically   |        :o:|   :x:|:x:|
 
-`of=gif` and `of=webp` are not supported when `e=imlib2`. `autoorient` is available ImageMagick-6.9.0 or later.
+There are any limitations below.
 
+ * `of=gif` and `of=webp` are not supported when `e=imlib2`.
+ * `autoorient` is available ImageMagick-6.9.0 or later.
+ * The value of `radius,sigma` for `sharpen` and `unsharp` and `blur` is limited by `small_light_radius_max` and `small_light_sigma_max`.
 
 There are the types of each parameter below.
 
