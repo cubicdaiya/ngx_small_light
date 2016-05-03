@@ -2,7 +2,7 @@
 
 	* introduced new directives: small_light_(radius|sigma)_max.
 
-	* set 10 to radius and sigma for `sharpen` and `unsharp` and `blur` by default.
+	* set 10 to the maximum geometry value (radius and sigma) for `sharpen` and `unsharp` and `blur` by default.
 
 	* 0.7.0 released
 
