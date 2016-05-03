@@ -596,9 +596,9 @@ ngx_http_small_light_image_read(ngx_http_request_t *r,
     p = ctx->last;
 
     for (cl=in;cl!=NULL;cl=cl->next) {
-        b       = cl->buf;
-        size    = b->last - b->pos;
-        rest    = ctx->content + ctx->content_length - p;
+        b    = cl->buf;
+        size = b->last - b->pos;
+        rest = ctx->content + ctx->content_length - p;
         if (size > rest) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log,
                           0,
