@@ -236,14 +236,15 @@ when Content-Length is not set in response headers.
 
 |Parameter  |Type  |Default    |Description                                     |ImageMagick|Imlib2|GD |
 |-----------|------|-----------|------------------------------------------------|-----------|------|---|
-|sx         |coord |           |source x coordinate                             |        :o:|   :o:|:o:|
-|sy         |coord |           |source y coordinate                             |        :o:|   :o:|:o:|
-|sw         |coord |           |source witdh                                    |        :o:|   :o:|:o:|
-|sh         |coord |           |source height                                   |        :o:|   :o:|:o:|
-|dx         |coord |sx         |destination x coordinate                        |        :o:|   :o:|:o:|
-|dy         |coord |sy         |destination y coordinate                        |        :o:|   :o:|:o:|
+|e          |string|imagemagick|engine name(imagemagick, imlib2, gd)            |           |      |   |
+|p          |string|           |named pattern of comma-delimited parameters     |        :o:|   :o:|:o:|
+|q          |number|           |quality                                         |        :o:|   :o:|:o:|
+|of         |string|           |output format(jpg, gif, png, webp)              |        :o:|   :o:|:o:|
+|jpeghint   |char  |n          |enable jpeg hinting                             |        :o:|   :o:|:x:|
 |dw         |coord |sw         |destination width                               |        :o:|   :o:|:o:|
 |dh         |coord |sh         |destination height                              |        :o:|   :o:|:o:|
+|dx         |coord |sx         |destination x coordinate                        |        :o:|   :o:|:o:|
+|dy         |coord |sy         |destination y coordinate                        |        :o:|   :o:|:o:|
 |da         |char  |l          |destination aspect ratio contol                 |        :o:|   :o:|:o:|
 |ds         |char  |n          |destination scaling control(s, n)               |        :o:|   :o:|:o:|
 |cw         |number|           |canvas width                                    |        :o:|   :o:|:o:|
@@ -252,21 +253,20 @@ when Content-Length is not set in response headers.
 |bw         |number|           |border width                                    |        :o:|   :o:|:o:|
 |bh         |number|           |border height                                   |        :o:|   :o:|:o:|
 |bc         |color |000000     |border color                                    |        :o:|   :o:|:o:|
-|pt         |char  |n          |pass through cntrol                             |        :o:|   :o:|:o:|
-|q          |number|           |quality                                         |        :o:|   :o:|:o:|
-|of         |string|           |output format(jpg, gif, png, webp)              |        :o:|   :o:|:o:|
-|p          |string|           |named pattern of comma-delimited parameters     |        :o:|   :o:|:o:|
-|e          |string|imagemagick|engine name(imagemagick, imlib2, gd)            |           |      |   |
+|sw         |coord |           |source witdh                                    |        :o:|   :o:|:o:|
+|sh         |coord |           |source height                                   |        :o:|   :o:|:o:|
+|sx         |coord |           |source x coordinate                             |        :o:|   :o:|:o:|
+|sy         |coord |           |source y coordinate                             |        :o:|   :o:|:o:|
+|pt         |char  |n          |pass through control                            |        :o:|   :o:|:o:|
 |sharpen    |string|           |radius,sigma                                    |        :o:|   :o:|:o:|
 |unsharp    |string|           |radius,sigma,amount,threshold                   |        :o:|   :x:|:x:|
 |blur       |string|           |radius,sigma                                    |        :o:|   :o:|:x:|
 |embedicon  |string|           |embedded icon file in `small_light_material_dir`|        :o:|   :x:|:x:|
 |ix         |number|0          |embedded icon x coordinate                      |        :o:|   :x:|:x:|
 |iy         |number|0          |embedded icon y coordinate                      |        :o:|   :x:|:x:|
-|jpeghint   |char  |n          |enable jpeg hinting                             |        :o:|   :o:|:x:|
-|cmyk2rgb   |char  |n          |convert colorspace from CMYK to sRGB            |        :o:|   :x:|:x:|
 |angle      |number|0          |angle of rotation(90, 180, 270)                 |        :o:|   :o:|:o:|
 |progressive|char  |n          |make JPEG progressive                           |        :o:|   :x:|:x:|
+|cmyk2rgb   |char  |n          |convert colorspace from CMYK to sRGB            |        :o:|   :x:|:x:|
 |rmprof     |char  |n          |remove profile                                  |        :o:|   :x:|:x:|
 |autoorient |char  |n          |enable adjust image orientation automatically   |        :o:|   :x:|:x:|
 
