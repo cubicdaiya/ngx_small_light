@@ -1,6 +1,6 @@
 2016-05-06 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
-	* bugfix: the some parameters (sharp, unsharp, blur) was not available when small_light_getparam_mode is enabled.
+	* bugfix: the some parameters (sharpen, unsharp, blur) was not available when small_light_getparam_mode is enabled.
 
 	* 0.7.1 released
 
