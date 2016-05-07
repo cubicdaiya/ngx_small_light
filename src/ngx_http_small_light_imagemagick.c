@@ -252,8 +252,10 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                         DestroyString(of_orig);
                         return NGX_ERROR;
                     }
+                    MagickRelinquishMemory(profile);
                 }
             }
+            MagickRelinquishMemory(origin_image_profiles);
         }
 
         DestroyMagickWand(ictx->wand);
