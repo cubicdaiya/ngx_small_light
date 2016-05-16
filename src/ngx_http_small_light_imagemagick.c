@@ -250,7 +250,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     /* effects. */
     unsharp = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "unsharp");
-    if (unsharp != NULL) {
+    if (ngx_strlen(unsharp) > 0) {
         ParseGeometry(unsharp, &geo);
         if (geo.rho > ctx->radius_max || geo.sigma > ctx->sigma_max) {
             ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
@@ -269,7 +269,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
-    if (sharpen != NULL) {
+    if (ngx_strlen(sharpen) > 0) {
         ParseGeometry(sharpen, &geo);
         if (geo.rho > ctx->radius_max || geo.sigma > ctx->sigma_max) {
             ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
@@ -288,7 +288,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
-    if (blur) {
+    if (ngx_strlen(blur) > 0) {
         ParseGeometry(blur, &geo);
         if (geo.rho > ctx->radius_max || geo.sigma > ctx->sigma_max) {
             ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
