@@ -1,3 +1,9 @@
+2016-05-16 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: bugfix: nginx slows down in request processing for large image. Thanks @osamunmun. refs #41
+
+	* 0.7.2 released
+
 2016-05-06 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: the some parameters (sharpen, unsharp, blur) was not available when small_light_getparam_mode is enabled.
