@@ -32,8 +32,8 @@ typedef struct ngx_http_small_light_param_t {
 } ngx_http_small_light_param_t;
 
 static const ngx_http_small_light_param_t ngx_http_small_light_params[] = {
-    { ngx_string("e"),         NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK },
     { ngx_string("p"),         ""},
+    { ngx_string("e"),         NGX_HTTP_SMALL_LIGHT_CONVERTER_IMAGEMAGICK },
     { ngx_string("q"),         "0"},
     { ngx_string("of"),        ""},
     { ngx_string("jpeghint"),  "n"},
@@ -68,8 +68,8 @@ static const ngx_http_small_light_param_t ngx_http_small_light_params[] = {
 };
 
 static const ngx_str_t ngx_http_small_light_getparams[] = {
-    ngx_string("arg_e"),
     ngx_string("arg_p"),
+    ngx_string("arg_e"),
     ngx_string("arg_q"),
     ngx_string("arg_of"),
     ngx_string("arg_jpeghint"),

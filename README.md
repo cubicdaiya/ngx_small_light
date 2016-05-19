@@ -236,8 +236,8 @@ when Content-Length is not set in response headers.
 
 |Parameter  |Type  |Default    |Description                                     |ImageMagick|Imlib2|GD |
 |-----------|------|-----------|------------------------------------------------|-----------|------|---|
-|e          |string|imagemagick|engine name(imagemagick, imlib2, gd)            |           |      |   |
 |p          |string|           |named pattern of comma-delimited parameters     |        :o:|   :o:|:o:|
+|e          |string|imagemagick|engine name(imagemagick, imlib2, gd)            |           |      |   |
 |q          |number|           |quality                                         |        :o:|   :o:|:o:|
 |of         |string|           |output format(jpg, gif, png, webp)              |        :o:|   :o:|:o:|
 |jpeghint   |char  |n          |enable jpeg hinting                             |        :o:|   :o:|:x:|
