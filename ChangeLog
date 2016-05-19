@@ -4,7 +4,7 @@
 
 	* optimize: reduced allocation for parsing parameters.
 
-	* imagemagick: converted the first image instead of the last image in image list. @dtan4. #refs 43
+	* imagemagick: converted the first image instead of the last image in image list. Thanks @dtan4. refs #43
 
 	* 0.7.3 released
 
