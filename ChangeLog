@@ -1,6 +1,16 @@
+2016-05-20 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: small_light_pattern_define didn't work when small_light_getparam_mode is enabled. It has appeared in v0.7.1.
+
+	* optimize: reduced allocation for parsing parameters.
+
+	* imagemagick: converted the first image instead of the last image in image list. @dtan4. #refs 43
+
+	* 0.7.3 released
+
 2016-05-16 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
-	* bugfix: bugfix: nginx slows down in request processing for large image. Thanks @osamunmun. refs #41
+	* bugfix: nginx slows down in request processing for large image. Thanks @osamunmun. refs #41
 
 	* 0.7.2 released
 
