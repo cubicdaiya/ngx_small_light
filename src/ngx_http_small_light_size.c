@@ -101,6 +101,8 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     }
     sz->cw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cw"));
     sz->ch = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ch"));
+    sz->cx = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cx"));
+    sz->cy = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cy"));
     sz->bw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bw"));
     sz->bh = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bh"));
     sz->ix = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ix"));
@@ -109,9 +111,9 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     ngx_http_small_light_parse_color(&sz->bc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bc"));
 
     ngx_log_error(NGX_LOG_NOTICE, r->connection->log, 0,
-                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,cw=%f,ch=%f,bw=%f,bh=%f,ix=%i,iy=%i",
+                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,cw=%f,ch=%f,cx=%f,cy=%f,bw=%f,bh=%f,ix=%i,iy=%i",
                   sz->sx, sz->sy, sz->sw, sz->sh,
-                  sz->dw, sz->dh, sz->cw, sz->ch, sz->bw, sz->bh, 
+                  sz->dw, sz->dh, sz->cw, sz->ch, sz->cx, sz->cy, sz->bw, sz->bh,
                   sz->ix, sz->iy);
 
     /* get pass through option. */
@@ -138,10 +140,14 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->dw = iw;
         sz->dh = ih;
     }
-    if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+    if (sz->cx > 0) {
+      sz->dx = sz->cx
+    } else if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
     }
-    if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+    if (sz->cy > 0) {
+      sz->dy = sz->cy
+    } else if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dy = (sz->ch - sz->dh) * 0.5;
     }
 
