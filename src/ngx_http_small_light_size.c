@@ -141,12 +141,12 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->dh = ih;
     }
     if (sz->cx > 0) {
-      sz->dx = sz->cx
+      sz->dx = sz->cx;
     } else if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
     }
     if (sz->cy > 0) {
-      sz->dy = sz->cy
+      sz->dy = sz->cy;
     } else if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dy = (sz->ch - sz->dh) * 0.5;
     }
