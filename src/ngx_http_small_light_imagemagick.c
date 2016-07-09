@@ -98,12 +98,11 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
     /* prepare */
-    if (sz.jpeghint_flg != 0) {
-        if (sz.dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz.dh == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-            p = ngx_snprintf((u_char *)jpeg_size_opt, sizeof(jpeg_size_opt) - 1, "%dx%d", 10000.0, 10000.0);
-        } else {
-            p = ngx_snprintf((u_char *)jpeg_size_opt, sizeof(jpeg_size_opt) - 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
-        }
+    if (sz.jpeghint_flg != 0 &&
+        sz.dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE &&
+        sz.dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE)
+    {
+        p = ngx_snprintf((u_char *)jpeg_size_opt, sizeof(jpeg_size_opt) - 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
         *p = '\0';
         ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "jpeg_size_opt:%s", jpeg_size_opt);
         MagickSetOption(ictx->wand, "jpeg:size", (char *)jpeg_size_opt);
