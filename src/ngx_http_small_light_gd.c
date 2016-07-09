@@ -261,7 +261,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     /* effects. */
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
-    if (sharpen != NULL) {
+    if (ngx_strlen(sharpen) > 0) {
         radius = ngx_http_small_light_parse_int(sharpen);
         if (radius > 0 && radius <= (int)ctx->radius_max) {
             gdImageSharpen(dst, radius);
