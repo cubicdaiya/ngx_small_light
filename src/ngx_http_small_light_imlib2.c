@@ -189,6 +189,14 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         return NGX_OK;
     }
 
+    /* adjust destination size */
+    if (sz.dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dw = sz.sw;
+    }
+    if (sz.dh == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dh = sz.sh;
+    }
+
     /* crop, scale. */
     if (sz.scale_flg != 0) {
         image_dst = imlib_create_cropped_scaled_image((int)sz.sx, (int)sz.sy, (int)sz.sw, (int)sz.sh, (int)sz.dw, (int)sz.dh);
