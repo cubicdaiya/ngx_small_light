@@ -223,7 +223,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     /* effects. */
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
-    if (sharpen) {
+    if (ngx_strlen(sharpen) > 0) {
         radius = ngx_http_small_light_parse_int(sharpen);
         if (radius > 0 && radius <= (int)ctx->radius_max) {
             imlib_context_set_image(image_dst);
@@ -237,7 +237,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     }
 
     blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
-    if (blur) {
+    if (ngx_strlen(blur) > 0) {
         radius = ngx_http_small_light_parse_int(blur);
         if (radius > 0 && radius <= (int)ctx->radius_max) {
             imlib_context_set_image(image_dst);
