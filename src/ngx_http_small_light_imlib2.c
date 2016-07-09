@@ -124,7 +124,10 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     /* adjust image size */
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
-    if (sz.jpeghint_flg != 0) {
+    if (sz.jpeghint_flg != 0 &&
+        sz.dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE &&
+        sz.dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE)
+    {
         if (ngx_http_small_light_load_jpeg((void**)&data, &w, &h, r, filename, sz.dw, sz.dh) != NGX_OK) {
             image_org = imlib_load_image_immediately_without_cache(filename);
             if (image_org == NULL) {
