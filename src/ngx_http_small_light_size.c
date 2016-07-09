@@ -38,7 +38,6 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     ngx_http_small_light_coord_t  sx_coord, sy_coord, sw_coord, sh_coord;
     ngx_http_small_light_coord_t  dx_coord, dy_coord, dw_coord, dh_coord;
     char                         *da_str, *pt, *prm_ds_str, da, prm_ds;
-    double                        dwo;
     ngx_int_t                     pt_flg;
 
     ngx_http_small_light_parse_coord(&sx_coord, NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sx"));
@@ -90,9 +89,7 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         }
     } else {
         if (sz->dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dh == sz->dw) {
-            dwo = sz->dw;
-            sz->dw = sz->dh / sz->aspect;
-            sz->dh = dwo / sz->aspect;
+            // do nothing
         } else if (sz->dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
             sz->dw = sz->dh * sz->aspect;
         } else if (sz->dh == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
@@ -135,8 +132,6 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->scale_flg = 1;
     } else {
         sz->scale_flg = 0;
-        sz->dw = iw;
-        sz->dh = ih;
     }
     if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
