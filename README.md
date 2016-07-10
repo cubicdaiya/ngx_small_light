@@ -86,7 +86,7 @@ If you want to enable the libraries except ImageMagick in `ngx_small_light`, add
 
 ### Dynamic module
 
-You can also compile `ngx_small_light` as the dynamic module with `--add-dynamic-module` from nginx-1.9.11 and ngx_small_light-0.6.15.
+You can also compile `ngx_small_light` as the dynamic module with `--add-dynamic-module` in nginx-1.9.11 and ngx_small_light-0.6.15 or later.
 
 ```sh
 cd ${ngx_small_light_src_dir}
@@ -301,7 +301,7 @@ If the line above is added to some server context in nginx.conf, the two URLs be
 
 ## Using GET parameters
 
-`ngx_small_light` supports to convert image not only by **small_light function** but by GET paramenters from `v0.5.0`.
+`ngx_small_light` supports to convert image not only by **small_light function** but by GET paramenters in `v0.5.0` or later.
 You need to set both `small_light` and `small_light_getparam_mode` **on** to enable this feature.
 At the expense of enabling this feature, **small_light function** (e.g. `/small_light(dw=300,dh=300)/img.jpg` is disabled.
 
@@ -337,7 +337,7 @@ Because OpenMP is enabled in ImageMagick by default and ImageMagick enabled Open
 env OMP_NUM_THREADS=1; # or env MAGICK_THREAD_LIMIT=1;
 ```
 
-From `v0.6.14`, `ngx_small_light` sets the thread-number with OpenMP 1 always.
+In `v0.6.14` or later, `ngx_small_light` sets the thread-number with OpenMP 1 always.
 
 # Limitations
 
