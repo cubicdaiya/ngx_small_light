@@ -127,12 +127,10 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     } else {
         sz->scale_flg = 0;
     }
-    if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-        sz->dx = 0;
-        sz->dy = 0;
-    } else if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+    if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
-    } else if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+    }
+    if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dy = (sz->ch - sz->dh) * 0.5;
     }
 
@@ -140,9 +138,8 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     sz->angle        = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "angle"));
 
     ngx_log_error(NGX_LOG_NOTICE, r->connection->log, 0,
-                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,dx=%f,dy=%f,cw=%f,ch=%f,bw=%f,bh=%f,ix=%i,iy=%i",
+                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,cw=%f,ch=%f,bw=%f,bh=%f,ix=%i,iy=%i",
                   sz->sx, sz->sy, sz->sw, sz->sh,
-                  sz->dw, sz->dh, sz->dx, sz->dy,
-                  sz->cw, sz->ch, sz->bw, sz->bh,
+                  sz->dw, sz->dh, sz->cw, sz->ch, sz->bw, sz->bh, 
                   sz->ix, sz->iy);
 }
