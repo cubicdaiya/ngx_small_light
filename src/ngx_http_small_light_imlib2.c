@@ -225,6 +225,12 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         imlib_context_set_image(image_tmp);
         imlib_context_set_color(sz.cc.r, sz.cc.g, sz.cc.b, sz.cc.a);
         imlib_image_fill_rectangle(0, 0, sz.cw, sz.ch);
+        if (sz.dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dx = 0;
+        }
+        if (sz.dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dy = 0;
+        }
         imlib_blend_image_onto_image(image_dst, 255, 0, 0,
                                      (int)sz.dw, (int)sz.dh, (int)sz.dx, (int)sz.dy, (int)sz.dw, (int)sz.dh);
         imlib_context_set_image(image_dst);
