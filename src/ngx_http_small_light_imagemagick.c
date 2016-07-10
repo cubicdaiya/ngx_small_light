@@ -139,6 +139,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         return NGX_ERROR;
     }
 
+    /* set the first frame for animated-GIF */
     MagickSetFirstIterator(ictx->wand);
 
     color_space = MagickGetImageColorspace(ictx->wand);
