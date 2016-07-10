@@ -224,6 +224,14 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     ih = gdImageSY(src);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
+    /* adjust destination size */
+    if (sz.dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dw = sz.sw;
+    }
+    if (sz.dh == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dh = sz.sh;
+    }
+
     /* pass through. */
     if (sz.pt_flg != 0) {
         gdImageDestroy(src);
@@ -261,7 +269,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
 
     /* effects. */
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
-    if (sharpen != NULL) {
+    if (ngx_strlen(sharpen) > 0) {
         radius = ngx_http_small_light_parse_int(sharpen);
         if (radius > 0 && radius <= (int)ctx->radius_max) {
             gdImageSharpen(dst, radius);
@@ -285,6 +293,12 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         }
         ccolor = gdImageColorAllocateAlpha(canvas, sz.cc.r, sz.cc.g, sz.cc.b, sz.cc.a);
         gdImageFilledRectangle(canvas, 0, 0, sz.cw, sz.ch, ccolor);
+        if (sz.dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dx = 0;
+        }
+        if (sz.dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dy = 0;
+        }
         gdImageCopy(canvas, dst, sz.dx, sz.dy, 0, 0, sz.dw, sz.dh);
         gdImageDestroy(dst);
         dst = canvas;

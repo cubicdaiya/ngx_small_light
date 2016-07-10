@@ -124,7 +124,10 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     /* adjust image size */
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
-    if (sz.jpeghint_flg != 0) {
+    if (sz.jpeghint_flg != 0 &&
+        sz.dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE &&
+        sz.dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE)
+    {
         if (ngx_http_small_light_load_jpeg((void**)&data, &w, &h, r, filename, sz.dw, sz.dh) != NGX_OK) {
             image_org = imlib_load_image_immediately_without_cache(filename);
             if (image_org == NULL) {
@@ -186,6 +189,14 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         return NGX_OK;
     }
 
+    /* adjust destination size */
+    if (sz.dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dw = sz.sw;
+    }
+    if (sz.dh == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dh = sz.sh;
+    }
+
     /* crop, scale. */
     if (sz.scale_flg != 0) {
         image_dst = imlib_create_cropped_scaled_image((int)sz.sx, (int)sz.sy, (int)sz.sw, (int)sz.sh, (int)sz.dw, (int)sz.dh);
@@ -214,6 +225,12 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
         imlib_context_set_image(image_tmp);
         imlib_context_set_color(sz.cc.r, sz.cc.g, sz.cc.b, sz.cc.a);
         imlib_image_fill_rectangle(0, 0, sz.cw, sz.ch);
+        if (sz.dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dx = 0;
+        }
+        if (sz.dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dy = 0;
+        }
         imlib_blend_image_onto_image(image_dst, 255, 0, 0,
                                      (int)sz.dw, (int)sz.dh, (int)sz.dx, (int)sz.dy, (int)sz.dw, (int)sz.dh);
         imlib_context_set_image(image_dst);
@@ -223,7 +240,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
 
     /* effects. */
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
-    if (sharpen) {
+    if (ngx_strlen(sharpen) > 0) {
         radius = ngx_http_small_light_parse_int(sharpen);
         if (radius > 0 && radius <= (int)ctx->radius_max) {
             imlib_context_set_image(image_dst);
@@ -237,7 +254,7 @@ ngx_int_t ngx_http_small_light_imlib2_process(ngx_http_request_t *r, ngx_http_sm
     }
 
     blur = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "blur");
-    if (blur) {
+    if (ngx_strlen(blur) > 0) {
         radius = ngx_http_small_light_parse_int(blur);
         if (radius > 0 && radius <= (int)ctx->radius_max) {
             imlib_context_set_image(image_dst);

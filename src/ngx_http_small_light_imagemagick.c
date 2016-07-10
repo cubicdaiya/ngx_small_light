@@ -29,6 +29,27 @@
 extern const char *ngx_http_small_light_image_exts[];
 extern const char *ngx_http_small_light_image_types[];
 
+void ngx_http_small_light_imagemagick_adjust_image_offset(ngx_http_request_t *r,
+                                                          ngx_http_small_light_imagemagick_ctx_t *ictx,
+                                                          ngx_http_small_light_image_size_t *sz)
+{
+    MagickBooleanType status;
+    size_t            w, h;
+    ssize_t           x, y;
+
+    status = MagickGetImagePage(ictx->wand, &w, &h, &x, &y);
+    if (status == MagickFalse) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to get image page %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
+        return;
+    }
+
+    sz->sx = (double) x;
+    sz->sy = (double) y;
+}
+
 ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
     ngx_http_small_light_imagemagick_ctx_t *ictx;
@@ -98,7 +119,10 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_calc_image_size(r, ctx, &sz, 10000.0, 10000.0);
 
     /* prepare */
-    if (sz.jpeghint_flg != 0) {
+    if (sz.jpeghint_flg != 0 &&
+        sz.dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE &&
+        sz.dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE)
+    {
         p = ngx_snprintf((u_char *)jpeg_size_opt, sizeof(jpeg_size_opt) - 1, "%dx%d", (ngx_int_t)sz.dw, (ngx_int_t)sz.dh);
         *p = '\0';
         ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, "jpeg_size_opt:%s", jpeg_size_opt);
@@ -115,6 +139,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         return NGX_ERROR;
     }
 
+    /* set the first frame for animated-GIF */
     MagickSetFirstIterator(ictx->wand);
 
     color_space = MagickGetImageColorspace(ictx->wand);
@@ -178,11 +203,22 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ih = (double)MagickGetImageHeight(ictx->wand);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
 
+    /* adjust image offset automatically */
+    ngx_http_small_light_imagemagick_adjust_image_offset(r, ictx, &sz);
+
     /* pass through. */
     if (sz.pt_flg != 0) {
         ctx->of = ctx->inf;
         DestroyString(of_orig);
         return NGX_OK;
+    }
+
+    /* adjust destination size */
+    if (sz.dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dw = sz.sw;
+    }
+    if (sz.dh == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz.dh = sz.sh;
     }
 
     /* crop, scale. */
@@ -226,6 +262,13 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             DestroyMagickWand(canvas_wand);
             DestroyString(of_orig);
             return NGX_ERROR;
+        }
+
+        if (sz.dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dx = 0;
+        }
+        if (sz.dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+            sz.dy = 0;
         }
 
         status = MagickCompositeImage(canvas_wand, ictx->wand, AtopCompositeOp, sz.dx, sz.dy);

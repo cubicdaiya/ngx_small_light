@@ -24,21 +24,20 @@
 #include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
 
-/** 
+/**
  * following original functions are brought from
  * mod_small_light(Dynamic image transformation module for Apache2) and customed
- */ 
+ */
 
 void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                                           ngx_http_small_light_ctx_t *ctx,
                                           ngx_http_small_light_image_size_t *sz,
                                           double iw, double ih)
 {
-    
+
     ngx_http_small_light_coord_t  sx_coord, sy_coord, sw_coord, sh_coord;
     ngx_http_small_light_coord_t  dx_coord, dy_coord, dw_coord, dh_coord;
     char                         *da_str, *pt, *prm_ds_str, da, prm_ds;
-    double                        dwo;
     ngx_int_t                     pt_flg;
 
     ngx_http_small_light_parse_coord(&sx_coord, NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sx"));
@@ -90,9 +89,7 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         }
     } else {
         if (sz->dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dh == sz->dw) {
-            dwo = sz->dw;
-            sz->dw = sz->dh / sz->aspect;
-            sz->dh = dwo / sz->aspect;
+            // do nothing
         } else if (sz->dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
             sz->dw = sz->dh * sz->aspect;
         } else if (sz->dh == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
@@ -109,12 +106,6 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     sz->iy = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "iy"));
     ngx_http_small_light_parse_color(&sz->cc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cc"));
     ngx_http_small_light_parse_color(&sz->bc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bc"));
-
-    ngx_log_error(NGX_LOG_NOTICE, r->connection->log, 0,
-                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,cw=%f,ch=%f,cx=%f,cy=%f,bw=%f,bh=%f,ix=%i,iy=%i",
-                  sz->sx, sz->sy, sz->sw, sz->sh,
-                  sz->dw, sz->dh, sz->cw, sz->ch, sz->cx, sz->cy, sz->bw, sz->bh,
-                  sz->ix, sz->iy);
 
     /* get pass through option. */
     pt_flg = 0;
@@ -137,21 +128,25 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->scale_flg = 1;
     } else {
         sz->scale_flg = 0;
-        sz->dw = iw;
-        sz->dh = ih;
     }
     if (sz->cx > 0) {
       sz->dx = sz->cx;
-    } else if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+    } else if (sz->dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
     }
     if (sz->cy > 0) {
       sz->dy = sz->cy;
-    } else if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+    } else if (sz->dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dy = (sz->ch - sz->dh) * 0.5;
     }
 
     sz->jpeghint_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "jpeghint"));
     sz->angle        = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "angle"));
 
+    ngx_log_error(NGX_LOG_NOTICE, r->connection->log, 0,
+                  "size info:sx=%f,sy=%f,sw=%f,sh=%f,dw=%f,dh=%f,dx=%f,dy=%f,cw=%f,ch=%f,bw=%f,bh=%f,ix=%i,iy=%i",
+                  sz->sx, sz->sy, sz->sw, sz->sh,
+                  sz->dw, sz->dh, sz->dx, sz->dy,
+                  sz->cw, sz->ch, sz->bw, sz->bh,
+                  sz->ix, sz->iy);
 }
