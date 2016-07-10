@@ -25,6 +25,7 @@
 
 #include "ngx_http_small_light_module.h"
 
+void ngx_http_small_light_adjust_canvas_image_offset(ngx_http_small_light_image_size_t *sz);
 void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                                           ngx_http_small_light_ctx_t *ctx,
                                           ngx_http_small_light_image_size_t *sz,

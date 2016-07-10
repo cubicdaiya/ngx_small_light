@@ -24,6 +24,16 @@
 #include "ngx_http_small_light_size.h"
 #include "ngx_http_small_light_parser.h"
 
+void ngx_http_small_light_adjust_canvas_image_offset(ngx_http_small_light_image_size_t *sz)
+{
+    if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz->dx = (sz->cw - sz->dw) * 0.5;
+    }
+    if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
+        sz->dy = (sz->ch - sz->dh) * 0.5;
+    }
+}
+
 /** 
  * following original functions are brought from
  * mod_small_light(Dynamic image transformation module for Apache2) and customed

@@ -293,12 +293,7 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
         }
         ccolor = gdImageColorAllocateAlpha(canvas, sz.cc.r, sz.cc.g, sz.cc.b, sz.cc.a);
         gdImageFilledRectangle(canvas, 0, 0, sz.cw, sz.ch, ccolor);
-        if (sz.dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-            sz.dx = 0;
-        }
-        if (sz.dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-            sz.dy = 0;
-        }
+        ngx_http_small_light_adjust_canvas_image_offset(&sz);
         gdImageCopy(canvas, dst, sz.dx, sz.dy, 0, 0, sz.dw, sz.dh);
         gdImageDestroy(dst);
         dst = canvas;
