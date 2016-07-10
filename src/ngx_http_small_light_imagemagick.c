@@ -29,6 +29,27 @@
 extern const char *ngx_http_small_light_image_exts[];
 extern const char *ngx_http_small_light_image_types[];
 
+void ngx_http_small_light_imagemagick_adjust_image_offset(ngx_http_request_t *r,
+                                                          ngx_http_small_light_imagemagick_ctx_t *ictx,
+                                                          ngx_http_small_light_image_size_t *sz)
+{
+    MagickBooleanType status;
+    size_t            w, h;
+    ssize_t           x, y;
+
+    status = MagickGetImagePage(ictx->wand, &w, &h, &x, &y);
+    if (status == MagickFalse) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "failed to get image page %s:%d",
+                      __FUNCTION__,
+                      __LINE__);
+        return;
+    }
+
+    sz->sx = x;
+    sz->sy = y;
+}
+
 ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
 {
     ngx_http_small_light_imagemagick_ctx_t *ictx;
@@ -180,6 +201,9 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     iw = (double)MagickGetImageWidth(ictx->wand);
     ih = (double)MagickGetImageHeight(ictx->wand);
     ngx_http_small_light_calc_image_size(r, ctx, &sz, iw, ih);
+
+    /* adjust image offset automatically */
+    ngx_http_small_light_imagemagick_adjust_image_offset(r, ictx, &sz);
 
     /* pass through. */
     if (sz.pt_flg != 0) {
