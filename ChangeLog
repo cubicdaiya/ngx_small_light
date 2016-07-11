@@ -1,3 +1,17 @@
+2016-07-11 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* imagemagick, imlib2, gd: cropped the center of image when only `cw` and `ch` are given.
+
+	* imagemagick: adjusted image offset automatically. fixes #44
+
+	* bugfix, gd: fixed parameter validations for `sharpen`.
+
+	* bugfix, imlib2: fixed parameter validations for `sharpen` and `blur`.
+
+	* bugfix: fixed strange size and offset calculation behavior. refs #46
+
+	* 0.8.0 released
+
 2016-05-20 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: small_light_pattern_define didn't work when small_light_getparam_mode is enabled. It has appeared in v0.7.1.
