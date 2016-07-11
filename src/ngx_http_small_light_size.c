@@ -27,12 +27,12 @@
 void ngx_http_small_light_adjust_canvas_image_offset(ngx_http_small_light_image_size_t *sz)
 {
     if (sz->cx != 0) {
-        sz->dx = -sz->cx - sz->cw / 2;
+        sz->dx = -sz->cx - sz->dw / 2 + sz->cw / 2;
     } else if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
     }
     if (sz->cy != 0) {
-        sz->dy = sz->cy - sz->ch / 2;
+        sz->dy = sz->cy - sz->dh / 2 + sz->ch / 2;
     } else if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dy = (sz->ch - sz->dh) * 0.5;
     }
@@ -144,12 +144,12 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->scale_flg = 0;
     }
     if (sz->cx != 0) {
-        sz->dx = -sz->cx - sz->cw / 2;
+        sz->dx = -sz->cx - sz->dw / 2 + sz->cw / 2;
     } else if (sz->dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dx = (sz->cw - sz->dw) * 0.5;
     }
     if (sz->cy != 0) {
-        sz->dy = sz->cy - sz->ch / 2;
+        sz->dy = sz->cy - sz->dh / 2 + sz->ch / 2;
     } else if (sz->dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dy = (sz->ch - sz->dh) * 0.5;
     }
