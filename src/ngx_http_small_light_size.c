@@ -32,7 +32,7 @@ void ngx_http_small_light_adjust_canvas_image_offset(ngx_http_small_light_image_
         sz->dx = (sz->cw - sz->dw) * 0.5;
     }
     if (sz->cy != 0) {
-        sz->dy = sz->cy - sz->cw / 2;
+        sz->dy = sz->cy - sz->ch / 2;
     } else if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->dy = (sz->ch - sz->dh) * 0.5;
     }
