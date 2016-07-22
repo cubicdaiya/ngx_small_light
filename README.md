@@ -347,6 +347,8 @@ Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
 
 In `v0.6.14` or later, they are no longer required. Because `ngx_small_light` sets the thread-number with OpenMP 1 always.
 
+Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
+
 # Limitations
 
 `ngx_small_light` has the limitations below.
