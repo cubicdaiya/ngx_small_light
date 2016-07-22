@@ -22,6 +22,8 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
 * [Named Pattern](#named-pattern)
 * [Using GET parameters](#using-get-parameters)
 * [Optimizing Tips](#optimizing-tips)
+ * [JPEG hinting](#jpeg-hinting)
+ * [Limit thread-number with OpenMP](#limit-thread-number with OpenMP)
 * [Limitations](#limitations)
  * [Not supported features with Imlib2](#not-supported-features-with-imlib2)
  * [Not supported features with GD](#not-supported-features-with-gd)
@@ -324,8 +326,14 @@ http://localhost:8000/img/image.jpg?dw=200&dh=200
 
 ## Optimizing Tips
 
+There are some optimizing tips for `ngx_small_light`.
+
+### JPEG hinting
+
 When the output format is JPEG and image-converting engine is ImageMagick or Imlib2,
 you may give 'y' to the parameter `jpeghint`. The speed of processing images is improved dramatically.
+
+### Limit thread-number with OpenMP
 
 And when image-converting engine is ImageMagick and the version of `ngx_small_light` is lower than `v0.6.14`, 
 giving 1 to `OMP_NUM_THREADS` or `MAGICK_THREAD_LIMIT` in `nginx.conf` is recommended strongly.
