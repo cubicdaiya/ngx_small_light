@@ -23,7 +23,7 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
 * [Using GET parameters](#using-get-parameters)
 * [Optimizing Tips](#optimizing-tips)
  * [JPEG hinting](#jpeg-hinting)
- * [Limit thread-number with OpenMP](#limit-thread-number with OpenMP)
+ * [Limit thread-number with OpenMP](#limit-thread-number-with-openmp)
 * [Limitations](#limitations)
  * [Not supported features with Imlib2](#not-supported-features-with-imlib2)
  * [Not supported features with GD](#not-supported-features-with-gd)
