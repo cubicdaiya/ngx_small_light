@@ -322,8 +322,6 @@ Instead the url below returns converted image expected by right.
 http://localhost:8000/img/image.jpg?dw=200&dh=200
 ```
 
-Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
-
 ## Optimizing Tips
 
 When the output format is JPEG and image-converting engine is ImageMagick or Imlib2,
@@ -338,6 +336,8 @@ env OMP_NUM_THREADS=1; # or env MAGICK_THREAD_LIMIT=1;
 ```
 
 In `v0.6.14` or later, `ngx_small_light` sets the thread-number with OpenMP 1 always.
+
+Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
 
 # Limitations
 
