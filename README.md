@@ -331,7 +331,7 @@ There are some optimizing tips for `ngx_small_light`.
 ### JPEG hinting
 
 When the output format is JPEG and image-converting engine is ImageMagick or Imlib2,
-you may give 'y' to the parameter `jpeghint`. The speed of processing images is improved dramatically.
+you may give `jpeghint=y`. The speed of processing images is improved dramatically.
 
 ### Limit thread-number with OpenMP
 
