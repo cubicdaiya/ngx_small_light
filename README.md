@@ -335,7 +335,7 @@ you may give `jpeghint=y`. The speed of processing images is improved dramatical
 
 ### Limit thread-number with OpenMP
 
-And when image-converting engine is ImageMagick and the version of `ngx_small_light` is lower than `v0.6.14`, 
+When image-converting engine is ImageMagick and the version of `ngx_small_light` is lower than `v0.6.14`, 
 giving 1 to `OMP_NUM_THREADS` or `MAGICK_THREAD_LIMIT` in `nginx.conf` is recommended strongly.
 Because OpenMP is enabled in ImageMagick by default and ImageMagick enabled OpenMP is very slow on multi-process environment.
 
