@@ -242,7 +242,7 @@ when Content-Length is not set in response headers.
 |e          |string|imagemagick|engine name (imagemagick, imlib2, gd)           |           |      |   |
 |q          |number|           |quality                                         |        :o:|   :o:|:o:|
 |of         |string|           |output format (jpg, gif, png, webp)             |        :o:|   :o:|:o:|
-|jpeghint   |char  |n          |enable jpeg hinting                             |        :o:|   :o:|:x:|
+|jpeghint   |char  |n          |enable jpeg hinting (y, n)                      |        :o:|   :o:|:x:|
 |dw         |coord |sw         |destination width                               |        :o:|   :o:|:o:|
 |dh         |coord |sh         |destination height                              |        :o:|   :o:|:o:|
 |dx         |coord |sx         |destination x coordinate                        |        :o:|   :o:|:o:|
