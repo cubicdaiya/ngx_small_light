@@ -345,7 +345,7 @@ env OMP_NUM_THREADS=1; # or env MAGICK_THREAD_LIMIT=1;
 
 Or you can avoid this problem by building ImageMagick with `--disable-openmp`.
 
-In `v0.6.14` or later, they are no longer required. Because `ngx_small_light` sets the thread-number with OpenMP 1 always.
+In `v0.6.14` or later, they are no longer required. Because `ngx_small_light` always sets the thread-number with OpenMP 1.
 
 # Limitations
 
