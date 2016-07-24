@@ -239,16 +239,16 @@ when Content-Length is not set in response headers.
 |Parameter  |Type  |Default    |Description                                     |ImageMagick|Imlib2|GD |
 |-----------|------|-----------|------------------------------------------------|-----------|------|---|
 |p          |string|           |named pattern of comma-delimited parameters     |        :o:|   :o:|:o:|
-|e          |string|imagemagick|engine name(imagemagick, imlib2, gd)            |           |      |   |
+|e          |string|imagemagick|engine name (imagemagick, imlib2, gd)           |           |      |   |
 |q          |number|           |quality                                         |        :o:|   :o:|:o:|
-|of         |string|           |output format(jpg, gif, png, webp)              |        :o:|   :o:|:o:|
+|of         |string|           |output format (jpg, gif, png, webp)             |        :o:|   :o:|:o:|
 |jpeghint   |char  |n          |enable jpeg hinting                             |        :o:|   :o:|:x:|
 |dw         |coord |sw         |destination width                               |        :o:|   :o:|:o:|
 |dh         |coord |sh         |destination height                              |        :o:|   :o:|:o:|
 |dx         |coord |sx         |destination x coordinate                        |        :o:|   :o:|:o:|
 |dy         |coord |sy         |destination y coordinate                        |        :o:|   :o:|:o:|
-|da         |char  |l          |destination aspect ratio contol                 |        :o:|   :o:|:o:|
-|ds         |char  |n          |destination scaling control(s, n)               |        :o:|   :o:|:o:|
+|da         |char  |l          |destination aspect ratio contol (l, s)          |        :o:|   :o:|:o:|
+|ds         |char  |n          |destination scaling control (s, n)              |        :o:|   :o:|:o:|
 |cw         |number|           |canvas width                                    |        :o:|   :o:|:o:|
 |ch         |number|           |canvas height                                   |        :o:|   :o:|:o:|
 |cc         |color |000000     |canvas color                                    |        :o:|   :o:|:o:|
@@ -259,18 +259,18 @@ when Content-Length is not set in response headers.
 |sh         |coord |           |source height                                   |        :o:|   :o:|:o:|
 |sx         |coord |           |source x coordinate                             |        :o:|   :o:|:o:|
 |sy         |coord |           |source y coordinate                             |        :o:|   :o:|:o:|
-|pt         |char  |n          |pass through control                            |        :o:|   :o:|:o:|
-|sharpen    |string|           |radius,sigma                                    |        :o:|   :o:|:o:|
-|unsharp    |string|           |radius,sigma,amount,threshold                   |        :o:|   :x:|:x:|
-|blur       |string|           |radius,sigma                                    |        :o:|   :o:|:x:|
+|pt         |char  |n          |pass through control (y, n)                     |        :o:|   :o:|:o:|
+|sharpen    |string|           |radius,sigma (e.g. 10x5)                        |        :o:|   :o:|:o:|
+|unsharp    |string|           |radius,sigma,amount,threshold (e.g 2x5+0.5+0)   |        :o:|   :x:|:x:|
+|blur       |string|           |radius,sigma (e.g. 5x10)                        |        :o:|   :o:|:x:|
 |embedicon  |string|           |embedded icon file in `small_light_material_dir`|        :o:|   :x:|:x:|
 |ix         |number|0          |embedded icon x coordinate                      |        :o:|   :x:|:x:|
 |iy         |number|0          |embedded icon y coordinate                      |        :o:|   :x:|:x:|
-|angle      |number|0          |angle of rotation(90, 180, 270)                 |        :o:|   :o:|:o:|
-|progressive|char  |n          |make JPEG progressive                           |        :o:|   :x:|:x:|
-|cmyk2rgb   |char  |n          |convert colorspace from CMYK to sRGB            |        :o:|   :x:|:x:|
-|rmprof     |char  |n          |remove profile                                  |        :o:|   :x:|:x:|
-|autoorient |char  |n          |enable adjust image orientation automatically   |        :o:|   :x:|:x:|
+|angle      |number|0          |angle of rotation (90, 180, 270)                |        :o:|   :o:|:o:|
+|progressive|char  |n          |make JPEG progressive (y, n)                    |        :o:|   :x:|:x:|
+|cmyk2rgb   |char  |n          |convert colorspace from CMYK to sRGB (y, n)     |        :o:|   :x:|:x:|
+|rmprof     |char  |n          |remove profile (y, n)                           |        :o:|   :x:|:x:|
+|autoorient |char  |n          |enable adjust image orientation automatically (y, n)  |  :o:|   :x:|:x:|
 
 There are any limitations below.
 
