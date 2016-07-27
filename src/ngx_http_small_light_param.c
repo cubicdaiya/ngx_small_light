@@ -62,9 +62,13 @@ static const ngx_http_small_light_param_t ngx_http_small_light_params[] = {
     { ngx_string("iy"),        "0"},
     { ngx_string("angle"),     "0"},
     { ngx_string("progressive"), "n"},
+    { ngx_string("shadecolor"), ""},
+    { ngx_string("shadeopc"), "0"},
     { ngx_string("cmyk2rgb"),  "n"},
     { ngx_string("rmprof"),    "n"},
-    { ngx_string("autoorient"),"n"}
+    { ngx_string("autoorient"),"n"},
+    { ngx_string("thumbnail"), "n"},
+    { ngx_string("interlace"), ""}
 };
 
 static const ngx_str_t ngx_http_small_light_getparams[] = {
@@ -98,9 +102,13 @@ static const ngx_str_t ngx_http_small_light_getparams[] = {
     ngx_string("arg_iy"),
     ngx_string("arg_angle"),
     ngx_string("arg_progressive"),
+    ngx_string("arg_shadecolor"),
+    ngx_string("arg_shadeopc"),
     ngx_string("arg_cmyk2rgb"),
     ngx_string("arg_rmprof"),
-    ngx_string("arg_autoorient")
+    ngx_string("arg_autoorient"),
+    ngx_string("arg_thumbnail"),
+    ngx_string("arg_interlace"),
 };
 
 static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t *ctx)

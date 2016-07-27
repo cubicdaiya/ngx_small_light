@@ -93,12 +93,12 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
-    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
-    double                                  iw, ih, q;
-    char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
-    MagickWand                             *trans_wand, *canvas_wand;
+    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg, thumbnail_flg;
+    double                                  iw, ih, q, shade_opc;
+    char                                   *unsharp, *sharpen, *blur, *of, *of_orig, *shade_color;
+    MagickWand                             *trans_wand, *canvas_wand, *fill_wand, *interlace;
     DrawingWand                            *border_wand;
-    PixelWand                              *bg_color, *canvas_color, *border_color;
+    PixelWand                              *bg_color, *canvas_color, *border_color, *shade_wand, *colorize_wand, *alpha_wand;
     GeometryInfo                            geo;
     ngx_fd_t                                fd;
     MagickWand                             *icon_wand;
@@ -456,9 +456,46 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         MagickSetImageCompressionQuality(ictx->wand, q);
     }
 
-    progressive_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "progressive"));
-    if (progressive_flg != 0) {
-        MagickSetInterlaceScheme(ictx->wand, LineInterlace);
+    interlace = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "interlace");
+    if (ngx_strlen(interlace) > 0) {
+        if (ngx_strcmp(interlace, NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_INTERLACE_TYPE_LINE) == 0) {
+            MagickSetInterlaceScheme(ictx->wand, LineInterlace);
+        } else if (ngx_strcmp(interlace, NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_INTERLACE_TYPE_PLANE) == 0) {
+            MagickSetInterlaceScheme(ictx->wand, PlaneInterlace);
+        } else if (ngx_strcmp(interlace, NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_INTERLACE_TYPE_PARTITION) == 0) {
+            MagickSetInterlaceScheme(ictx->wand, PartitionInterlace);
+        }
+    } else {
+        progressive_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "progressive"));
+        if (progressive_flg != 0) {
+            MagickSetInterlaceScheme(ictx->wand, LineInterlace);
+        }
+    }
+
+    shade_color = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "shadecolor");
+    shade_opc = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "shadeopc"));
+    if (ngx_strlen(shade_color) > 0 && shade_opc > 0.0) {
+        fill_wand = NewMagickWand();
+        shade_wand = NewPixelWand();
+
+        PixelSetColor(shade_wand, shade_color);
+        if (sz.cw > 0.0 && sz.ch > 0.0) {
+            MagickNewImage(fill_wand, sz.cw, sz.ch, shade_wand);
+        } else {
+            MagickNewImage(fill_wand, sz.dw, sz.dh, shade_wand);
+        }
+        colorize_wand = NewPixelWand();
+        alpha_wand = NewPixelWand();
+        PixelSetColor(colorize_wand, "transparent");
+        PixelSetAlpha(alpha_wand, shade_opc);
+
+        MagickColorizeImage(fill_wand, colorize_wand, alpha_wand);
+        MagickCompositeImage(ictx->wand, fill_wand, OverCompositeOp, 0, 0);
+
+        DestroyPixelWand(shade_wand);
+        DestroyPixelWand(colorize_wand);
+        DestroyPixelWand(alpha_wand);
+        DestroyMagickWand(fill_wand);
     }
 
     of = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "of");
@@ -492,6 +529,15 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     }
 
     DestroyString(of_orig);
+
+    thumbnail_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "thumbnail"));
+    if (thumbnail_flg != 0) {
+        if (sz.cw > 0.0 && sz.ch > 0.0) {
+            MagickThumbnailImage(ictx->wand, sz.cw, sz.ch);
+        } else {
+            MagickThumbnailImage(ictx->wand, sz.dw, sz.dh);
+        }
+    }
 
     ctx->content        = MagickGetImageBlob(ictx->wand, &sled_image_size);
     ctx->content_length = sled_image_size;
