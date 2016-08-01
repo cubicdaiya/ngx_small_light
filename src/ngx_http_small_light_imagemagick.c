@@ -539,7 +539,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
-	MagickStripImage(ictx->wand);
+    MagickStripImage(ictx->wand);
 	
     ctx->content        = MagickGetImageBlob(ictx->wand, &sled_image_size);
     ctx->content_length = sled_image_size;
