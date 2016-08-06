@@ -21,6 +21,7 @@ A dynamic image transformation module for [nginx](http://nginx.org/).
 * [Parameters for small_light function](#parameters-for-small_light-function)
 * [Named Pattern](#named-pattern)
 * [Using GET parameters](#using-get-parameters)
+* [Enabling WebP transformation](#enabling-webp-transformation)
 * [Optimizing Tips](#optimizing-tips)
  * [JPEG hinting](#jpeg-hinting)
  * [Limit thread-number with OpenMP](#limit-thread-number-with-openmp)
@@ -323,6 +324,32 @@ Instead the url below returns converted image expected by right.
 ```
 http://localhost:8000/img/image.jpg?dw=200&dh=200
 ```
+
+## Enabling WebP Transformation
+
+`ngx_small_light` supports WebP transformation with ImageMagick and GD.
+Given `of=webp` to **small_light function**, `ngx_small_light` transforms image format into WebP.
+But ImageMagick requires libwebp and GD requires libvpx.
+You need to embed these libraries in building ImageMagick and GD for enabling WebP transformation.
+
+If WebP transformation is not available, `nginx` outputs the line like below in error.log in processing image.
+
+```
+WebP is not supported
+```
+
+If WebP transformation with ImageMagick is available, the output of `convert -list format` includes the line like below.
+
+```
+$ convert -list format | grep -i webp
+     WEBP* WEBP      rw-   WebP Image Format (libwebp 0.5.0[0208])
+```
+
+If WebP transformation with GD is available, the output of `libgd-config --libs` includes `-lvpx`.
+
+In general, the packages of ImageMagick and GD provided from the linux distributions
+such as Ubuntu and CentOS does not embed the library for WebP transformation by default.
+In such cases, you need to build ImageMagick or GD yourself.
 
 ## Optimizing Tips
 
