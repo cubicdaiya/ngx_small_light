@@ -332,7 +332,7 @@ Given `of=webp` to **small_light function**, `ngx_small_light` transforms image 
 But ImageMagick requires libwebp and GD requires libvpx.
 You need to embed these libraries in building ImageMagick and GD for enabling WebP transformation.
 
-If WebP transformation is not available, `nginx` outputs the line like below in error.log in processing image.
+If WebP transformation is not available, `nginx` outputs the line like below in error.log in processing image with `of=webp`.
 
 ```
 WebP is not supported
