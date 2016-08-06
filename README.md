@@ -345,7 +345,7 @@ $ convert -list format | grep -i webp
      WEBP* WEBP      rw-   WebP Image Format (libwebp 0.5.0[0208])
 ```
 
-If WebP transformation with GD is available, the output of `libgd-config --libs` includes `-lvpx`.
+If WebP transformation with GD is available, the output of `gdlib-config --libs` includes `-lvpx`.
 
 In general, the packages of ImageMagick and GD provided from the linux distributions
 such as Ubuntu and CentOS does not embed the library for WebP transformation by default.
