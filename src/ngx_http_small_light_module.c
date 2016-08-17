@@ -541,7 +541,7 @@ static char *ngx_http_small_light_pattern_define(ngx_conf_t *cf, ngx_command_t *
     hash.hash        = &srv_conf->hash;
     hash.key         = ngx_hash_key_lc;
     hash.max_size    = 128;
-    hash.bucket_size = ngx_cacheline_size;
+    hash.bucket_size = 128;
     hash.name        = "small_light_pattern_define";
     hash.pool        = srv_conf->patterns.keys.pool;
     hash.temp_pool   = NULL;
