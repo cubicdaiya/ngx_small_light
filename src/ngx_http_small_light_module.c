@@ -263,7 +263,7 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     hash_init.hash        = &ctx->hash;
     hash_init.key         = ngx_hash_key_lc;
     hash_init.max_size    = 128;
-    hash_init.bucket_size = ngx_cacheline_size;
+    hash_init.bucket_size = 128;
     hash_init.name        = "small_light_init_params";
     hash_init.pool        = ctx->params.keys.pool;
     hash_init.temp_pool   = NULL;
