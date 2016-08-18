@@ -1,3 +1,11 @@
+2016-08-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* Adjust hash bucket size of `small_light_init_params`. Thanks @takano32. refs #65
+
+	* Adjust hash bucket size of `small_light_pattern_define`.
+
+	* 0.8.1 released
+
 2016-07-11 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* imagemagick, imlib2, gd: cropped the center of image when only `cw` and `ch` are given.
