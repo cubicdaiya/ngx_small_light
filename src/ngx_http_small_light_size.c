@@ -119,11 +119,11 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     pt_flg = 0;
     pt     = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "pt");
     if (pt[0] == '\0' || ngx_strcmp(pt, "ptss") == 0) {
-        if (sz->sw < sz->cw && sz->sh < sz->ch) {
+        if (sz->sw < sz->dw && sz->sh < sz->dh) {
             pt_flg = 1;
         }
     } else if (ngx_strcmp(pt, "ptls") == 0) {
-        if (sz->sw > sz->cw || sz->sh > sz->ch) {
+        if (sz->sw > sz->dw || sz->sh > sz->dh) {
             pt_flg = 1;
         }
     }
