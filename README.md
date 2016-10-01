@@ -220,10 +220,11 @@ This directive sets maximum sigma value of geometry for `sharpen` and `unsharp` 
 
 |Syntax     |*small_light_imlib2_temp_dir path* [*level1* [*level2* [*level 3* ]]]|
 |-----------|---------------------------------------------------------------------|
-|**Default**|/tmp 1 2                                                             |
+|**Default**|small_light_imlib2_temp 1 2                                          |
 |**Context**|server                                                               |
 
 This directive assigns the directory for temporary file for Imlib2 processing.
+This directive is available when Imlib2 is enabled.
 
 ### small_light_buffer
 

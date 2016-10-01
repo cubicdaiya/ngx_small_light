@@ -68,7 +68,9 @@ typedef struct {
     ngx_hash_t hash;
     ngx_hash_keys_arrays_t patterns;
     ngx_str_t material_dir;
+#ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
     ngx_path_t *imlib2_temp_dir;
+#endif
     size_t buffer_size;
     ngx_uint_t radius_max;
     ngx_uint_t sigma_max;
@@ -111,7 +113,9 @@ typedef struct ngx_http_small_light_ctx_t {
     ngx_uint_t radius_max;
     ngx_uint_t sigma_max;
     ngx_str_t *material_dir;
+#ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
     ngx_path_t *imlib2_temp_dir;
+#endif
     struct ngx_http_small_light_converter_t {
         ngx_int_t (*init)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
         ngx_int_t (*process)(ngx_http_request_t *r, struct ngx_http_small_light_ctx_t *ctx);
