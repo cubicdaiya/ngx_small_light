@@ -491,7 +491,7 @@ static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, v
 }
 
 static ngx_path_init_t  ngx_http_small_light_imlib2_temp_dir = {
-    ngx_string("/tmp"), { 1, 2, 0 }
+    ngx_string("/var/cache/nginx/small_light/imlib2"), { 1, 2, 0 }
 };
 
 static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
