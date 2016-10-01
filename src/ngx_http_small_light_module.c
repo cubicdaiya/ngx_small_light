@@ -287,7 +287,7 @@ static ngx_int_t ngx_http_small_light_header_filter(ngx_http_request_t *r)
     ctx->inf             = (char *)r->headers_out.content_type.data;
     ctx->material_dir    = &srv_conf->material_dir;
 #ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
-    ctx->imlib2_temp_dir = loc_conf->imlib2_temp_dir;
+    ctx->imlib2_temp_dir = srv_conf->imlib2_temp_dir;
 #endif
     ctx->radius_max      = loc_conf->radius_max;
     ctx->sigma_max       = loc_conf->sigma_max;
@@ -497,6 +497,19 @@ static void *ngx_http_small_light_create_loc_conf(ngx_conf_t *cf)
 
 static char *ngx_http_small_light_merge_srv_conf(ngx_conf_t *cf, void *parent, void *child)
 {
+#ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
+    ngx_http_small_light_conf_t *prev = parent;
+    ngx_http_small_light_conf_t *conf = child;
+
+    if (ngx_conf_merge_path_value(cf, &conf->imlib2_temp_dir,
+                                  prev->imlib2_temp_dir,
+                                  &ngx_http_small_light_imlib2_temp_dir)
+        != NGX_OK)
+    {
+        return NGX_CONF_ERROR;
+    }
+#endif
+
     return NGX_CONF_OK;
 }
 
@@ -507,16 +520,6 @@ static char *ngx_http_small_light_merge_loc_conf(ngx_conf_t *cf, void *parent, v
 
     ngx_conf_merge_value(conf->enable,               prev->enable,               0);
     ngx_conf_merge_value(conf->enable_getparam_mode, prev->enable_getparam_mode, 0);
-
-#ifdef NGX_HTTP_SMALL_LIGHT_IMLIB2_ENABLED
-    if (ngx_conf_merge_path_value(cf, &conf->imlib2_temp_dir,
-                                  prev->imlib2_temp_dir,
-                                  &ngx_http_small_light_imlib2_temp_dir)
-        != NGX_OK)
-    {
-        return NGX_CONF_ERROR;
-    }
-#endif
 
     ngx_conf_merge_size_value(conf->buffer_size, prev->buffer_size, 1 * 1024 * 1024);
 
