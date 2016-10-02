@@ -1,3 +1,15 @@
+2016-10-02 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* imlib2: change default small_light_imlib2_temp_dir value. Thanks @draskolnikova. refs #70
+
+	* bugfix: small_light_imlib2_temp_dir was not modfiabile.
+
+	* bugfix: failed to load modules dynamically on linux. refs #66
+
+	* bugfix: path-through did not work.
+
+	* 0.9.0 released
+
 2016-08-19 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* Adjust hash bucket size of `small_light_init_params`. Thanks @takano32. refs #65
