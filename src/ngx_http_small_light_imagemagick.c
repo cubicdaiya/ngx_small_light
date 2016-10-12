@@ -94,7 +94,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
     int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
-    double                                  iw, ih, q;
+    double                                  iw, ih, q, trimfuzz;
     char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
     MagickWand                             *trans_wand, *canvas_wand;
     DrawingWand                            *border_wand;
@@ -171,6 +171,12 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 #endif
+
+    /* auto-crop / trim */
+    trimfuzz = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "trimfuzz"));
+    if (trimfuzz > 0.0) {
+        MagickTrimImage(ictx->wand, trimfuzz);
+    }
 
     /* rotate. */
     if (sz.angle) {
