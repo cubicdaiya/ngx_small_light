@@ -244,9 +244,9 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     if (resize_flg != 0) {
         if (sz.cw > 0.0 && sz.ch > 0.0) {
-            MagickResizeImage(ictx->wand, sz.cw, sz.ch, LanczosFilter);
+            MagickResizeImage(ictx->wand, sz.cw, sz.ch, LanczosFilter, 0.1);
         } else {
-            MagickResizeImage(ictx->wand, sz.dw, sz.dh, LanczosFilter);
+            MagickResizeImage(ictx->wand, sz.dw, sz.dh, LanczosFilter, 0.1);
         }
     } else if (adaptiveresize_flg != 0) {
         if (sz.cw > 0.0 && sz.ch > 0.0) {
