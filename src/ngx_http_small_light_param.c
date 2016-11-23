@@ -68,7 +68,9 @@ static const ngx_http_small_light_param_t ngx_http_small_light_params[] = {
     { ngx_string("rmprof"),    "n"},
     { ngx_string("autoorient"),"n"},
     { ngx_string("thumbnail"), "n"},
-    { ngx_string("interlace"), ""}
+    { ngx_string("interlace"), ""},
+    { ngx_string("resize"), "n"},
+    { ngx_string("adaptiveresize"), "n"}
 };
 
 static const ngx_str_t ngx_http_small_light_getparams[] = {
@@ -109,6 +111,8 @@ static const ngx_str_t ngx_http_small_light_getparams[] = {
     ngx_string("arg_autoorient"),
     ngx_string("arg_thumbnail"),
     ngx_string("arg_interlace"),
+    ngx_string("arg_resize"),
+    ngx_string("arg_adaptiveresize")
 };
 
 static void ngx_http_small_light_init_params_default(ngx_http_small_light_ctx_t *ctx)

@@ -93,7 +93,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
-    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg, thumbnail_flg;
+    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg, thumbnail_flg, adaptiveresize_flg, resize_flg;
     double                                  iw, ih, q, shade_opc;
     char                                   *unsharp, *sharpen, *blur, *of, *of_orig, *shade_color;
     MagickWand                             *trans_wand, *canvas_wand, *fill_wand, *interlace;
@@ -239,8 +239,23 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         ictx->wand = trans_wand;
     }
 
+    resize_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "resize"));
+    adaptiveresize_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "adaptiveresize"));
+
+    if (resize_flg != 0) {
+        if (sz.cw > 0.0 && sz.ch > 0.0) {
+            MagickResizeImage(ictx->wand, sz.cw, sz.ch, LanczosFilter);
+        } else {
+            MagickResizeImage(ictx->wand, sz.dw, sz.dh, LanczosFilter);
+        }
+    } else if (adaptiveresize_flg != 0) {
+        if (sz.cw > 0.0 && sz.ch > 0.0) {
+            MagickAdaptiveResizeImage(ictx->wand, sz.cw, sz.ch);
+        } else {
+            MagickAdaptiveResizeImage(ictx->wand, sz.dw, sz.dh);
+        }
     /* create canvas then draw image to the canvas. */
-    if (sz.cw > 0.0 && sz.ch > 0.0) {
+    } else if (sz.cw > 0.0 && sz.ch > 0.0) {
         canvas_wand  = NewMagickWand();
         canvas_color = NewPixelWand();
         PixelSetRed(canvas_color,   sz.cc.r / 255.0);
