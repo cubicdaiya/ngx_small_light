@@ -393,7 +393,7 @@ The transformation with GD supports to write WebP-image. But it is the experimen
 
 ## Not supported animated GIF
 
-`ngx_small_light` does not suport the transformation kept animation for animated GIF.
+`ngx_small_light` does not support the transformation kept animation for animated GIF.
 Because it takes long time to transform(e.g. resize, crop) animated GIF kept animation.
 So it is not realistic for `ngx_small_light` to support an animated GIF.
 
