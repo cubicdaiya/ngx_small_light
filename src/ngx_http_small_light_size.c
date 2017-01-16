@@ -27,24 +27,39 @@
 void ngx_http_small_light_adjust_canvas_image_offset(ngx_http_small_light_image_size_t *sz)
 {
     if (sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-        sz->dx = (sz->cw - sz->dw) * 0.5;
+
+        if (sz->sw < sz->dw) {
+            sz->dx = (sz->cw - sz->sw) * 0.5;
+        } else {
+            sz->dx = (sz->cw - sz->dw) * 0.5;
+        }
+
     }
     if (sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-        sz->dy = (sz->ch - sz->dh) * 0.5;
+
+        if (sz->sh < sz->dh) {
+            sz->dy = (sz->ch - sz->sh) * 0.5;
+        } else {
+            sz->dy = (sz->ch - sz->dh) * 0.5;
+        }
+
     }
+
+
+
 }
 
-/** 
+/**
  * following original functions are brought from
  * mod_small_light(Dynamic image transformation module for Apache2) and customed
- */ 
+ */
 
 void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                                           ngx_http_small_light_ctx_t *ctx,
                                           ngx_http_small_light_image_size_t *sz,
                                           double iw, double ih)
 {
-    
+
     ngx_http_small_light_coord_t  sx_coord, sy_coord, sw_coord, sh_coord;
     ngx_http_small_light_coord_t  dx_coord, dy_coord, dw_coord, dh_coord;
     char                         *da_str, *pt, *prm_ds_str, da, prm_ds;
@@ -138,10 +153,18 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
         sz->scale_flg = 0;
     }
     if (sz->dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-        sz->dx = (sz->cw - sz->dw) * 0.5;
+        if (sz->sw < sz->dw) {
+            sz->dx = (sz->cw - sz->sw) * 0.5;
+        } else {
+            sz->dx = (sz->cw - sz->dw) * 0.5;
+        }
     }
     if (sz->dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dy == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
-        sz->dy = (sz->ch - sz->dh) * 0.5;
+        if (sz->sh < sz->dh) {
+            sz->dy = (sz->ch - sz->sh) * 0.5;
+        } else {
+            sz->dy = (sz->ch - sz->dh) * 0.5;
+        }
     }
 
     sz->jpeghint_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "jpeghint"));
