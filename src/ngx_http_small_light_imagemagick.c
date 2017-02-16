@@ -46,8 +46,12 @@ void ngx_http_small_light_imagemagick_adjust_image_offset(ngx_http_request_t *r,
         return;
     }
 
-    sz->sx = (double) x;
-    sz->sy = (double) y;
+    if (x != 0) {
+        sz->sx = (double)x + sz->sx;
+    }
+    if (y != 0) {
+        sz->sy = (double)y + sz->sy;
+    }
 }
 
 ngx_int_t ngx_http_small_light_imagemagick_init(ngx_http_request_t *r, ngx_http_small_light_ctx_t *ctx)
