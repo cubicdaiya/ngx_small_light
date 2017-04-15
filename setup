@@ -4,17 +4,6 @@ use strict;
 use warnings;
 use utf8;
 
-sub xxx_config_check
-{
-    my $xxx_config = shift;
-    my $enabled    = shift;
-    my $cmd        = "which $xxx_config";
-    if ($enabled == 1 and `$cmd` eq "") {
-        print "$xxx_config is not found\n";
-        exit;
-    }
-}
-
 sub imlib2_is_take_off_line
 {
     my $line = shift;
@@ -86,13 +75,9 @@ my $gd_enabled;
 
 ($imagemagick_enabled, $imlib2_enabled, $gd_enabled) = xxx_set_enabled(@ARGV);
 
-xxx_config_check("Wand-config",   $imagemagick_enabled);
-xxx_config_check("imlib2-config", $imlib2_enabled);
-xxx_config_check("gdlib-config",  $gd_enabled);
-
-my $wand_libs     = `Wand-config --libs`;
-my $wand_lds      = `Wand-config --ldflags`;
-my $wand_includes = `Wand-config --cflags`;
+my $wand_libs     = `pkg-config MagickWand --libs`;
+my $wand_lds      = `pkg-config MagickWand --libs`;
+my $wand_includes = `pkg-config MagickWand --cflags`;
 
 chomp($wand_libs);
 chomp($wand_lds);
@@ -101,9 +86,9 @@ chomp($wand_includes);
 my $imlib2_libs     = "";
 my $imlib2_includes = "";
 if ($imlib2_enabled == 1) {
-    $imlib2_libs     = `imlib2-config --libs`;
+    $imlib2_libs     = `pkg-config imlib2 --libs`;
     $imlib2_libs     =~ s/\s*?\@my_libs\@\s*?//;
-    $imlib2_includes = `imlib2-config --cflags`;
+    $imlib2_includes = `pkg-config imlib2 --cflags`;
     chomp($imlib2_libs);
     chomp($imlib2_includes);
     # the output of `imlib2-config --libs` does not include '-ljpeg'.
@@ -114,10 +99,10 @@ my $gd_libs     = "";
 my $gd_lds      = "";
 my $gd_includes = "";
 if ($gd_enabled == 1) {
-    $gd_libs     = `gdlib-config --libs`;
+    $gd_libs     = `pkg-config gdlib --libs`;
     $gd_libs     =~ s/\s*?\@LIBICONV\@\s*?//;
-    $gd_lds      = `gdlib-config --ldflags`;
-    $gd_includes = `gdlib-config --cflags`;
+    $gd_lds      = `pkg-config gdlib --libs`;
+    $gd_includes = `pkg-config gdlib --cflags`;
     chomp($gd_libs);
     chomp($gd_includes);
     # the output of `gdlib-config --libs` does not include '-lgd'.(This is a bug of GD)
