@@ -249,7 +249,7 @@ when Content-Length is not set in response headers.
 |dh         |coord |sh         |destination height                              |        :o:|   :o:|:o:|
 |dx         |coord |sx         |destination x coordinate                        |        :o:|   :o:|:o:|
 |dy         |coord |sy         |destination y coordinate                        |        :o:|   :o:|:o:|
-|da         |char  |l          |destination aspect ratio contol (l, s)          |        :o:|   :o:|:o:|
+|da         |char  |l          |destination aspect ratio contol (l, s, n)       |        :o:|   :o:|:o:|
 |ds         |char  |n          |destination scaling control (s, n)              |        :o:|   :o:|:o:|
 |cw         |number|           |canvas width                                    |        :o:|   :o:|:o:|
 |ch         |number|           |canvas height                                   |        :o:|   :o:|:o:|
@@ -273,6 +273,12 @@ when Content-Length is not set in response headers.
 |cmyk2rgb   |char  |n          |convert colorspace from CMYK to sRGB (y, n)     |        :o:|   :x:|:x:|
 |rmprof     |char  |n          |remove profile (y, n)                           |        :o:|   :x:|:x:|
 |autoorient |char  |n          |enable adjust image orientation automatically (y, n)  |  :o:|   :x:|:x:|
+
+The values of `da` are `l` and `s` and `n`. These present the meanings below.
+
+ * `l`: long-edge based
+ * `s`: short-edge based
+ * `n`: nope
 
 There are any limitations below.
 
