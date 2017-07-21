@@ -43,7 +43,7 @@ Supports the various image-processings below.
  * Blur
  * Border
  * Canvas
- * Crop
+ * Crop / Trim
  * Composition
  * JPEG Hinting(except GD)
  * Format convert(e.g. PNG -> JPEG)
@@ -243,6 +243,7 @@ when Content-Length is not set in response headers.
 |p          |string|           |named pattern of comma-delimited parameters     |        :o:|   :o:|:o:|
 |e          |string|imagemagick|engine name (imagemagick, imlib2, gd)           |           |      |   |
 |q          |number|           |quality                                         |        :o:|   :o:|:o:|
+|trimfuzz   |number|           |fuzz for auto-crop / trim                       |        :o:|   :x:|:x:|
 |of         |string|           |output format (jpg, gif, png, webp)             |        :o:|   :o:|:o:|
 |jpeghint   |char  |n          |enable jpeg hinting (y, n)                      |        :o:|   :o:|:x:|
 |dw         |coord |sw         |destination width                               |        :o:|   :o:|:o:|
