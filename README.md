@@ -273,6 +273,10 @@ when Content-Length is not set in response headers.
 |cmyk2rgb   |char  |n          |convert colorspace from CMYK to sRGB (y, n)     |        :o:|   :x:|:x:|
 |rmprof     |char  |n          |remove profile (y, n)                           |        :o:|   :x:|:x:|
 |autoorient |char  |n          |enable adjust image orientation automatically (y, n)  |  :o:|   :x:|:x:|
+|shadecolor |string|           |adds a shade overlay of the specified color     |        :o:|   :x:|:x:|
+|shadeopc   |number|           |specifies the opacity of the shade overlay (0.0 to 1  |  :o:|   :x:|:x:|
+|thumbnail  |char  |n          |make an optimized thumbnail (y, n)              |        :o:|   :x:|:x:|
+|interlace  |string|           |specifies interlace type (line, plane, partition)     |  :o:|   :x:|:x:|
 
 The values of `da` are `l` and `s` and `n`. These present the meanings below.
 
