@@ -265,6 +265,7 @@ when Content-Length is not set in response headers.
 |sharpen    |string|           |radius,sigma (e.g. 10x5)                        |        :o:|   :o:|:o:|
 |unsharp    |string|           |radius,sigma,amount,threshold (e.g 2x5+0.5+0)   |        :o:|   :x:|:x:|
 |blur       |string|           |radius,sigma (e.g. 5x10)                        |        :o:|   :o:|:x:|
+|gamma      |number|1.0        |gamma correction                                |        :o:|   :x:|:x:|
 |embedicon  |string|           |embedded icon file in `small_light_material_dir`|        :o:|   :x:|:x:|
 |ix         |number|0          |embedded icon x coordinate                      |        :o:|   :x:|:x:|
 |iy         |number|0          |embedded icon y coordinate                      |        :o:|   :x:|:x:|
@@ -292,7 +293,7 @@ There are the types of each parameter below.
 |------|-------------------------------------------------|
 |coord |coordicante or pixel. percent when appending 'p' |
 |char  |character                                        |
-|number|integer number                                   |
+|number|number                                           |
 |color |rrggbb or rrggbbaa                               |
 |string|string                                           |
 
