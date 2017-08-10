@@ -99,7 +99,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     MagickBooleanType                       status;
     int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
     double                                  iw, ih, q;
-    char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
+    char                                   *unsharp, *sharpen, *blur, *gamma, *of, *of_orig;
     MagickWand                             *trans_wand, *canvas_wand;
     DrawingWand                            *border_wand;
     PixelWand                              *bg_color, *canvas_color, *border_color;
@@ -355,6 +355,19 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                               __FUNCTION__,
                               __LINE__);
             }
+        }
+    }
+
+    gamma = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "gamma");
+    if (ngx_strlen(gamma) > 0) {
+        double g = (double)ngx_atofp((u_char *)gamma, ngx_strlen(gamma), 10)/(1e10);
+        status = MagickGammaImage(ictx->wand, g);
+        if (status == MagickFalse) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "gamma failed %s:%d (%0.3lf)",
+                          __FUNCTION__,
+                          __LINE__,
+                          g);
         }
     }
 
