@@ -87,7 +87,7 @@ void ngx_http_small_light_imagemagick_term(void *data)
     DestroyMagickWand(ictx->wand);
 }
 
-/** 
+/**
  * following original functions are brought from
  * mod_small_light(Dynamic image transformation module for Apache2) and customed
  */
@@ -97,10 +97,10 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
-    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
+    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg, dbl_x, dbl_y;
     double                                  iw, ih, q;
     char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
-    MagickWand                             *trans_wand, *canvas_wand;
+    MagickWand                             *trans_wand, *canvas_wand *blurred_wand *resized_cropped_wand;
     DrawingWand                            *border_wand;
     PixelWand                              *bg_color, *canvas_color, *border_color;
     GeometryInfo                            geo;
@@ -109,7 +109,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     u_char                                 *p, *embedicon;
     size_t                                  embedicon_path_len, embedicon_len, sled_image_size;
     ngx_int_t                               type;
-    u_char                                  jpeg_size_opt[32], crop_geo[128], size_geo[128], embedicon_path[256];
+    u_char                                  jpeg_size_opt[32], crop_geo[128], size_geo[128], twice_size_geo[128], embedicon_path[256];
     ColorspaceType                          color_space;
 #if MagickLibVersion >= 0x690
     int                                     autoorient_flg;
@@ -269,6 +269,40 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
 
         ngx_http_small_light_adjust_canvas_image_offset(&sz);
+
+        /* place blurred resized original image on empty canvas */
+        blurred_wand = ictx->wand;
+        status = MagickBlurImage(blurred_wand, 5, 10);
+        if (status == MagickFalse) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "blur failed %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
+        }
+
+
+        dbl_x = sz.sw * 2;
+        dbl_y = sz.sh * 2;
+
+        p = ngx_snprintf(twice_size_geo, sizeof(twice_size_geo) - 1, "%f!x%f!",  dbl_x, dbl_y);
+        *p = '\0';
+
+        resized_cropped_wand = MagickTransformImage(blurred_wand, (char *)crop_geo, (char *)twice_size_geo);
+        if (trans_wand == NULL || trans_wand == ictx->wand) {
+            r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyString(of_orig);
+            return NGX_ERROR;
+        }
+        DestroyMagickWand(blurred_wand);
+
+        status = MagickCompositeImage(canvas_wand, resized_cropped_wand, AtopCompositeOp, 0, 0);
+        if (status == MagickFalse) {
+            r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyMagickWand(canvas_wand);
+            DestroyString(of_orig);
+            return NGX_ERROR;
+        }
+        DestroyMagickWand(resized_cropped_wand);
 
         status = MagickCompositeImage(canvas_wand, ictx->wand, AtopCompositeOp, sz.dx, sz.dy);
         if (status == MagickFalse) {
