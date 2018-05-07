@@ -1,3 +1,9 @@
+2017-02-16 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* bugfix: mistaken image offset adjusting. Thanks @urapico. refs #81 and #82
+
+	* 0.9.1 released
+
 2016-10-02 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* imlib2: change default small_light_imlib2_temp_dir value. Thanks @draskolnikova. refs #70
