@@ -283,6 +283,14 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
             return NGX_ERROR;
         }
 
+        status = MagickSetImageDepth(canvas_wand, MagickGetImageDepth(ictx->wand));
+        if (status == MagickFalse) {
+            r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+            DestroyMagickWand(canvas_wand);
+            DestroyString(of_orig);
+            return NGX_ERROR;
+        }
+
         status = MagickTransformImageColorspace(canvas_wand, color_space);
         if (status == MagickFalse) {
             r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
