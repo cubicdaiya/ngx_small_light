@@ -301,8 +301,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
         ngx_http_small_light_adjust_canvas_image_offset(&sz);
 
-        // background fill
-
+        // check background fill
         backgroundfill_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "backgroundfill"));
 
         if (backgroundfill_flg == 1) {
