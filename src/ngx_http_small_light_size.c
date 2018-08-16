@@ -117,6 +117,9 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                  sz->dh = sz->dh / sz->aspect;
                  sz->dw = sz->dw;
                  sz->dy = 0;
+                 if (sz->dx > 0) {
+                    sz->dx = 0;
+                 }
              } else {
                  sz->dh = sz->dh;
                  sz->dw = sz->dw * sz->aspect;
