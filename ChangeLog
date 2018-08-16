@@ -1,3 +1,11 @@
+2017-04-29 Tatsuhiko Kubo <cubicdaiya@gmail.com>
+
+	* imagemagick: adjusted image depth between canvas and original image. #86
+
+	* setup: use pkg-config instead of (Wand|imlib2|gdlib)-config. #85
+
+	* 0.9.2 released
+
 2017-02-16 Tatsuhiko Kubo <cubicdaiya@gmail.com>
 
 	* bugfix: mistaken image offset adjusting. Thanks @urapico. refs #81 and #82
