@@ -111,7 +111,18 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
             } else {
                 sz->dw = sz->dh * sz->aspect;
             }
-        }
+        } else if (da == 'f') {
+
+             if (sz->sw < sz->sh) {
+                 sz->dh = sz->dh / sz->aspect;
+                 sz->dw = sz->dw;
+                 sz->dy = 0;
+             } else {
+                 sz->dh = sz->dh;
+                 sz->dw = sz->dw * sz->aspect;
+             }
+         }
+
     } else {
         if (sz->dw == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dh == sz->dw) {
             // do nothing

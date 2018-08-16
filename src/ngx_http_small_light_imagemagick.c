@@ -207,7 +207,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     iw = (double)MagickGetImageWidth(ictx->wand);
     ih = (double)MagickGetImageHeight(ictx->wand);
 
-
     /* dpr adjustment */
     if (sz.img_dpr > 1 && (iw < sz.dw || ih < sz.dh )) {
         MagickAdaptiveResizeImage(ictx->wand, iw*sz.img_dpr, ih*sz.img_dpr);
@@ -303,7 +302,6 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
         // check background fill
         backgroundfill_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "backgroundfill"));
-
         if (backgroundfill_flg == 1) {
 
             // first trim whitespace off the original image
