@@ -74,6 +74,7 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     ngx_http_small_light_parse_coord(&dw_coord, NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "dw"));
     ngx_http_small_light_parse_coord(&dh_coord, NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "dh"));
 
+
     sz->sx = ngx_http_small_light_calc_coord(&sx_coord, iw);
     if (sz->sx == NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
         sz->sx = 0;
@@ -96,6 +97,13 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
     sz->dh = ngx_http_small_light_calc_coord(&dh_coord, ih);
     sz->aspect = sz->sw / sz->sh;
 
+    sz->cw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cw"));
+    sz->ch = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ch"));
+    sz->bw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bw"));
+    sz->bh = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bh"));
+    sz->ix = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ix"));
+    sz->iy = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "iy"));
+
     da_str = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "da");
     da     = da_str[0] ? da_str[0] : 'l';
     if (sz->dw != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE && sz->dh != NGX_HTTP_SMALL_LIGHT_COORD_INVALID_VALUE) {
@@ -112,7 +120,9 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                 sz->dw = sz->dh * sz->aspect;
             }
         } else if (da == 'f') {
+            // scalefit
 
+            // portrait
              if (sz->sw < sz->sh) {
                  sz->dh = sz->dh / sz->aspect;
                  sz->dw = sz->dw;
@@ -120,9 +130,32 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
                  if (sz->dx > 0) {
                     sz->dx = 0;
                  }
+
+                // if canvas height > destination height :
+                if (sz->ch > sz->dh) {
+                    sz->fitfactor = sz->ch/sz->dh;
+                    sz->dh = sz->dh*sz->fitfactor;
+                    sz->dw = sz->dw*sz->fitfactor;
+                }
+
+             // landscape
              } else {
                  sz->dh = sz->dh;
                  sz->dw = sz->dw * sz->aspect;
+                 if (sz->dx > 0) {
+                    sz->dx = 0;
+                 }
+                 if (sz->dy > 0) {
+                    sz->dy = 0;
+                 }
+
+                 // if canvas width > destination width :
+                 if (sz->cw > sz->dw) {
+                    sz->fitfactor = sz->cw/sz->dw;
+                    sz->dh = sz->dh*sz->fitfactor;
+                    sz->dw = sz->dw*sz->fitfactor;
+                 }
+
              }
          }
 
@@ -135,15 +168,10 @@ void ngx_http_small_light_calc_image_size(ngx_http_request_t *r,
             sz->dh = sz->dw / sz->aspect;
         }
     }
-    sz->cw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cw"));
-    sz->ch = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ch"));
-    sz->bw = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bw"));
-    sz->bh = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bh"));
-    sz->ix = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "ix"));
-    sz->iy = ngx_http_small_light_parse_int(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "iy"));
+
+
     ngx_http_small_light_parse_color(&sz->cc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "cc"));
     ngx_http_small_light_parse_color(&sz->bc,  NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "bc"));
-
     /* get pass through option. */
     pt_flg = 0;
     pt     = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "pt");
