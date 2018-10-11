@@ -360,4 +360,5 @@ ngx_int_t ngx_http_small_light_gd_process(ngx_http_request_t *r, ngx_http_small_
     ictx->complete = 1;
 
     return NGX_OK;
+
 }
