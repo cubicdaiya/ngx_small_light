@@ -464,7 +464,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
 
     /* set params. */
     q = ngx_http_small_light_parse_double(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "q"));
-    if (q > 0.0) {
+    if (q > 0.0 && q <= 100) {
         MagickSetImageCompressionQuality(ictx->wand, q);
     }
 
