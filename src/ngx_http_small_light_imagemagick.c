@@ -100,7 +100,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
     double                                  iw, ih, q;
     char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
-    MagickWand                             *trans_wand, *canvas_wand, *canvas_bg_wand;
+    MagickWand                             *trans_wand, *canvas_wand, *canvas_bg_wand, *source_wand;
     DrawingWand                            *border_wand;
     PixelWand                              *bg_color, *canvas_color, *border_color;
     GeometryInfo                            geo;
@@ -201,6 +201,29 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
 
         DestroyPixelWand(bg_color);
+    }
+
+    /* fix stretch image when jpeghint=y */
+   if (sz.jpeghint_flg != 0) {
+        /* calc source size. */
+        source_wand = NewMagickWand();
+        status = MagickReadImageBlob(source_wand, (void *)ictx->image, ictx->image_len);
+        if (status == MagickFalse) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "couldn't read image %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
+            return NGX_ERROR;
+        }
+        iw = (double)MagickGetImageWidth(source_wand);
+        ih = (double)MagickGetImageHeight(source_wand);
+        ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, 
+                      "source width:%f,source height:%f,dw:%f,dh:%f",
+                      iw, ih, sz.dw, sz.dh);
+        if(iw < sz.dw || ih < sz.dh) {
+             MagickAdaptiveResizeImage(ictx->wand, iw, ih);
+        }
+        DestroyMagickWand(source_wand);
     }
 
     /* calc size. */
