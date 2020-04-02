@@ -215,6 +215,20 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
                           __LINE__);
             return NGX_ERROR;
         }
+        
+        #if MagickLibVersion >= 0x690
+            /* auto-orient */
+            autoorient_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "autoorient"));
+            if (autoorient_flg != 0) {
+                status = MagickAutoOrientImage(source_wand);
+                if (status == MagickFalse) {
+                    r->err_status = NGX_HTTP_INTERNAL_SERVER_ERROR;
+                    DestroyString(of_orig);
+                    return NGX_ERROR;
+                }
+            }
+        #endif
+
         iw = (double)MagickGetImageWidth(source_wand);
         ih = (double)MagickGetImageHeight(source_wand);
         ngx_log_error(NGX_LOG_DEBUG, r->connection->log, 0, 
