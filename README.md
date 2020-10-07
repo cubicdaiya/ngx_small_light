@@ -273,6 +273,7 @@ when Content-Length is not set in response headers.
 |cmyk2rgb   |char  |n          |convert colorspace from CMYK to sRGB (y, n)     |        :o:|   :x:|:x:|
 |rmprof     |char  |n          |remove profile (y, n)                           |        :o:|   :x:|:x:|
 |autoorient |char  |n          |enable adjust image orientation automatically (y, n)  |  :o:|   :x:|:x:|
+|rmalpha    |char  |n          |remove alpha channel (y, n)                     |        :o:|   :x:|:x:|
 
 The values of `da` are `l` and `s` and `n`. These present the meanings below.
 
