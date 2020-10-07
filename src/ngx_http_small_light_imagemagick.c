@@ -97,7 +97,7 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
     ngx_http_small_light_imagemagick_ctx_t *ictx;
     ngx_http_small_light_image_size_t       sz;
     MagickBooleanType                       status;
-    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg;
+    int                                     rmprof_flg, progressive_flg, cmyk2rgb_flg, rmalpha_flg;
     double                                  iw, ih, q;
     char                                   *unsharp, *sharpen, *blur, *of, *of_orig;
     MagickWand                             *trans_wand, *canvas_wand;
@@ -155,6 +155,18 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         if (status == MagickFalse) {
             ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
                           "couldn't profiling image %s:%d",
+                          __FUNCTION__,
+                          __LINE__);
+        }
+    }
+
+    /* remove alpha channel */
+    rmalpha_flg = ngx_http_small_light_parse_flag(NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "rmalpha"));
+    if (rmalpha_flg != 0) {
+        status = MagickSetImageAlphaChannel(ictx->wand, RemoveAlphaChannel);
+        if (status == MagickFalse) {
+            ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                          "couldn't remove alpha channel from image %s:%d",
                           __FUNCTION__,
                           __LINE__);
         }
