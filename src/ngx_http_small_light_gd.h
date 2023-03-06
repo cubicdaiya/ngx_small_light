@@ -23,9 +23,8 @@
 #ifndef NGX_HTTP_SMALL_LIGHT_GD_H
 #define NGX_HTTP_SMALL_LIGHT_GD_H
 
-#include <gd.h>
-
 #include "ngx_http_small_light_module.h"
+#include <gd.h>
 
 typedef struct {
     u_char *image;

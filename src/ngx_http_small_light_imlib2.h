@@ -23,9 +23,8 @@
 #ifndef NGX_HTTP_SMALL_LIGHT_IMLIB2_H
 #define NGX_HTTP_SMALL_LIGHT_IMLIB2_H
 
-#include <Imlib2.h>
-
 #include "ngx_http_small_light_module.h"
+#include <Imlib2.h>
 
 typedef struct {
     u_char *image;
