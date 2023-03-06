@@ -23,9 +23,8 @@
 #ifndef NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
 #define NGX_HTTP_SMALL_LIGHT_IMAGEMAGICK_H
 
-#include <wand/MagickWand.h>
-
 #include "ngx_http_small_light_module.h"
+#include <wand/MagickWand.h>
 
 typedef struct {
     u_char *image;

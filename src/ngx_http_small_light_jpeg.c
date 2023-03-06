@@ -21,7 +21,8 @@
    THE SOFTWARE.
 */
 
-#include <nginx.h>
+#include <ngx_config.h>
+#include <ngx_core.h>
 
 #include <Imlib2.h>
 #include <setjmp.h>
