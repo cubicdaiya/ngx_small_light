@@ -320,6 +320,12 @@ ngx_int_t ngx_http_small_light_imagemagick_process(ngx_http_request_t *r, ngx_ht
         }
     }
 
+    /* Add DPI */
+    if (sz.dpi != 0) {
+        MagickSetImageUnits(ictx->wand, PixelsPerInchResolution);
+        MagickSetImageResolution(ictx->wand, sz.dpi, sz.dpi);
+    }
+
     sharpen = NGX_HTTP_SMALL_LIGHT_PARAM_GET_LIT(&ctx->hash, "sharpen");
     if (ngx_strlen(sharpen) > 0) {
         ParseGeometry(sharpen, &geo);

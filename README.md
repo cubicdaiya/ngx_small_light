@@ -251,6 +251,7 @@ when Content-Length is not set in response headers.
 |dy         |coord |sy         |destination y coordinate                        |        :o:|   :o:|:o:|
 |da         |char  |l          |destination aspect ratio contol (l, s, n)       |        :o:|   :o:|:o:|
 |ds         |char  |n          |destination scaling control (s, n)              |        :o:|   :o:|:o:|
+|dpi        |number|           |DPI of result image                             |        :o:|   :x:|:x:|
 |cw         |number|           |canvas width                                    |        :o:|   :o:|:o:|
 |ch         |number|           |canvas height                                   |        :o:|   :o:|:o:|
 |cc         |color |000000     |canvas color                                    |        :o:|   :o:|:o:|
